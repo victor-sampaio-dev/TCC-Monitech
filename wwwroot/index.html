@@ -1,0 +1,747 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MONITECH — Monitoramento de Energia Residencial</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <!-- Theme Loader - DEVE estar antes de qualquer CSS -->
+  <script src="./assets/js/shared/theme-loader.js"></script>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="./website/css/index.css">
+  <link rel="stylesheet" href="./assets/css/shared/navbar.css">
+  <link rel="stylesheet" href="./assets/css/shared/userMenu.css">
+  <link rel="stylesheet" href="./assets/css/shared/profile-photo-styles.css">
+  <link rel="stylesheet" href="./assets/css/shared/auth-modal.css">
+  <link rel="stylesheet" href="./assets/css/shared/theme-toggle.css">
+  <link rel="stylesheet" href="./assets/css/shared/icons.css">
+  <link rel="stylesheet" href="./website/css/theme-colors.css">
+  <script src="./assets/js/vendor/lucide.min.js" defer></script>
+  <script src="./assets/js/shared/navbar.js" defer></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="./assets/js/shared/auth-modal.js" defer></script>
+  <script src="./assets/js/shared/profile-photo-manager.js" defer></script>
+  <script src="./assets/js/shared/magnific-icons-loader.js" defer></script>
+  <script src="./assets/js/shared/theme-toggle.js" defer></script>
+  <script src="./assets/js/shared/user-info-panel.js" defer></script>
+
+<body>
+
+  <!-- ══════════ NAV ══════════ -->
+  <nav id="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="#">
+        <img src="/assets/images/logo.svg" alt="MONITECH" style="height:32px;width:auto;">
+        <span class="nav-brand">MONITECH</span>
+      </a>
+
+      <!-- Menu Desktop -->
+      <div class="nav-links-desktop" id="nav-links-desktop">
+        <a class="nav-link" href="#funcionalidades">Funcionalidades</a>
+        <a class="nav-link" href="#como-funciona">Como Funciona</a>
+        <a class="nav-link" href="#protocolos">Protocolos</a>
+        <a class="nav-link" href="#hardware">Hardware</a>
+      </div>
+
+      <!-- Menu Mobile Toggle -->
+      <button type="button" class="mobile-menu-btn" id="mobile-menu-btn" onclick="alternarMenuMobile()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <!-- Menu Mobile -->
+      <div class="nav-menu-mobile" id="nav-menu-mobile">
+
+        <!-- Links de navegação -->
+        <div class="nav-links" id="nav-tabs-mobile">
+          <a class="nav-link" href="#funcionalidades">
+            <span class="mmenu-icon"><i data-lucide="zap"></i></span>
+            <span class="mmenu-text">Funcionalidades</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a class="nav-link" href="#como-funciona">
+            <span class="mmenu-icon"><i data-lucide="activity"></i></span>
+            <span class="mmenu-text">Como Funciona</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a class="nav-link" href="#protocolos">
+            <span class="mmenu-icon"><i data-lucide="wifi"></i></span>
+            <span class="mmenu-text">Protocolos</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a class="nav-link" href="#hardware">
+            <span class="mmenu-icon"><i data-lucide="cpu"></i></span>
+            <span class="mmenu-text">Hardware</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+        </div>
+
+        <!-- Ações do rodapé -->
+        <div class="nav-menu-footer">
+          <a class="btn-nav-solid-mobile" target="_blank" href="./system/system.html">
+            <i data-lucide="layout-dashboard"></i>
+            Acessar Painel
+          </a>
+          <a class="btn-nav-ghost-mobile" href="./website/compra.html">
+            <i data-lucide="shopping-cart"></i>
+            Comprar Dispositivo
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Nav Actions (Right Side) -->
+      <div class="nav-actions">
+        <div class="nav-end">
+          <!-- <a class="btn-nav-ghost" href="./pages-documents/docs.html">Documentação</a> -->
+          <a class="btn-nav-ghost" href="./website/compra.html">Comprar Dispositivo</a>
+          <a class="btn-nav-solid" target="_blank" href="./system/system.html">Acessar Painel →</a>
+        </div>
+
+        <!-- Toggle de Tema -->
+        <button class="theme-toggle-btn" id="theme-toggle-btn" title="Alternar tema">
+          <span class="theme-toggle-icon"></span>
+        </button>
+
+        <div class="user-menu-wrapper">
+          <button class="user-menu-btn" id="user-menu-btn" onclick="toggleUserMenu()">
+            <div class="user-avatar">U</div>
+          </button>
+          <div class="user-dropdown" id="user-dropdown">
+            <!-- Header com dados do usuário (aparece quando logado) -->
+            <div class="user-dropdown-header" id="user-dropdown-header" style="display:none !important;">
+              <div class="user-dropdown-avatar-lg" id="user-dropdown-avatar-lg">U</div>
+              <div class="user-dropdown-info">
+                <div class="user-dropdown-nome" id="user-dropdown-nome">Usuário</div>
+                <div class="user-dropdown-email" id="user-dropdown-email">email@example.com</div>
+              </div>
+            </div>
+            <div class="user-dropdown-divider" id="user-dropdown-divider" style="display:none !important;"></div>
+            
+            <div class="dropdown-auth-section">
+              <a href="#" id="dropdown-login" onclick="openAuthModal(); event.preventDefault();" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                Entrar
+              </a>
+              <a href="#" id="dropdown-cadastro" onclick="openAuthModal(); switchAuthTab('signup'); event.preventDefault();" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                Criar conta
+              </a>
+            </div>
+            <a href="./website/settings.html" id="dropdown-config" class="user-dropdown-item" style="display:none !important;">Configurações</a>
+            <a href="./pages-documents/docs.html" id="dropdown-sobre" class="user-dropdown-item" style="display:none !important;">Sobre</a>
+            <button id="dropdown-logout" class="user-dropdown-item user-dropdown-logout" onclick="logout()" style="display:none !important;">Sair</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="nav-backdrop" id="nav-backdrop" onclick="alternarMenuMobile()"></div>
+
+  <!-- Modal de Autenticação -->
+  <div class="auth-backdrop" id="auth-backdrop">
+    <div class="auth-modal">
+      <!-- Botão fechar -->
+      <button class="auth-close-btn" onclick="closeAuthModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <!-- Header -->
+      <div class="auth-header">
+        <h2>Bem-vindo</h2>
+        <p>Acesse sua conta profissional MONITECH</p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab" data-tab="login" onclick="switchAuthTab('login')">Login</button>
+        <button class="auth-tab" data-tab="signup" onclick="switchAuthTab('signup')">Cadastro</button>
+      </div>
+
+      <!-- Conteúdo: Login -->
+      <div class="auth-content" id="auth-login">
+        <!-- Login com Google -->
+        <button class="auth-social-btn" id="google-login-btn" onclick="loginWithGoogle()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            <path d="M1 1h22v22H1z" fill="none"/>
+          </svg>
+          <span>Entrar com Google</span>
+        </button>
+
+        <!-- Divisor -->
+        <div class="auth-divider">ou</div>
+
+        <!-- Formulário de Login -->
+        <form class="auth-form" id="login-form" onsubmit="loginWithEmail(event)">
+          <div class="form-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" placeholder="seu@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="login-password">Senha</label>
+            <input type="password" id="login-password" placeholder="••••••••" required>
+          </div>
+
+          <button type="submit" class="auth-submit-btn">Login</button>
+        </form>
+
+        <!-- Links de rodapé -->
+        <div class="auth-footer">
+          <a href="#" onclick="event.preventDefault(); showForgotPassword();">Esqueceu a senha?</a>
+        </div>
+      </div>
+
+      <!-- Conteúdo: Esqueceu a senha -->
+      <div class="auth-content" id="auth-forgot">
+        <div class="auth-forgot-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="40" height="40">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+        <h3 class="auth-forgot-title">Recuperar senha</h3>
+        <p class="auth-forgot-desc">Informe seu e-mail e enviaremos um link para redefinir sua senha.</p>
+        <form class="auth-form" id="forgot-form" onsubmit="esqueceuSenhaComEmail(event)">
+          <div class="form-group">
+            <label for="forgot-email">Email</label>
+            <input type="email" id="forgot-email" placeholder="seu@email.com" required>
+          </div>
+          <button type="submit" class="auth-submit-btn">Enviar link de recuperação</button>
+        </form>
+        <div class="auth-footer">
+          <a href="#" onclick="event.preventDefault(); switchAuthTab('login');">← Voltar ao login</a>
+        </div>
+      </div>
+
+      <!-- Conteúdo: Cadastro -->
+      <div class="auth-content" id="auth-signup">
+        <!-- Cadastro com Google -->
+        <button class="auth-social-btn" id="google-signup-btn" onclick="signupWithGoogle()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            <path d="M1 1h22v22H1z" fill="none"/>
+          </svg>
+          <span>Cadastrar com Google</span>
+        </button>
+
+        <!-- Divisor -->
+        <div class="auth-divider">ou</div>
+
+        <!-- Formulário de Cadastro -->
+        <form class="auth-form" id="signup-form" onsubmit="signupWithEmail(event)">
+          <div class="form-group">
+            <label for="signup-name">Nome Completo</label>
+            <input type="text" id="signup-name" placeholder="Seu nome" required>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-email">Email</label>
+            <input type="email" id="signup-email" placeholder="seu@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-password">Senha</label>
+            <input type="password" id="signup-password" placeholder="••••••••" required>
+          </div>
+
+          <div class="form-checkbox">
+            <input type="checkbox" id="signup-terms" required>
+            <label for="signup-terms">Concordo com os <a href="./pages-documents/termos.html" target="_blank">Termos de Serviço</a></label>
+          </div>
+
+          <button type="submit" class="auth-submit-btn">Criar Conta</button>
+        </form>
+
+        <!-- Links de rodapé -->
+        <div class="auth-footer">
+          Já tem uma conta? <a href="#" onclick="switchAuthTab('login');">Faça login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ HERO ══════════ -->
+  <section class="hero">
+    <div class="hero-orb-left"></div>
+    <div class="hero-orb-right"></div>
+    <div class="hero-inner">
+      <!-- Esquerda -->
+      <div class="hero-left">
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          Monitore em Tempo Real
+        </div>
+        <h1 class="hero-h1">
+          Saiba exatamente quanto<br>
+          <mark>sua casa consome</mark><br>
+          de energia
+        </h1>
+        <p class="hero-p">
+          Instale o Dispositivo MONITECH em sua casa e acompanhe
+          tensão, corrente, potência e consumo ao vivo direto no seu
+          navegador ou smartphone — tudo funcionando local, seguro e sem assinatura.
+        </p>
+        <div class="hero-btns">
+          <a class="btn-primary" href="./system/system.html">Começar Agora (Gratuito) →</a>
+          <a class="btn-secondary" href="#como-funciona">Como Funciona?</a>
+        </div>
+        <div class="hero-trust">
+          <span>100% Gratuito</span>
+          <span class="trust-dot"></span>
+          <span>Sem assinatura mensal</span>
+          <span class="trust-dot"></span>
+          <span>Dados armazenados localmente</span>
+        </div>
+      </div>
+
+      <!-- Direita — painel ao vivo -->
+      <div class="hero-panel">
+        <div class="panel-topbar">
+          <div class="panel-dots">
+            <div class="pdot"></div>
+            <div class="pdot"></div>
+            <div class="pdot"></div>
+          </div>
+          <span class="panel-title-bar">monitech — leitura ao vivo</span>
+          <div class="panel-live"><span class="live-pip"></span> AO VIVO</div>
+        </div>
+        <div class="panel-canvas-wrap">
+          <canvas id="hero-canvas"></canvas>
+        </div>
+        <div class="panel-metrics">
+          <div class="pm">
+            <div class="pm-val" id="pm-v">220<span>V</span></div>
+            <div class="pm-key">Tensão</div>
+          </div>
+          <div class="pm">
+            <div class="pm-val" id="pm-w">1847<span>W</span></div>
+            <div class="pm-key">Potência</div>
+          </div>
+          <div class="pm">
+            <div class="pm-val" id="pm-k">4.21<span>kWh</span></div>
+            <div class="pm-key">Consumo</div>
+          </div>
+        </div>
+        <div class="panel-json">
+          <span class="jk">"volts"</span>: <span class="jv" id="pj-v">220.4</span>,&nbsp;
+          <span class="jk">"amps"</span>: <span class="jv" id="pj-a">8.37</span>,&nbsp;
+          <span class="jk">"watts"</span>: <span class="jv" id="pj-w">1847</span><br>
+          <span class="jk">"kwh"</span>: <span class="jv" id="pj-k">4.218</span>,&nbsp;
+          <span class="jk">"pf"</span>: <span class="jv">0.92</span>,&nbsp;
+          <span class="jk">"hz"</span>: <span class="jv">60.0</span><br>
+          <span class="jk">"ssid"</span>: <span class="js">"MinhaRede_5G"</span>,&nbsp;
+          <span class="jk">"rssi"</span>: <span class="jv">-58</span><br>
+          <span class="jk">"id"</span>: <span class="js">"MONITECH-001"</span>,&nbsp;
+          <span class="jk">"fw"</span>: <span class="js">"1.0.0"</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════ O DISPOSITIVO MONITECH ══════════ -->
+  <div class="compat-strip">
+    <div class="compat-inner">
+      <span class="compat-label">O Dispositivo MONITECH inclui:</span>
+      <div class="compat-list">
+        <span class="compat-item"><i data-lucide="package"></i> Caixa de proteção com logo MONITECH</span>
+        <span class="compat-item"><i data-lucide="zap"></i> Sensor de energia integrado</span>
+        <span class="compat-item"><i data-lucide="plug"></i> Cabo de energia com fonte</span>
+        <span class="compat-item"><i data-lucide="bar-chart-2"></i> Sensor CT para o cabo principal</span>
+        <span class="compat-item"><i data-lucide="wrench"></i> Porta USB para atualizações</span>
+        <span class="compat-item"><i data-lucide="wifi"></i> Wi-Fi integrado</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════ O QUE VOCÊ VAI APRENDER ══════════ -->
+  <section class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-cell">
+        <div class="stat-num"><b id="s1">6</b></div>
+        <div class="stat-desc">Medições diferentes — Tensão, Corrente, Potência, Consumo, Fator de Potência e Frequência</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num"><b id="s2">Cada 2</b>s</div>
+        <div class="stat-desc">Atualização de dados — Informações sempre frescas e em tempo real</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num"><b id="s3">10</b> min</div>
+        <div class="stat-desc">Tempo de instalação — Ligar e conectar ao seu Wi-Fi</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num"><b id="s4">0</b>R$</div>
+        <div class="stat-desc">Sem custo mensal — Tudo funciona localmente, para sempre</div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════ FUNCIONALIDADES ══════════ -->
+  <section class="features-section" id="funcionalidades">
+    <div class="features-inner">
+      <div class="features-head">
+        <div>
+          <div class="eyebrow">Funcionalidades</div>
+          <h2 class="s-h2">O que você pode fazer<br><em>com o MONITECH</em></h2>
+        </div>
+        <p style="font-size:15px;color:var(--ink-3);max-width:340px;line-height:1.7;">
+          Uma solução completa para você entender seu consumo de energia e economizar
+          de forma inteligente.
+        </p>
+      </div>
+
+      <div class="feat-grid">
+        <div class="feat-card feat-card--wide reveal">
+          <div class="feat-icon"><i data-lucide="bar-chart-2"></i></div>
+          <div class="feat-title">Painel em Tempo Real</div>
+          <p class="feat-text">Veja ao vivo quanto você está consumindo agora: tensão, corrente, potência em watts e consumo acumulado do dia. Os dados atualizam a cada 2 segundos, direto da caixa para o seu navegador.</p>
+          <span class="feat-tag">Ao Vivo</span>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon"><i data-lucide="banknote"></i></div>
+          <div class="feat-title">Saiba quanto custa</div>
+          <p class="feat-text">O sistema calcula automaticamente o custo do seu consumo baseado na tarifa da sua distribuidora. Veja quanto você gastou no dia, na semana e no mês em reais.</p>
+          <span class="feat-tag">Financeiro</span>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon"><i data-lucide="bell"></i></div>
+          <div class="feat-title">Alertas Inteligentes</div>
+          <p class="feat-text">O sistema compara o consumo real medido com o que você cadastrou e gera alertas automáticos quando detecta desperdício, aparelho esquecido ligado ou consumo fora do padrão esperado.</p>
+          <span class="feat-tag">Automático</span>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon"><i data-lucide="file-text"></i></div>
+          <div class="feat-title">Histórico Completo</div>
+          <p class="feat-text">Veja seu consumo hora a hora, dia após dia. Gráficos mostram quando você mais consome e quando menos gasta energia. Perfeito para encontrar oportunidades de economia.</p>
+          <span class="feat-tag">Histórico</span>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon"><i data-lucide="home"></i></div>
+          <div class="feat-title">Organize por Cômodos</div>
+          <p class="feat-text">Cadastre os cômodos da sua casa e associe seus aparelhos a cada um. O sistema usa essa informação para estimar, com base no consumo total, quais dispositivos e ambientes estão ativos.</p>
+          <span class="feat-tag">Organização</span>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon"><i data-lucide="cpu"></i></div>
+          <div class="feat-title">Detecção de Aparelhos</div>
+          <p class="feat-text">A tecnologia NILM (Non-Intrusive Load Monitoring) analisa variações no consumo total e estima quais aparelhos estão ligados — geladeira, chuveiro, micro-ondas — sem nenhum sensor individual.</p>
+          <span class="feat-tag">Inteligência</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════ COMO FUNCIONA ══════════ -->
+  <section class="how-section" id="como-funciona">
+    <div class="how-inner">
+      <div class="how-head">
+        <div class="eyebrow">4 Passos Simples</div>
+        <h2 class="s-h2">Comece a monitorar em <em>menos de 15 minutos</em></h2>
+      </div>
+      <div class="steps-track">
+        <div class="step reveal">
+          <div class="step-num-wrap">
+            <div class="step-num">01</div>
+          </div>
+          <div class="step-title">Desempacote e Conecte</div>
+          <p class="step-text">Retire o Dispositivo MONITECH da caixa. Conecte o cabo de energia na tomada e prenda o sensor CT no fio principal do seu quadro elétrico — sem desligar nada. Ao ligar, o dispositivo cria uma rede Wi-Fi temporária para configuração.</p>
+        </div>
+        <div class="step reveal">
+          <div class="step-num-wrap">
+            <div class="step-num">02</div>
+          </div>
+          <div class="step-title">Crie Sua Conta</div>
+          <p class="step-text">Abra o painel do MONITECH no seu navegador ou smartphone. Cadastre-se com seu email (leva 1 minuto). Depois, preencha informações da sua casa: tipo (casa, apartamento, etc), distribuidora de energia e quantos cômodos tem.</p>
+        </div>
+        <div class="step reveal">
+          <div class="step-num-wrap">
+            <div class="step-num">03</div>
+          </div>
+          <div class="step-title">Configure o Wi-Fi</div>
+          <p class="step-text">Conecte seu celular ou notebook à rede temporária criada pelo dispositivo, informe o nome e senha do seu Wi-Fi doméstico e salve. O dispositivo se conecta à sua rede e começa a enviar dados automaticamente.</p>
+        </div>
+        <div class="step reveal">
+          <div class="step-num-wrap">
+            <div class="step-num">04</div>
+          </div>
+          <div class="step-title">Monitore Seu Consumo</div>
+          <p class="step-text">Veja o painel em tempo real mostrando quanto você está usando nesse exato momento. Defina alertas de consumo, veja gráficos históricos e descubra oportunidades para economizar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════ CONECTIVIDADE ══════════ -->
+  <section class="proto-section" id="protocolos">
+    <div class="proto-inner">
+      <div class="eyebrow">Formas de Conectar</div>
+      <h2 class="s-h2">O Dispositivo funciona<br><em>com seu Wi-Fi</em></h2>
+      <p class="s-sub">O Dispositivo MONITECH se conecta automaticamente ao seu Wi-Fi quando ligado. Não precisa de configurações técnicas — tudo é automático!</p>
+
+      <div class="proto-layout">
+        <div class="proto-list">
+          <div class="proto-item active reveal" onclick="selectProto(0, this)">
+            <div class="proto-icon-wrap"><i data-lucide="monitor"></i></div>
+            <div class="proto-name-group">
+              <div class="proto-n">Pelo Navegador</div>
+              <div class="proto-hint">Abra no seu PC ou notebook</div>
+            </div>
+            <span class="proto-arrow">→</span>
+          </div>
+          <div class="proto-item reveal" onclick="selectProto(1, this)">
+            <div class="proto-icon-wrap"><i data-lucide="smartphone"></i></div>
+            <div class="proto-name-group">
+              <div class="proto-n">Pelo Smartphone</div>
+              <div class="proto-hint">Acesse em qualquer lugar</div>
+            </div>
+            <span class="proto-arrow">→</span>
+          </div>
+          <div class="proto-item reveal" onclick="selectProto(2, this)">
+            <div class="proto-icon-wrap"><i data-lucide="usb"></i></div>
+            <div class="proto-name-group">
+              <div class="proto-n">Pela Porta USB</div>
+              <div class="proto-hint">Para atualizações do dispositivo</div>
+            </div>
+            <span class="proto-arrow">→</span>
+          </div>
+          <div class="proto-item reveal" onclick="selectProto(3, this)">
+            <div class="proto-icon-wrap"><i data-lucide="settings-2"></i></div>
+            <div class="proto-name-group">
+              <div class="proto-n">Modo Avançado</div>
+              <div class="proto-hint">Para usuários técnicos</div>
+            </div>
+            <span class="proto-arrow">→</span>
+          </div>
+        </div>
+
+        <div class="proto-detail visible" id="proto-detail">
+          <div class="proto-detail-top">
+            <span class="proto-detail-icon" id="pd-icon"><i data-lucide="monitor"></i></span>
+            <span class="proto-detail-name" id="pd-name">Pelo Navegador</span>
+            <span class="proto-detail-badge" id="pd-badge">Recomendado</span>
+          </div>
+          <div class="proto-detail-body">
+            <p class="proto-detail-desc" id="pd-desc">
+              Abra seu navegador (Chrome, Edge, Firefox) e acesse o painel MONITECH. O dispositivo já estará conectado automaticamente, mostrando seus dados em tempo real. Funciona em qualquer PC ou notebook ligado na sua rede Wi-Fi.
+            </p>
+            <div class="proto-specs" id="pd-specs">
+              <div class="proto-spec">Sem instalação</div>
+              <div class="proto-spec">Funciona em qualquer PC</div>
+              <div class="proto-spec">Dados em tempo real</div>
+              <div class="proto-spec">Painel completo com gráficos</div>
+            </div>
+            <div class="proto-url" id="pd-url">http://localhost:5000</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════ HARDWARE ══════════ -->
+  <section class="hw-section" id="hardware">
+    <div class="hw-inner">
+      <div class="hw-left">
+        <div class="eyebrow">O Dispositivo MONITECH</div>
+        <h2 class="s-h2">Uma caixa pronta<br><em>para usar</em></h2>
+        <div class="hw-cards">
+          <div class="hw-card reveal">
+            <div class="hw-card-icon"><i data-lucide="package"></i></div>
+            <div>
+              <div class="hw-card-name">Caixa de Isolamento</div>
+              <p class="hw-card-desc">Caixa branca ou preta com logo MONITECH. Protege completamente todos os componentes internos. Segura, discreta e fácil de instalar.</p>
+            </div>
+          </div>
+          <div class="hw-card reveal">
+            <div class="hw-card-icon"><i data-lucide="cable"></i></div>
+            <div>
+              <div class="hw-card-name">3 Cabos Importantes</div>
+              <p class="hw-card-desc"><strong>1) Cabo de Energia:</strong> Conecta na tomada (inclui fonte integrada). <strong>2) Sensor CT:</strong> Prende no fio principal de energia da sua casa (não precisa desligar nada). <strong>3) Porta USB:</strong> Para atualizações de software (se necessário).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hw-right">
+        <div class="hw-diagram-label">O que vem na caixa:</div>
+        <div class="hw-board-wrap reveal">
+          <div class="hw-board">
+            <div class="board-pins-top">
+              <div class="bpin"></div>
+              <div class="bpin"></div>
+              <div class="bpin"></div>
+              <div class="bpin"></div>
+              <div class="bpin"></div>
+              <div class="bpin"></div>
+              <div class="bpin"></div>
+              <div class="bpin"></div>
+            </div>
+            <div class="board-leds">
+              <div class="board-led board-led--b"></div>
+              <div class="board-led board-led--g"></div>
+              <div class="board-led board-led--r"></div>
+            </div>
+            <div class="board-device-icon"><i data-lucide="cpu"></i></div>
+            <div class="board-label">MONITECH</div>
+            <div class="board-sub">Dispositivo Completo</div>
+            <div class="board-chip">Pronto para Usar</div>
+            <div class="board-pins-bot">
+              <div class="bpin" style="border-radius:3px 3px 0 0"></div>
+              <div class="bpin" style="border-radius:3px 3px 0 0"></div>
+              <div class="bpin" style="border-radius:3px 3px 0 0"></div>
+              <div class="bpin" style="border-radius:3px 3px 0 0"></div>
+              <div class="bpin" style="border-radius:3px 3px 0 0"></div>
+              <div class="bpin" style="border-radius:3px 3px 0 0"></div>
+              <div class="bpin" style="border-radius:3px 3px 0 0"></div>
+              <div class="bpin" style="border-radius:3px 3px 0 0"></div>
+            </div>
+          </div>
+        </div>
+        <div class="hw-tags-row">
+          <span class="hw-tag">Plug & Play</span>
+          <span class="hw-tag">Wi-Fi Integrado</span>
+          <span class="hw-tag">Sensor CT</span>
+          <span class="hw-tag">Atualizável</span>
+          <span class="hw-tag">Seguro</span>
+          <span class="hw-tag">Gratuito</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════ INSTALE O WEB APP ══════════ -->
+  <section class="pwa-section" id="instalar">
+    <div class="pwa-inner">
+      <div class="pwa-head">
+        <div class="eyebrow">Web App</div>
+        <h2 class="s-h2">Instale no seu celular<br><em>ou computador</em></h2>
+        <p class="s-sub">O painel MONITECH funciona como um app instalável — sem precisar de loja de aplicativos. Adicione à tela inicial e acesse com um toque.</p>
+      </div>
+
+      <div class="pwa-grid">
+        <!-- Android -->
+        <div class="pwa-card reveal">
+          <div class="pwa-card-icon"><i data-lucide="smartphone"></i></div>
+          <div class="pwa-platform">Android</div>
+          <ol class="pwa-steps">
+            <li>Abra o painel no <strong>Chrome</strong></li>
+            <li>Toque no menu <strong>⋮</strong> (três pontos)</li>
+            <li>Selecione <strong>"Adicionar à tela inicial"</strong></li>
+            <li>Confirme — aparece como app!</li>
+          </ol>
+        </div>
+
+        <!-- iPhone -->
+        <div class="pwa-card reveal">
+          <div class="pwa-card-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          </div>
+          <div class="pwa-platform">iPhone / iOS</div>
+          <ol class="pwa-steps">
+            <li>Abra o painel no <strong>Safari</strong></li>
+            <li>Toque no botão <strong>compartilhar ⬆</strong></li>
+            <li>Selecione <strong>"Adicionar à Tela de Início"</strong></li>
+            <li>Confirme — aparece como app!</li>
+          </ol>
+        </div>
+
+        <!-- Desktop -->
+        <div class="pwa-card reveal">
+          <div class="pwa-card-icon"><i data-lucide="monitor"></i></div>
+          <div class="pwa-platform">Desktop (Chrome / Edge)</div>
+          <ol class="pwa-steps">
+            <li>Abra o painel no <strong>Chrome ou Edge</strong></li>
+            <li>Clique no ícone <strong>⊕</strong> na barra de endereço</li>
+            <li>Clique em <strong>"Instalar"</strong></li>
+            <li>Abre como janela própria, sem abas!</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="pwa-action">
+        <a class="btn-primary" href="./system/system.html" target="_blank">Abrir Painel e Instalar →</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════ CTA ══════════ -->
+  <section class="cta-section">
+    <div class="cta-orb-1"></div>
+    <div class="cta-orb-2"></div>
+    <div class="cta-inner">
+      <div class="cta-label">Pronto para economizar?</div>
+      <h2 class="cta-h2">Comece agora.<br><em>100% gratuito.</em></h2>
+      <p class="cta-p">Não precisa de cartão de crédito. Sem assinatura. Sem propagandas. Instale o Dispositivo MONITECH, crie sua conta e comece a monitorar sua energia em tempo real — tudo controlado por você.</p>
+      <div class="cta-btns">
+        <a class="btn-cta-primary" href="./system/system.html">Criar Conta Gratuita Agora</a>
+        <a class="btn-cta-ghost" href="#como-funciona">Ver Como Instalar</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════ FOOTER ══════════ -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-about">
+        <div class="nav-logo">
+          <img src="/assets/images/logo.svg" alt="MONITECH" style="height:32px;width:auto;">
+          <span class="nav-brand">MONITECH</span>
+        </div>
+        <p>Plataforma gratuita de monitoramento de energia residencial. Instale o Dispositivo MONITECH em casa, crie sua conta e acompanhe seu consumo em tempo real com gráficos, alertas inteligentes e metas de economia.</p>
+      </div>
+      <div>
+        <div class="footer-col-head">Comece Aqui</div>
+        <a class="f-link" href="#funcionalidades">Funcionalidades</a>
+        <a class="f-link" href="#como-funciona">Como Funciona</a>
+        <a class="f-link" href="#protocolos">Conectividade</a>
+        <a class="f-link" href="#hardware">O Dispositivo</a>
+      </div>
+      <div>
+        <div class="footer-col-head">Suporte</div>
+        <a class="f-link" href="./pages-documents/docs.html">Documentação</a>
+        <a class="f-link" href="./pages-documents/docs.html#instalacao">Guia de Instalação</a>
+        <a class="f-link" href="./pages-documents/changelog.html">Novidades</a>
+        <a class="f-link" href="./pages-documents/contato.html">Fale Conosco</a>
+      </div>
+      <div>
+        <div class="footer-col-head">Empresa</div>
+        <a class="f-link" href="./pages-documents/contato.html">Contato</a>
+        <a class="f-link" href="#">Sobre</a>
+        <a class="f-link" href="#">Blog</a>
+        <a class="f-link" href="#">Comunidade</a>
+      </div>
+    </div>
+    <div class="footer-bot">
+      <span class="f-copy">© 2026 MONITECH. Todos os direitos reservados.</span>
+      <span class="f-version">v2.1.0 — Monitore. Economize. Controle.</span>
+    </div>
+  </footer>
+
+
+  <!--SCRIPTs -->
+  <script src="./website/js/index.js"></script>
+</body>
+
+</html>
+

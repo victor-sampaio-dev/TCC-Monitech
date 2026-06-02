@@ -1,0 +1,6 @@
+@Monitech.API_HostAddress = http://localhost:5051
+
+GET {{Monitech.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

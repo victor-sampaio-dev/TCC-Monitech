@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redefinir Senha — MONITECH</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0a0f1e;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      padding: 24px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: #111827;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, #0057ff 0%, #0ea5e9 100%);
+      padding: 28px 32px;
+      text-align: center;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span { opacity: 0.75; font-size: 13px; font-weight: 400; display: block; margin-top: 4px; }
+
+    .card-body { padding: 36px 32px; }
+
+    .icon-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    .icon-wrap svg {
+      color: #0ea5e9;
+      opacity: 0.9;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 20px;
+      font-weight: 700;
+      color: #f0f4ff;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: #94a3b8;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    /* ── Estado: solicitar e-mail ── */
+    #step-email, #step-nova, #step-ok, #step-erro { display: none; }
+    #step-email.ativo, #step-nova.ativo, #step-ok.ativo, #step-erro.ativo { display: block; }
+
+    .form-group { margin-bottom: 18px; }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1.5px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 14px;
+      color: #f0f4ff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus { border-color: #0ea5e9; }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      letter-spacing: 0.02em;
+    }
+
+    .btn:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0057ff, #0ea5e9);
+      color: #fff;
+      margin-top: 4px;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1.5px solid rgba(255,255,255,0.12);
+      color: #94a3b8;
+      margin-top: 12px;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: #64748b;
+      text-align: center;
+      margin-top: 16px;
+      line-height: 1.6;
+    }
+
+    .hint a { color: #0ea5e9; text-decoration: none; }
+    .hint a:hover { text-decoration: underline; }
+
+    /* Toast */
+    #toast {
+      display: none;
+      margin-bottom: 18px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    #toast.erro   { background: rgba(239,68,68,0.15);  border: 1px solid rgba(239,68,68,0.35);  color: #fca5a5; }
+    #toast.aviso  { background: rgba(234,179,8,0.12);  border: 1px solid rgba(234,179,8,0.3);   color: #fde68a; }
+    #toast.sucesso{ background: rgba(34,197,94,0.12);  border: 1px solid rgba(34,197,94,0.3);   color: #86efac; }
+
+    /* Ícones de estado */
+    .state-icon {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .state-icon.ok  { color: #22c55e; }
+    .state-icon.err { color: #ef4444; }
+
+    /* Barra de força da senha */
+    .pass-strength { margin-top: 6px; height: 4px; border-radius: 4px; background: rgba(255,255,255,0.08); overflow: hidden; }
+    .pass-strength-bar { height: 100%; width: 0; border-radius: 4px; transition: width 0.3s, background 0.3s; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="card-header">
+    <div class="logo">⚡ MONITECH <span>Redefinição de Senha</span></div>
+  </div>
+
+  <div class="card-body">
+    <div id="toast"></div>
+
+    <!-- PASSO 1: pedir e-mail (quando não há token na URL) -->
+    <div id="step-email">
+      <div class="icon-wrap">
+        <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+          <polyline points="22,6 12,13 2,6"></polyline>
+        </svg>
+      </div>
+      <h1>Recuperar senha</h1>
+      <p class="subtitle">Informe seu e-mail e enviaremos um link para redefinir sua senha.</p>
+      <div class="form-group">
+        <label for="email-input">E-mail cadastrado</label>
+        <input type="email" id="email-input" placeholder="seu@email.com">
+      </div>
+      <button class="btn btn-primary" id="btn-enviar" onclick="enviarLink()">Enviar link de recuperação</button>
+      <p class="hint" style="margin-top:18px;"><a href="../system/system.html">← Voltar ao login</a></p>
+    </div>
+
+    <!-- PASSO 2: nova senha (quando há token na URL) -->
+    <div id="step-nova">
+      <div class="icon-wrap">
+        <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+      </div>
+      <h1>Nova senha</h1>
+      <p class="subtitle">Escolha uma senha forte com pelo menos 8 caracteres.</p>
+      <div class="form-group">
+        <label for="nova-senha">Nova senha</label>
+        <input type="password" id="nova-senha" placeholder="Mínimo 8 caracteres" oninput="atualizarForca(this.value)">
+        <div class="pass-strength"><div class="pass-strength-bar" id="pass-bar"></div></div>
+      </div>
+      <div class="form-group">
+        <label for="conf-senha">Confirmar nova senha</label>
+        <input type="password" id="conf-senha" placeholder="Repita a senha">
+      </div>
+      <button class="btn btn-primary" id="btn-salvar" onclick="salvarSenha()">Salvar nova senha</button>
+    </div>
+
+    <!-- PASSO 3: sucesso -->
+    <div id="step-ok">
+      <div class="state-icon ok">
+        <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+      </div>
+      <h1>Senha redefinida!</h1>
+      <p class="subtitle">Sua senha foi alterada com sucesso. Faça login com a nova senha.</p>
+      <a href="../system/system.html">
+        <button class="btn btn-primary">Ir para o login</button>
+      </a>
+    </div>
+
+    <!-- PASSO 4: link inválido / expirado -->
+    <div id="step-erro">
+      <div class="state-icon err">
+        <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </div>
+      <h1>Link inválido ou expirado</h1>
+      <p class="subtitle">Este link de recuperação é inválido ou expirou. Solicite um novo.</p>
+      <button class="btn btn-primary" onclick="mostrarPasso('email')">Solicitar novo link</button>
+      <a href="../system/system.html">
+        <button class="btn btn-ghost">Voltar ao login</button>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API = window.location.origin;
+
+  function mostrarPasso(passo) {
+    ['email','nova','ok','erro'].forEach(p => {
+      document.getElementById('step-' + p).classList.remove('ativo');
+    });
+    document.getElementById('step-' + passo).classList.add('ativo');
+  }
+
+  function mostrarToast(msg, tipo) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = tipo;
+    t.style.display = 'block';
+    setTimeout(() => { t.style.display = 'none'; }, 5000);
+  }
+
+  function atualizarForca(valor) {
+    const bar = document.getElementById('pass-bar');
+    const len = valor.length;
+    let pct = 0, cor = '#ef4444';
+    if (len >= 8)  { pct = 40; cor = '#f97316'; }
+    if (len >= 10) { pct = 65; cor = '#eab308'; }
+    if (len >= 12 && /[A-Z]/.test(valor) && /[0-9]/.test(valor)) { pct = 100; cor = '#22c55e'; }
+    bar.style.width = pct + '%';
+    bar.style.background = cor;
+  }
+
+  async function enviarLink() {
+    const email = document.getElementById('email-input').value.trim();
+    if (!email) { mostrarToast('Informe seu e-mail.', 'aviso'); return; }
+
+    const btn = document.getElementById('btn-enviar');
+    btn.textContent = 'Enviando...';
+    btn.disabled = true;
+
+    try {
+      const resp = await fetch(API + '/api/auth/esqueceu-senha', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ email })
+      });
+
+      if (resp.ok) {
+        mostrarToast('Se o e-mail existir em nossa base, você receberá o link em breve.', 'sucesso');
+      } else {
+        const dados = await resp.json().catch(() => ({}));
+        mostrarToast(dados.erro || 'Erro ao processar solicitação. Tente novamente.', 'erro');
+      }
+    } catch (err) {
+      console.error('[enviarLink]', err);
+      mostrarToast('Não foi possível conectar ao servidor. Verifique se o sistema está rodando.', 'erro');
+    }
+
+    btn.textContent = 'Enviar link de recuperação';
+    btn.disabled = false;
+  }
+
+  async function salvarSenha() {
+    const novaSenha = document.getElementById('nova-senha').value;
+    const confSenha = document.getElementById('conf-senha').value;
+
+    if (novaSenha.length < 8) { mostrarToast('A senha deve ter pelo menos 8 caracteres.', 'erro'); return; }
+    if (novaSenha !== confSenha) { mostrarToast('As senhas não coincidem.', 'erro'); return; }
+
+    const token = new URLSearchParams(window.location.search).get('token');
+    if (!token) { mostrarPasso('erro'); return; }
+
+    const btn = document.getElementById('btn-salvar');
+    btn.textContent = 'Salvando...';
+    btn.disabled = true;
+
+    try {
+      const resp = await fetch(API + '/api/auth/resetar-senha', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, novaSenha })
+      });
+      const dados = await resp.json();
+
+      if (dados.sucesso) {
+        mostrarPasso('ok');
+      } else {
+        mostrarPasso('erro');
+      }
+    } catch (_) {
+      mostrarToast('Erro de conexão. Tente novamente.', 'erro');
+      btn.textContent = 'Salvar nova senha';
+      btn.disabled = false;
+    }
+  }
+
+  // Ao carregar: decide qual passo mostrar
+  window.addEventListener('DOMContentLoaded', function () {
+    const token = new URLSearchParams(window.location.search).get('token');
+    if (token) {
+      mostrarPasso('nova');
+    } else {
+      mostrarPasso('email');
+    }
+  });
+</script>
+</body>
+</html>

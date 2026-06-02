@@ -1,0 +1,135 @@
+/**
+ * PROFILE PHOTO STYLES
+ * Estilos adicionais para melhor exibição de fotos de perfil
+ * Funciona com profile-photo-manager.js
+ */
+
+/* Avatar com foto - melhora a qualidade de visualização */
+.user-avatar img,
+.user-dropdown-avatar-lg img,
+.user-profile-avatar img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  border-radius: 50% !important;
+  display: block !important;
+}
+
+/* Melhorar aparência do avatar em navbar quando tem foto */
+#user-menu-btn {
+  overflow: hidden !important;
+  background-size: cover !important;
+  background-position: center !important;
+}
+
+#user-menu-btn:has(img) {
+  background: transparent !important;
+}
+
+/* Avatar do dropdown com foto */
+#user-dropdown-avatar-lg {
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+#user-dropdown-avatar-lg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+  border-radius: 50%;
+}
+
+#user-dropdown-avatar-lg img {
+  z-index: 0;
+}
+
+/* Animação de carregamento */
+@keyframes photoLoading {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.user-avatar img,
+.user-dropdown-avatar-lg img,
+.user-profile-avatar img {
+  animation: photoLoading 0.4s ease-out;
+}
+
+/* Melhorar sombra para fotos */
+#user-menu-btn.active,
+#user-menu-btn:hover {
+  box-shadow: 0 8px 24px rgba(0, 87, 255, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Tamanho mínimo para garantir visibilidade */
+.user-avatar {
+  min-width: 44px !important;
+  min-height: 44px !important;
+}
+
+.user-dropdown-avatar-lg {
+  min-width: 100px !important;
+  min-height: 100px !important;
+}
+
+/* Mobile - aumentar tamanho do avatar em navbar */
+@media (max-width: 768px) {
+  .user-avatar {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+  }
+
+  #user-menu-btn {
+    width: 48px !important;
+    height: 48px !important;
+  }
+}
+
+/* Focus states para acessibilidade */
+#user-menu-btn:focus-visible {
+  outline: 2px solid var(--electric, #00d4ff) !important;
+  outline-offset: 2px !important;
+}
+
+/* Ensure image doesn't get distorted */
+.user-avatar,
+.user-dropdown-avatar-lg,
+.user-profile-avatar {
+  aspect-ratio: 1 / 1 !important;
+}
+
+/* Melhorar transição quando foto muda */
+.user-avatar,
+.user-dropdown-avatar-lg,
+.user-profile-avatar {
+  transition: background-image 0.3s ease-in-out, filter 0.2s ease;
+}
+
+/* Efeito hover para fotos */
+.user-avatar:hover,
+.user-dropdown-avatar-lg:hover,
+.user-profile-avatar:hover {
+  filter: brightness(1.1);
+}
+
+.user-avatar:active,
+.user-dropdown-avatar-lg:active,
+.user-profile-avatar:active {
+  filter: brightness(0.95);
+}

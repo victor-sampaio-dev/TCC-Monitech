@@ -1,0 +1,39 @@
+{
+  "name": "MONITECH — Monitor de Energia",
+  "short_name": "MONITECH",
+  "description": "Monitore o consumo de energia residencial em tempo real.",
+  "start_url": "/system/system.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0a0f1e",
+  "theme_color": "#0057ff",
+  "orientation": "portrait-primary",
+  "lang": "pt-BR",
+  "categories": ["utilities"],
+  "icons": [
+    {
+      "src": "/assets/images/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/images/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "url": "/system/system.html",
+      "description": "Ver consumo em tempo real"
+    },
+    {
+      "name": "Alertas",
+      "url": "/system/system.html",
+      "description": "Ver alertas ativos"
+    }
+  ]
+}

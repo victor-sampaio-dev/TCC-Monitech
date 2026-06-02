@@ -1,0 +1,66 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Monitech.API</RootNamespace>
+    <AssemblyName>Monitech.API</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- MySQL via Pomelo (suporte oficial ao MySQL 8 + .NET 8) -->
+    <PackageReference Include="MailKit" Version="4.16.0" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10" />
+  
+    <!-- Autenticação JWT (.NET 8 compatible) -->
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.10" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.0.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.1" />
+
+    <!-- Hash de senha -->
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+
+    <!-- Verificação de ID Token Google OAuth -->
+    <PackageReference Include="Google.Apis.Auth" Version="1.68.0" />
+
+    <!-- Swagger (.NET 8 compatible) -->
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+</Project>
+
+<!--
+══════════════════════════════════════════════════════════════
+COMO CRIAR DO ZERO (terminal):
+══════════════════════════════════════════════════════════════
+
+1. Instale o .NET 8 SDK → https://dotnet.microsoft.com/download
+
+2. Crie e configure:
+   dotnet new webapi -n Monitech.API
+   cd Monitech.API
+   dotnet add package Pomelo.EntityFrameworkCore.MySql
+   dotnet add package Microsoft.EntityFrameworkCore.Tools
+   dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer
+   dotnet add package Microsoft.IdentityModel.Tokens
+   dotnet add package System.IdentityModel.Tokens.Jwt
+   dotnet add package BCrypt.Net-Next
+   dotnet add package Swashbuckle.AspNetCore
+
+3. Copie os arquivos deste projeto para dentro da pasta criada
+
+4. Coloque o frontend na pasta wwwroot/:
+   mkdir wwwroot
+   cp -r ../front/* wwwroot/
+
+5. Configure appsettings.json com sua senha MySQL
+
+6. Execute o banco: mysql -u root -p < database/banco.sql
+
+7. Rode: dotnet run
+
+8. Acesse:
+   http://localhost:5000          → frontend MONITECH
+   http://localhost:5000/swagger  → documentação da API
+══════════════════════════════════════════════════════════════
+-->

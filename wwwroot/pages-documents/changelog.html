@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Changelog — MONITECH</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <!-- Theme Loader - DEVE estar antes de qualquer CSS -->
+  <script src="../assets/js/shared/theme-loader.js"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/shared/navbar.css">
+  <link rel="stylesheet" href="../assets/css/shared/userMenu.css">
+  <link rel="stylesheet" href="../assets/css/shared/profile-photo-styles.css">
+  <link rel="stylesheet" href="../assets/css/shared/auth-modal.css">
+  <link rel="stylesheet" href="../website/css/changelog.css">
+  <link rel="stylesheet" href="../website/css/theme-colors.css">
+  <link rel="stylesheet" href="../assets/css/shared/theme-toggle.css">
+  <link rel="stylesheet" href="../assets/css/shared/icons.css">
+  <script src="../assets/js/vendor/lucide.min.js" defer></script>
+  <script src="../assets/js/shared/navbar.js" defer></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="../assets/js/shared/auth-modal.js" defer></script>
+  <script src="../assets/js/shared/profile-photo-manager.js" defer></script>
+  <script src="../assets/js/shared/magnific-icons-loader.js" defer></script>
+  <script src="../assets/js/pages/settings.js" defer></script>
+  <script src="../assets/js/shared/theme-toggle.js" defer></script>
+  <script src="../assets/js/shared/user-info-panel.js" defer></script>
+
+<body>
+
+  <nav id="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="../index.html">
+        <img src="/assets/images/logo.svg" alt="MONITECH" style="height:32px;width:auto;">
+        <span class="nav-brand">MONITECH</span>
+      </a>
+
+      <!-- Botão do menu hambúrguer -->
+      <button type="button" class="mobile-menu-btn" id="mobile-menu-btn" onclick="alternarMenuMobile()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <!-- Menu mobile -->
+      <div class="nav-menu-mobile" id="nav-menu-mobile">
+        <div class="nav-links">
+          <a class="nav-link" href="../index.html">
+            <span class="mmenu-icon"><i data-lucide="home"></i></span>
+            <span class="mmenu-text">Início</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a class="nav-link" href="./docs.html">
+            <span class="mmenu-icon"><i data-lucide="book-open"></i></span>
+            <span class="mmenu-text">Documentação</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a class="nav-link active" href="changelog.html">
+            <span class="mmenu-icon"><i data-lucide="list-checks"></i></span>
+            <span class="mmenu-text">Changelog</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a class="nav-link" href="./contato.html">
+            <span class="mmenu-icon"><i data-lucide="mail"></i></span>
+            <span class="mmenu-text">Contato</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a class="nav-link" href="../website/compra.html">
+            <span class="mmenu-icon"><i data-lucide="shopping-cart"></i></span>
+            <span class="mmenu-text">Comprar</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+        </div>
+        <div class="nav-menu-footer">
+          <a class="btn-nav-solid-mobile" target="_blank" href="../system/system.html">
+            <i data-lucide="layout-dashboard"></i>
+            Acessar Painel
+          </a>
+        </div>
+      </div>
+
+      <!-- Menu desktop -->
+      <div class="nav-links nav-links-desktop">
+        <a class="nav-link" href="../index.html">Início</a>
+        <a class="nav-link" href="./docs.html">Documentação</a>
+        <a class="nav-link active" href="changelog.html">Changelog</a>
+        <a class="nav-link" href="./contato.html">Contato</a>
+        <a class="nav-link" href="../website/compra.html">Comprar</a>
+      </div>
+
+      <div class="nav-actions">
+        <div class="nav-end">
+          <a class="btn-nav-solid" target="_blank" href="../system/system.html">Acessar Painel →</a>
+        </div>
+
+        <!-- Toggle de Tema -->
+        <button class="theme-toggle-btn" id="theme-toggle-btn" title="Alternar tema">
+          <span class="theme-toggle-icon"></span>
+        </button>
+
+        <div class="user-menu-wrapper">
+          <button class="user-menu-btn" id="user-menu-btn" onclick="toggleUserMenu()">
+            <div class="user-avatar">U</div>
+          </button>
+          <div class="user-dropdown" id="user-dropdown">
+            <!-- Header com dados do usuário (aparece quando logado) -->
+            <div class="user-dropdown-header" id="user-dropdown-header" style="display:none !important;">
+              <div class="user-dropdown-avatar-lg" id="user-dropdown-avatar-lg">U</div>
+              <div class="user-dropdown-info">
+                <div class="user-dropdown-nome" id="user-dropdown-nome">Usuário</div>
+                <div class="user-dropdown-email" id="user-dropdown-email">email@example.com</div>
+              </div>
+            </div>
+            <div class="user-dropdown-divider" id="user-dropdown-divider" style="display:none !important;"></div>
+            
+            <div class="dropdown-auth-section">
+              <a href="#" id="dropdown-login" onclick="openAuthModal(); event.preventDefault();" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                Entrar
+              </a>
+              <a href="#" id="dropdown-cadastro" onclick="openAuthModal(); switchAuthTab('signup'); event.preventDefault();" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                Criar conta
+              </a>
+            </div>
+            <a href="../website/settings.html" id="dropdown-config" class="user-dropdown-item" style="display:none !important;">Configurações</a>
+            <a href="../pages-documents/docs.html" id="dropdown-sobre" class="user-dropdown-item" style="display:none !important;">Sobre</a>
+            <button id="dropdown-logout" class="user-dropdown-item user-dropdown-logout" onclick="logout()" style="display:none !important;">Sair</button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Backdrop para o menu mobile -->
+  <div class="nav-backdrop" id="nav-backdrop" onclick="alternarMenuMobile()"></div>
+
+  <!-- Modal de Autenticação -->
+  <div class="auth-backdrop" id="auth-backdrop">
+    <div class="auth-modal">
+      <!-- Botão fechar -->
+      <button class="auth-close-btn" onclick="closeAuthModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <!-- Header -->
+      <div class="auth-header">
+        <h2>Bem-vindo</h2>
+        <p>Acesse sua conta profissional MONITECH</p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab" data-tab="login" onclick="switchAuthTab('login')">Login</button>
+        <button class="auth-tab" data-tab="signup" onclick="switchAuthTab('signup')">Cadastro</button>
+      </div>
+
+      <!-- Conteúdo: Login -->
+      <div class="auth-content" id="auth-login">
+        <!-- Login com Google -->
+        <button class="auth-social-btn" id="google-login-btn" onclick="loginWithGoogle()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            <path d="M1 1h22v22H1z" fill="none"/>
+          </svg>
+          Entrar com Google
+        </button>
+
+        <!-- Divisor -->
+        <div class="auth-divider">ou</div>
+
+        <!-- Formulário de Login -->
+        <form class="auth-form" id="login-form" onsubmit="loginWithEmail(event)">
+          <div class="form-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" placeholder="seu@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="login-password">Senha</label>
+            <input type="password" id="login-password" placeholder="••••••••" required>
+          </div>
+
+          <button type="submit" class="auth-submit-btn">Login</button>
+        </form>
+
+        <!-- Links de rodapé -->
+        <div class="auth-footer">
+          <a href="#" onclick="event.preventDefault(); alert('Recuperação de senha será implementada');"> Esqueceu a senha?</a>
+        </div>
+      </div>
+
+      <!-- Conteúdo: Cadastro -->
+      <div class="auth-content" id="auth-signup">
+        <!-- Cadastro com Google -->
+        <button class="auth-social-btn" id="google-signup-btn" onclick="signupWithGoogle()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            <path d="M1 1h22v22H1z" fill="none"/>
+          </svg>
+          Cadastrar com Google
+        </button>
+
+        <!-- Divisor -->
+        <div class="auth-divider">ou</div>
+
+        <!-- Formulário de Cadastro -->
+        <form class="auth-form" id="signup-form" onsubmit="signupWithEmail(event)">
+          <div class="form-group">
+            <label for="signup-name">Nome Completo</label>
+            <input type="text" id="signup-name" placeholder="Seu nome" required>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-email">Email</label>
+            <input type="email" id="signup-email" placeholder="seu@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-password">Senha</label>
+            <input type="password" id="signup-password" placeholder="••••••••" required>
+          </div>
+
+          <div class="form-checkbox">
+            <input type="checkbox" id="signup-terms" required>
+            <label for="signup-terms">Concordo com os <a href="#" onclick="event.preventDefault();">Termos de Serviço</a></label>
+          </div>
+
+          <button type="submit" class="auth-submit-btn">Criar Conta</button>
+        </form>
+
+        <!-- Links de rodapé -->
+        <div class="auth-footer">
+          Já tem uma conta? <a href="#" onclick="switchAuthTab('login');">Faça login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <div class="page-eyebrow"><i data-lucide="git-branch"></i> Histórico de versões</div>
+      <h1>Changelog</h1>
+      <p>Todas as novidades, melhorias e correções do MONITECH, organizadas por versão.</p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-val">5</div>
+          <div class="hero-stat-key">Versões</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-val">22</div>
+          <div class="hero-stat-key">Recursos</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-val">8</div>
+          <div class="hero-stat-key">Correções</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-val">2</div>
+          <div class="hero-stat-key">Breaking</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick nav entre versões -->
+  <nav class="version-nav">
+    <span class="ver-nav-label">Versões:</span>
+    <a class="ver-btn ver-btn--latest" href="#v2-2-0">v2.2.0 · Atual</a>
+    <a class="ver-btn" href="#v2-1-0">v2.1.0</a>
+    <a class="ver-btn" href="#v2-0-0">v2.0.0</a>
+    <a class="ver-btn" href="#v1-2-0">v1.2.0</a>
+    <a class="ver-btn" href="#v1-0-0">v1.0.0</a>
+  </nav>
+
+  <div class="changelog-wrap">
+
+    <!-- v2.2.0 -->
+    <div class="release" id="v2-2-0">
+      <div class="release-meta">
+        <div class="release-ver">v2.2.0</div>
+        <div class="release-date">25 Mai 2026</div>
+        <div class="release-badge badge-latest"><i data-lucide="zap"></i> Atual</div>
+      </div>
+      <div class="release-body">
+        <div class="release-summary">
+          Lançamento do sistema de notificações por e-mail, alertas configuráveis por conta e reformulação completa da interface de configurações — tanto na landing page quanto no painel do sistema.
+        </div>
+
+        <div class="change-group">
+          <div class="change-group-title"><span class="cg-dot cg-dot--new"></span><span class="change-title--new">Novidades</span></div>
+          <div class="change-list">
+            <div class="change-item"><span class="change-tag tag-new">novo</span>
+              <div class="change-text"><strong>Alertas por E-mail</strong> — O sistema envia e-mails automáticos ao detectar anomalias de consumo. Discrepância acima de 40% dispara alerta crítico; entre 15% e 40% dispara aviso.</div>
+            </div>
+            <div class="change-item"><span class="change-tag tag-new">novo</span>
+              <div class="change-text"><strong>Preferências de Notificação por Conta</strong> — Tabela <code>notificacoes_usuario</code> armazena por usuário quais alertas de e-mail estão habilitados, com endpoints <code>GET/PUT /api/usuario/notificacoes</code>.</div>
+            </div>
+            <div class="change-item"><span class="change-tag tag-new">novo</span>
+              <div class="change-text"><strong>Configuração de Limites via API</strong> — <code>GET/POST /api/alertas/config</code> permite salvar limites personalizados de kWh/dia, custo mensal e faixa de tensão segura por residência.</div>
+            </div>
+            <div class="change-item"><span class="change-tag tag-new">novo</span>
+              <div class="change-text"><strong>Template de E-mail HTML</strong> — Alertas enviados com template profissional, color-coded por tipo (crítico, aviso, informativo), via MailKit SMTP.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="change-group">
+          <div class="change-group-title"><span class="cg-dot cg-dot--imp"></span><span class="change-title--imp">Melhorias</span></div>
+          <div class="change-list">
+            <div class="change-item"><span class="change-tag tag-imp">melhoria</span>
+              <div class="change-text"><strong>Configurações da Landing Page reformuladas</strong> — Novo hero com gradient, ícones Lucide nos card labels, tipografia refinada com Syne + IBM Plex. Suporte completo ao tema escuro.</div>
+            </div>
+            <div class="change-item"><span class="change-tag tag-imp">melhoria</span>
+              <div class="change-text">Preferências de notificação da landing e do painel agora compartilham o mesmo backend — alterações em qualquer interface são refletidas em todas as outras automaticamente.</div>
+            </div>
+            <div class="change-item"><span class="change-tag tag-imp">melhoria</span>
+              <div class="change-text">Anti-spam integrado nos alertas por e-mail — cooldown de 1 hora para alertas de consumo e 2 horas para anomalias, evitando flood de mensagens.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- v2.1.0 -->
+    <div class="release" id="v2-1-0">
+      <div class="release-meta">
+        <div class="release-ver">v2.1.0</div>
+        <div class="release-date">19 Mar 2026</div>
+        <div class="release-badge badge-stable">Estável</div>
+      </div>
+      <div class="release-body">
+        <div class="release-summary">
+          Versão focada em melhorias de experiência — novo sistema de temas claro/escuro, aba de Personalização nas
+          configurações e refinamentos de performance no osciloscópio ao vivo.
+        </div>
+
+        <div class="change-group">
+          <div class="change-group-title"><span class="cg-dot cg-dot--new"></span><span
+              class="change-title--new">Novidades</span></div>
+          <div class="change-list">
+            <div class="change-item"><span class="change-tag tag-new">novo</span>
+              <div class="change-text"><strong>Tema Claro / Escuro</strong> — Seletor de tema na aba Personalização das
+                configurações. A preferência é salva no localStorage e aplicada automaticamente ao abrir o painel.</div>
+            </div>
+            <div class="change-item"><span class="change-tag tag-new">novo</span>
+              <div class="change-text"><strong>Aba Personalização</strong> — Nova seção nas configurações com cards de
+                pré-visualização do tema, acesso rápido por clique.</div>
+            </div>
+            <div class="change-item"><span class="change-tag tag-new">novo</span>
+              <div class="change-text"><strong>Site Institucional</strong> — Landing page pública com documentação,
+                changelog e contato. Design responsivo com tema claro profissional.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="change-group">
+          <div class="change-group-title"><span class="cg-dot cg-dot--imp"></span><span
+              class="change-title--imp">Melhorias</span></div>
+          <div class="change-list">
+            <div class="change-item"><span class="change-tag tag-imp">melhoria</span>
+              <div class="change-text">Osciloscópio ao vivo com interpolação suave entre leituras — reduz o
+                escalonamento visual das ondas.</div>
+            </div>
+            <div class="change-item"><span class="change-tag tag-imp">melhoria</span>
+              <div class="change-text">Correção de encoding UTF-8 aplicada automaticamente em toda troca de aba e
+                renderização de modal.</div>
+            </div>
+            <div class="change-item"><span class="change-tag tag-imp">melhoria</span>
+              <div class="change-text">Recalculo automático dos gráficos ativos ao aplicar o tema, evitando
+                inconsistência de cores entre Chart.js e CSS.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="change-group">
+          <div class="change-group-title"><span class="cg-dot cg-dot--fix"></span><span
+              class="change-title--fix">Correções</span></div>
+          <div class="change-list">
+            <div class="change-item"><span class="change-tag tag-fix">fix</span>
+              <div class="change-text">Corrido bug onde o menu dropdown do usuário não fechava ao clicar fora em
+                dispositivos touch.</div>
+            </div>
+            <div class="change-item"><span class="change-tag tag-fix">fix</span>
+              <div class="change-text">Overlay do gráfico ESP32 não reaparecia corretamente após desconexão em modo HTTP
+                Polling.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- v2.0.0 -->
+    <div class="release" id="v2-0-0">
+      <div class="release-meta">
+        <div class="release-ver">v2.0.0</div>
+        <div class="release-date">01 Mar 2026</div>
+        <div class="release-badge badge-stable">Estável</div>
+      </div>
+      <div class="release-body">
+        <div class="release-summary">
+          Reescrita completa da interface — novo design system, suporte a MQTT e Serial/USB, terminal de log integrado,
+          osciloscópio em canvas e reestruturação do motor de conexão ESP32.
+        </div>
+
+        <div class="change-group">
+          <div class="change-group-title"><span class="cg-dot cg-dot--new"></span><span
+              class="change-title--new">Novidades</span></div>
+          <div class="change-list">
+            <div class="change-item"><span class="change-tag tag-new">novo</span>
+              <div class="change-text"><strong>Protocolo MQTT</strong> — Suporte completo a brokers públicos e privados
+                com autenticação por usuário/senha.</div>
+            </div>
+            <div class="change-item"><span class="change-tag tag-new">novo</span>
+              <div class="change-text"><strong>Protocolo Serial/USB</strong> — Comunicação direta via Web Serial API sem
+                necessidade de rede Wi-Fi.</div>
+            </div>
+            <div class="change-item"><span class="change-tag tag-new">novo</span>
+              <div class="change-text"><strong>Terminal de Log</strong> — Janela de log em tempo real na aba ESP32, com
+                filtro por nível e rolagem automática.</div>
+            </div>
+            <div class="change-item"><span class="change-tag tag-new">novo</span>
+              <div class="change-text"><strong>Gráfico ESP32 ao vivo</strong> — Canvas com onda em tempo real,
+                selecionável entre Volts, Amperes e Watts.</div>
+            </div>
+            <div class="change-item"><span class="change-tag tag-new">novo</span>
+              <div class="change-text"><strong>Painel de informações do hardware</strong> — Exibe firmware, Chip ID, IP,
+                SSID, sensor e heap memory ao conectar.</div>
+            </div>
+            <div class="change-item"><span class="change-tag tag-new">novo</span>
+              <div class="change-text"><strong>Planta Interativa</strong> — Mapa de calor da residência com consumo por
+                cômodo em tempo real.</div>
+            </div>
+            <div class="change-item"><span class="change-tag tag-new">novo</span>
+              <div class="change-text"><strong>Seção de Relatórios</strong> — Gráficos históricos de consumo, custo,
+                tensão e corrente com exportação JSON.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="change-group">
+          <div class="change-group-title"><span class="cg-dot cg-dot--brk"></span><span
+              class="change-title--brk">Breaking Changes</span></div>
+          <div class="change-list">
+            <div class="change-item"><span class="change-tag tag-brk">breaking</span>
+              <div class="change-text">O JSON enviado pelo ESP32 agora <strong>requer os campos <code>volts</code>, <code>amps</code> e <code>watts</code></strong>. Pacotes sem estes campos são ignorados silenciosamente.</div>
+            </div>
+            <div class="change-item"><span class="change-tag tag-brk">breaking</span>
+              <div class="change-text">A porta WebSocket padrão mudou de <code>:80</code> para <code>:81</code>. Atualize o firmware existente antes de conectar.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- v1.2.0 -->
+    <div class="release" id="v1-2-0">
+      <div class="release-meta">
+        <div class="release-ver">v1.2.0</div>
+        <div class="release-date">10 Fev 2026</div>
+        <div class="release-badge badge-legacy">Legado</div>
+      </div>
+      <div class="release-body">
+        <div class="release-summary">
+          Adicionados o sistema de alertas configuráveis, suporte a múltiplos cômodos e a tabela de dispositivos com
+          ações de ligar/desligar.
+        </div>
+        <div class="change-group">
+          <div class="change-group-title"><span class="cg-dot cg-dot--new"></span><span
+              class="change-title--new">Novidades</span></div>
+          <div class="change-list">
+            <div class="change-item"><span class="change-tag tag-new">novo</span>
+              <div class="change-text"><strong>Sistema de Alertas</strong> — Configure limites de kWh, custo mensal e
+                faixa de tensão. Alertas classificados por criticidade.</div>
+            </div>
+            <div class="change-item"><span class="change-tag tag-new">novo</span>
+              <div class="change-text"><strong>Gestão de Cômodos</strong> — Adicione, edite e remova cômodos com tipo,
+                ícone e consumo individual.</div>
+            </div>
+            <div class="change-item"><span class="change-tag tag-new">novo</span>
+              <div class="change-text"><strong>Tabela de Dispositivos</strong> — Lista completa com status, potência,
+                kWh do dia e ações de ativar/desativar.</div>
+            </div>
+          </div>
+        </div>
+        <div class="change-group">
+          <div class="change-group-title"><span class="cg-dot cg-dot--fix"></span><span
+              class="change-title--fix">Correções</span></div>
+          <div class="change-list">
+            <div class="change-item"><span class="change-tag tag-fix">fix</span>
+              <div class="change-text">Corrigido cálculo de custo que dobrava o valor ao trocar de período no Dashboard.
+              </div>
+            </div>
+            <div class="change-item"><span class="change-tag tag-fix">fix</span>
+              <div class="change-text">Gráfico de pizza voltava a mostrar dados de sessão anterior após logout e novo
+                login.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- v1.0.0 -->
+    <div class="release" id="v1-0-0">
+      <div class="release-meta">
+        <div class="release-ver">v1.0.0</div>
+        <div class="release-date">19 Jan 2026</div>
+        <div class="release-badge badge-legacy">Legado</div>
+      </div>
+      <div class="release-body">
+        <div class="release-summary">
+          Lançamento inicial do MONITECH. Dashboard básico com leituras em tempo real via WebSocket e HTTP Polling,
+          cadastro de conta, onboarding de residência e gráficos de histórico.
+        </div>
+        <div class="change-group">
+          <div class="change-group-title"><span class="cg-dot cg-dot--new"></span><span
+              class="change-title--new">Lançamento Inicial</span></div>
+          <div class="change-list">
+            <div class="change-item"><span class="change-tag tag-new">novo</span>
+              <div class="change-text">Dashboard com 6 medidores circulares — Tensão, Corrente, Potência, FP,
+                Frequência, kWh.</div>
+            </div>
+            <div class="change-item"><span class="change-tag tag-new">novo</span>
+              <div class="change-text">Conexão ESP32 via WebSocket e HTTP Polling com terminal de status básico.</div>
+            </div>
+            <div class="change-item"><span class="change-tag tag-new">novo</span>
+              <div class="change-text">Fluxo de cadastro e onboarding de residência com configuração de cômodos e
+                dispositivos.</div>
+            </div>
+            <div class="change-item"><span class="change-tag tag-new">novo</span>
+              <div class="change-text">Gráficos Chart.js — consumo por hora, por cômodo (pizza) e histórico mensal.
+              </div>
+            </div>
+            <div class="change-item"><span class="change-tag tag-new">novo</span>
+              <div class="change-text">Código de referência de firmware para ESP32 + PZEM-004T disponível no painel.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBSCRIBE -->
+    <div class="subscribe-box">
+      <h3>Receba novas versões por e-mail</h3>
+      <p>Notificação gratuita sempre que uma nova versão for lançada. Sem spam.</p>
+      <div class="subscribe-form">
+        <input class="subscribe-input" type="email" placeholder="seu@email.com">
+        <button class="subscribe-btn" onclick="
+          this.textContent = 'Inscrito ✓';
+          this.style.background = 'var(--success, #4ECB71)';
+          this.style.color = '#fff';
+          this.disabled = true;
+        ">Inscrever</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 10);
+    });
+  </script>
+</body>
+
+</html>
+

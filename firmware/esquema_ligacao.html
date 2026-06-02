@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MONITECH — Esquema de Ligação</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; padding: 32px 24px; min-height: 100vh; }
+  h1 { text-align: center; font-size: 22px; letter-spacing: 3px; color: #00d4ff; margin-bottom: 8px; text-transform: uppercase; }
+  .subtitle { text-align: center; color: #64748b; font-size: 13px; margin-bottom: 40px; }
+
+  .box { border-radius: 12px; padding: 20px 16px; min-width: 130px; text-align: center; position: relative; }
+  .box-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.6; margin-bottom: 6px; }
+  .box-title { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+  .box-pin { font-size: 11px; padding: 3px 8px; border-radius: 4px; margin: 2px 0; display: inline-block; font-family: monospace; }
+
+  .box-entrada { background: #1e293b; border: 2px solid #f59e0b; }
+  .box-ct      { background: #1e293b; border: 2px solid #f97316; }
+  .box-pzem    { background: #1e293b; border: 2px solid #8b5cf6; }
+  .box-esp     { background: #1e293b; border: 2px solid #00d4ff; }
+  .box-server  { background: #1e293b; border: 2px solid #10b981; }
+
+  .pin-fase   { background: #7f1d1d; color: #fca5a5; }
+  .pin-neutro { background: #1e3a5f; color: #93c5fd; }
+  .pin-ct     { background: #431407; color: #fb923c; }
+  .pin-vcc    { background: #3b0764; color: #d8b4fe; }
+  .pin-gnd    { background: #1e293b; color: #94a3b8; border: 1px solid #334155; }
+  .pin-tx     { background: #064e3b; color: #6ee7b7; }
+  .pin-rx     { background: #134e4a; color: #5eead4; }
+  .pin-gpio   { background: #0c4a6e; color: #7dd3fc; }
+  .pin-wifi   { background: #064e3b; color: #6ee7b7; }
+
+  .diagram { display: flex; align-items: center; justify-content: center; gap: 0; flex-wrap: wrap; margin-bottom: 48px; }
+  .arrow { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 0 8px; min-width: 80px; }
+  .arrow-wire { display: flex; align-items: center; gap: 4px; font-size: 10px; white-space: nowrap; }
+  .arrow-line { height: 2px; width: 40px; display: inline-block; border-radius: 2px; }
+  .wire-fase   { background: #ef4444; } .wire-neutro { background: #3b82f6; }
+  .wire-ct     { background: #f97316; } .wire-vcc    { background: #a855f7; }
+  .wire-gnd    { background: #64748b; } .wire-tx     { background: #10b981; }
+  .wire-rx     { background: #14b8a6; } .wire-wifi   { background: #00d4ff; }
+  .wire-label  { color: #94a3b8; font-size: 10px; }
+
+  .notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 40px; }
+  .note { background: #1e293b; border-radius: 10px; padding: 16px; border-left: 3px solid #00d4ff; }
+  .note.warn { border-left-color: #f59e0b; } .note.ok { border-left-color: #10b981; } .note.info { border-left-color: #8b5cf6; }
+  .note-title { font-size: 12px; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .note p { font-size: 13px; color: #cbd5e1; line-height: 1.6; }
+  .note p + p { margin-top: 6px; }
+  .note code { background: #0f172a; padding: 1px 6px; border-radius: 4px; font-size: 12px; color: #00d4ff; }
+
+  .table-wrap { overflow-x: auto; margin-bottom: 40px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: #0f172a; padding: 10px 14px; text-align: left; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #64748b; }
+  td { padding: 10px 14px; border-bottom: 1px solid #1e293b; }
+  tr:hover td { background: #1e293b; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+
+  .alert-box { padding: 18px 20px; background: #1e293b; border-radius: 10px; margin-bottom: 16px; }
+  .alert-box table { font-size: 13px; }
+  .alert-box td { padding: 8px 12px; border-bottom: 1px solid #334155; color: #cbd5e1; }
+</style>
+</head>
+<body>
+
+<h1>Monitech — Esquema de Ligação</h1>
+<p class="subtitle">ESP32 + Leitor Monitech + Sensor Monitech | Entrada monofásica 220V</p>
+
+<!-- DIAGRAMA DE BLOCOS -->
+<div class="diagram">
+
+  <div class="box box-entrada">
+    <div class="box-label">Entrada</div>
+    <div class="box-title">⚡ Rede Elétrica</div>
+    <span class="box-pin pin-fase">FASE 220V</span><br>
+    <span class="box-pin pin-neutro">NEUTRO</span>
+  </div>
+
+  <div class="arrow">
+    <div class="arrow-wire"><span class="arrow-line wire-fase"></span><span>▶</span><span class="wire-label">Fase</span></div>
+  </div>
+
+  <div class="box box-ct">
+    <div class="box-label">Sensor Monitech</div>
+    <div class="box-title">🔌 Sensor Monitech</div>
+    <span class="box-pin pin-ct">abraça o fio fase</span><br><br>
+    <span class="box-pin pin-ct">CT1 →</span>
+    <span class="box-pin pin-ct">CT2 →</span>
+  </div>
+
+  <div class="arrow">
+    <div class="arrow-wire"><span class="arrow-line wire-ct"></span><span>▶</span><span class="wire-label">2 fios CT</span></div>
+    <div class="arrow-wire" style="margin-top:4px"><span class="arrow-line wire-fase"></span><span>▶</span><span class="wire-label">Fase</span></div>
+    <div class="arrow-wire" style="margin-top:4px"><span class="arrow-line wire-neutro"></span><span>▶</span><span class="wire-label">Neutro</span></div>
+  </div>
+
+  <div class="box box-pzem">
+    <div class="box-label">Leitor Monitech</div>
+    <div class="box-title">📊 Leitor Monitech</div>
+    <span class="box-pin pin-fase">L ← Fase</span><br>
+    <span class="box-pin pin-neutro">N ← Neutro</span><br>
+    <span class="box-pin pin-ct">CT1 ← CT</span><br>
+    <span class="box-pin pin-ct">CT2 ← CT</span><br><br>
+    <span class="box-pin pin-vcc">VCC 5V →</span><br>
+    <span class="box-pin pin-gnd">GND →</span><br>
+    <span class="box-pin pin-tx">TX →</span><br>
+    <span class="box-pin pin-rx">RX ←</span>
+  </div>
+
+  <div class="arrow">
+    <div class="arrow-wire"><span class="arrow-line wire-vcc"></span><span>▶</span><span class="wire-label">5V</span></div>
+    <div class="arrow-wire" style="margin-top:4px"><span class="arrow-line wire-gnd"></span><span>▶</span><span class="wire-label">GND</span></div>
+    <div class="arrow-wire" style="margin-top:4px"><span class="arrow-line wire-tx"></span><span>▶</span><span class="wire-label">TX→RX</span></div>
+    <div class="arrow-wire" style="margin-top:4px"><span class="arrow-line wire-rx"></span><span>▶</span><span class="wire-label">RX←TX</span></div>
+  </div>
+
+  <div class="box box-esp">
+    <div class="box-label">Microcontrolador</div>
+    <div class="box-title">🤖 ESP32</div>
+    <span class="box-pin pin-vcc">VIN (5V)</span><br>
+    <span class="box-pin pin-gnd">GND</span><br>
+    <span class="box-pin pin-gpio">GPIO16 (RX2)</span><br>
+    <span class="box-pin pin-gpio">GPIO17 (TX2)</span><br><br>
+    <span class="box-pin pin-wifi">Wi-Fi →</span>
+  </div>
+
+  <div class="arrow">
+    <div class="arrow-wire"><span class="arrow-line wire-wifi"></span><span>▶</span><span class="wire-label">HTTP POST</span></div>
+  </div>
+
+  <div class="box box-server">
+    <div class="box-label">Servidor</div>
+    <div class="box-title">🖥️ MONITECH</div>
+    <span class="box-pin pin-wifi">/api/medicoes</span><br><br>
+    <span style="font-size:11px;color:#64748b">10.0.0.156:5000</span>
+  </div>
+
+</div>
+
+<!-- TABELA DE CONEXÕES -->
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th><th>De</th><th>Terminal</th><th>Para</th><th>Terminal</th><th>Cor</th><th>Atenção</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Rede elétrica</td><td>FASE</td><td>Leitor Monitech</td><td>L</td><td><span class="dot" style="background:#ef4444"></span>Vermelho</td><td>⚠️ 220V</td></tr>
+      <tr><td>2</td><td>Rede elétrica</td><td>NEUTRO</td><td>Leitor Monitech</td><td>N</td><td><span class="dot" style="background:#3b82f6"></span>Azul</td><td>⚠️ 220V</td></tr>
+      <tr><td>3</td><td>Sensor Monitech</td><td>Fio 1</td><td>Leitor Monitech</td><td>CT1</td><td><span class="dot" style="background:#f97316"></span>Laranja</td><td>Baixa tensão</td></tr>
+      <tr><td>4</td><td>Sensor Monitech</td><td>Fio 2</td><td>Leitor Monitech</td><td>CT2</td><td><span class="dot" style="background:#f97316"></span>Laranja</td><td>Baixa tensão</td></tr>
+      <tr><td>5</td><td>Leitor Monitech</td><td>VCC (1º pino JST)</td><td>ESP32</td><td>VIN</td><td><span class="dot" style="background:#a855f7"></span>Roxo</td><td>Alimentação</td></tr>
+      <tr><td>6</td><td>Leitor Monitech</td><td>GND (4º pino JST)</td><td>ESP32</td><td>GND</td><td><span class="dot" style="background:#64748b"></span>Preto</td><td>Alimentação</td></tr>
+      <tr><td>7</td><td>Leitor Monitech</td><td>TX (3º pino JST)</td><td>ESP32</td><td>GPIO16 (RX2)</td><td><span class="dot" style="background:#10b981"></span>Verde</td><td>Comunicação</td></tr>
+      <tr><td>8</td><td>ESP32</td><td>GPIO17 (TX2)</td><td>Leitor Monitech</td><td>RX (2º pino JST)</td><td><span class="dot" style="background:#14b8a6"></span>Teal</td><td>Comunicação</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- NOTAS -->
+<div class="notes">
+  <div class="note warn">
+    <div class="note-title">⚠️ Alta Tensão</div>
+    <p>Os terminais <strong>L</strong> e <strong>N</strong> do Leitor Monitech estão conectados à rede elétrica (220V). Sempre desligue o disjuntor antes dessas conexões.</p>
+  </div>
+  <div class="note ok">
+    <div class="note-title">✅ Sensor Monitech — sem cortar fio</div>
+    <p>O Sensor Monitech <strong>abraça</strong> o fio fase por fora sem cortar. Coloque <strong>somente o fio fase</strong> dentro — não passe fase e neutro juntos.</p>
+  </div>
+  <div class="note info">
+    <div class="note-title">📡 Leitor Monitech → ESP32</div>
+    <p>TX do Leitor vai no <strong>GPIO16</strong> do ESP32 (RX2).</p>
+    <p>RX do Leitor vai no <strong>GPIO17</strong> do ESP32 (TX2).</p>
+    <p>TX e RX são cruzados — o que transmite de um lado é recebido pelo outro.</p>
+  </div>
+  <div class="note ok">
+    <div class="note-title">⚡ Por que mede 110V e 220V?</div>
+    <p>Todo consumo da casa passa pelo fio fase de entrada. O Sensor Monitech mede a corrente total e o Leitor Monitech mede os 220V, calculando <code>P = 220V × corrente</code>.</p>
+  </div>
+</div>
+
+<!-- NOTA FONTE -->
+<div class="alert-box" style="border-left: 4px solid #10b981;">
+  <div style="font-size:12px;font-weight:700;letter-spacing:1px;color:#10b981;margin-bottom:12px">🔋 FONTE DE ALIMENTAÇÃO 5V</div>
+  <table style="width:100%">
+    <tr><td><span class="dot" style="background:#ef4444"></span><strong>Fio VERMELHO (+5V)</strong></td><td style="color:#d8b4fe"><strong>VIN</strong> do ESP32</td><td style="color:#d8b4fe"><strong>VCC (1º pino JST)</strong> do Leitor Monitech</td></tr>
+    <tr><td><span class="dot" style="background:#334155"></span><strong>Fio PRETO (GND)</strong></td><td style="color:#94a3b8"><strong>GND</strong> do ESP32</td><td style="color:#94a3b8"><strong>GND (4º pino JST)</strong> do Leitor Monitech</td></tr>
+    <tr><td colspan="3" style="color:#fbbf24;font-size:12px;padding-top:10px">⚠️ GND compartilhado entre fonte, ESP32 e Leitor Monitech — obrigatório para comunicação funcionar</td></tr>
+  </table>
+</div>
+
+</body>
+</html>

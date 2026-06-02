@@ -1,0 +1,458 @@
+/* ============================================================
+   TEMA DO SITE INSTITUCIONAL — CORES E PERSONALIZAÇÃO
+   ============================================================ */
+
+/* ══════════════════════════════════════════════════════════
+   VARIÁVEIS GLOBAIS (não-temáticas)
+   ══════════════════════════════════════════════════════════ */
+:root {
+  --display: 'Syne', sans-serif;
+  --body:    'IBM Plex Sans', sans-serif;
+  --mono:    'IBM Plex Mono', monospace;
+  --r:    14px;
+  --r-sm:  8px;
+}
+
+/* ══════════════════════════════════════════════════════════
+   TEMA ESCURO — padrão
+   ══════════════════════════════════════════════════════════ */
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* ── Fundos (escuro → claro) ── */
+  --bg-void:    #182F48;
+  --bg-deep:    #1F3A58;
+  --bg-card:    #254568;
+  --bg-card2:   #2C5078;
+  --bg-surface: #2C5078;
+  --dark-bg:    #182F48;
+
+  /* ── Mapeamento semântico ── */
+  --white:  #254568;
+  --off:    #1F3A58;
+  --off2:   #2C5078;
+
+  /* ── Texto ── */
+  --text-primary:   #E2F0FA;
+  --text-secondary: #AACFE0;   /* era #96C0D8 */
+  --text-dim:       #7AAFC8;   /* era #5E90AE */
+  --ink:    #E2F0FA;
+  --ink-2:  #C8E0F0;           /* era #C4DCF0 */
+  --ink-3:  #8BBDD6;           /* era #7DB5CC */
+  --muted:  #7AAFC8;           /* era #5E90AE */
+
+  /* ── Azuis de destaque ── */
+  --blue:        #0057ff;
+  --blue-core:   #0057ff;
+  --blue-bright: #3EA7CC;
+  --blue-2:      #3EA7CC;
+  --blue-bg:     rgba(0, 87, 255, 0.18);    /* era 0.12 */
+  --blue-mid:    rgba(72, 197, 217, 0.40);  /* era 0.30 */
+  --cyan:        #48C5D9;
+  --cyan-dim:    rgba(72, 197, 217, 0.22);
+  --electric:    #5FD3E5;
+
+  /* ── Acento e chips ── */
+  --accent:        #5FD3E5;                   /* acento brilhante para texto em dark */
+  --accent-bg:     rgba(95, 211, 229, 0.12);
+  --accent-border: rgba(95, 211, 229, 0.40);
+  --icon-fg:       #48C5D9;
+  --chip-bg:       rgba(72, 197, 217, 0.12);
+  --chip-border:   rgba(72, 197, 217, 0.42);
+  --hover-bg:      rgba(72, 197, 217, 0.08);
+  --input-bg:      #1C3554;
+  --divider:       rgba(72, 197, 217, 0.20);
+
+  /* ── Separadores e bordas ── */
+  --line:          rgba(72, 197, 217, 0.22);   /* era rgba(43,145,173,0.18) */
+  --subtle:        rgba(72, 197, 217, 0.20);   /* era 0.15 */
+  --border:        rgba(72, 197, 217, 0.22);   /* era rgba(43,145,173,0.18) */
+  --border-bright: rgba(72, 197, 217, 0.50);   /* era 0.32 */
+
+  /* ── Estado / semântica ── */
+  --success: #4ECB71;
+  --warn:    #FFB74D;
+  --danger:  #FF6B7A;
+
+  /* ── Topbar ── */
+  --topbar-bg:     rgba(20, 40, 66, 0.96);
+  --topbar-hover:  rgba(72, 197, 217, 0.10);   /* era rgba(43,145,173,0.09) */
+  --topbar-active: rgba(72, 197, 217, 0.18);   /* era rgba(43,145,173,0.16) */
+
+  /* ── Brilhos ── */
+  --glow-blue:   rgba(72, 197, 217, 0.30);
+  --glow-cyan:   rgba(72, 197, 217, 0.25);
+  --glow-strong: rgba(72, 197, 217, 0.45);
+
+  /* ── Sombras ── */
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.55), 0 0 20px rgba(72, 197, 217, 0.12);
+
+  /* ── Dropdown ── */
+  --dropdown-shadow: 0 8px 28px rgba(43, 145, 173, 0.30), 0 0 18px rgba(72, 197, 217, 0.14);
+
+  /* ── Aliases "active" ── */
+  --active-bg:           var(--bg-void);
+  --active-alt-bg:       var(--bg-deep);
+  --active-text:         var(--text-primary);
+  --active-text-muted:   var(--text-secondary);
+  --active-accent:       var(--blue-core);
+  --active-accent-hover: var(--blue-bright);
+  --active-border:       var(--border-bright);
+}
+
+/* ══════════════════════════════════════════════════════════
+   TEMA CLARO
+   ══════════════════════════════════════════════════════════ */
+html[data-theme="light"] {
+  color-scheme: light;
+
+  --bg-void:    #D6E8F5;
+  --bg-deep:    #C0D8EE;
+  --bg-card:    #E8F3FA;
+  --bg-card2:   #C8DEEC;
+  --bg-surface: #C8DEEC;
+
+  --white:  #ffffff;
+  --off:    #f4f8fc;
+  --off2:   #EAF3FB;
+
+  --text-primary:   #0A1A2C;
+  --text-secondary: #1E3D58;
+  --text-dim:       #4A6C88;
+  --ink:    #0A1A2C;
+  --ink-2:  #1E3D58;
+  --ink-3:  #4A6C88;
+  --muted:  #7a94a8;
+
+  --blue:        #1A7A9C;
+  --blue-core:   #1A7A9C;
+  --blue-bright: #1591B8;
+  --blue-2:      #1370A0;
+  --blue-bg:     rgba(26, 122, 156, 0.08);
+  --blue-mid:    rgba(26, 122, 156, 0.25);
+  --cyan:        #176E8F;
+  --cyan-dim:    rgba(23, 110, 143, 0.18);
+  --electric:    #0F8FAF;
+
+  --accent:        #0F8FAF;
+  --accent-bg:     rgba(15, 143, 175, 0.08);
+  --accent-border: rgba(15, 143, 175, 0.28);
+  --icon-fg:       #176E8F;
+  --chip-bg:       rgba(26, 122, 156, 0.08);
+  --chip-border:   rgba(26, 122, 156, 0.28);
+  --hover-bg:      rgba(26, 122, 156, 0.06);
+  --input-bg:      #ffffff;
+  --divider:       rgba(10, 26, 44, 0.12);
+
+  --line:          #CCCCCC;
+  --subtle:        #b8cfe0;
+  --border:        rgba(10, 26, 44, 0.18);
+  --border-bright: rgba(26, 122, 156, 0.35);
+
+  --success: #159853;
+  --warn:    #DC8F1D;
+  --danger:  #D94455;
+
+  --topbar-bg:     rgba(214, 232, 245, 0.98);
+  --topbar-hover:  rgba(26, 122, 156, 0.09);
+  --topbar-active: rgba(26, 122, 156, 0.16);
+
+  --glow-blue:   rgba(26, 122, 156, 0.18);
+  --glow-cyan:   rgba(23, 110, 143, 0.14);
+  --glow-strong: rgba(26, 122, 156, 0.28);
+
+  --shadow-sm: 0 2px 8px rgba(10, 26, 44, 0.08);
+  --shadow-lg: 0 8px 32px rgba(10, 26, 44, 0.16);
+
+  --dropdown-shadow: 0 12px 28px rgba(10, 26, 44, 0.14), 0 0 18px rgba(26, 122, 156, 0.10);
+
+  --active-bg:           var(--bg-void);
+  --active-alt-bg:       var(--bg-deep);
+  --active-text:         var(--text-primary);
+  --active-text-muted:   var(--text-secondary);
+  --active-accent:       var(--blue-core);
+  --active-accent-hover: var(--blue-bright);
+  --active-border:       var(--border-bright);
+}
+
+/* ══════════════════════════════════════════════════════════
+   DARK — ESTILOS DE ELEMENTO
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Corpo e base ── */
+html[data-theme="dark"] body,
+body.dark-theme {
+  background-color: var(--bg-void);
+  color: var(--text-primary);
+}
+
+/* ── Cabeçalhos ── */
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4,
+html[data-theme="dark"] h5,
+html[data-theme="dark"] h6,
+body.dark-theme h1,
+body.dark-theme h2,
+body.dark-theme h3,
+body.dark-theme h4,
+body.dark-theme h5,
+body.dark-theme h6 {
+  color: var(--text-primary);
+}
+
+html[data-theme="dark"] p,
+body.dark-theme p {
+  color: var(--text-secondary);
+}
+
+html[data-theme="dark"] small,
+html[data-theme="dark"] .caption,
+html[data-theme="dark"] .hint,
+body.dark-theme small,
+body.dark-theme .caption,
+body.dark-theme .hint {
+  color: var(--text-dim);
+}
+
+/* ── Links ── */
+html[data-theme="dark"] a,
+body.dark-theme a {
+  color: var(--text-primary);
+}
+
+/* ── Divisórias ── */
+html[data-theme="dark"] hr,
+body.dark-theme hr {
+  border-color: var(--divider);
+  opacity: 1;
+}
+
+/* ── Código inline ── */
+html[data-theme="dark"] code,
+body.dark-theme code {
+  background: var(--chip-bg);
+  color: var(--cyan);
+  border: 1px solid var(--chip-border);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
+/* ── Navbar ── */
+html[data-theme="dark"] nav,
+body.dark-theme nav {
+  background: var(--topbar-bg) !important;
+  border-bottom-color: var(--border) !important;
+}
+
+html[data-theme="dark"] .nav-link,
+body.dark-theme .nav-link {
+  color: var(--text-secondary);
+}
+
+html[data-theme="dark"] .nav-link:hover,
+body.dark-theme .nav-link:hover {
+  color: var(--text-primary);
+  background: var(--topbar-hover);
+}
+
+html[data-theme="dark"] .nav-link.active,
+body.dark-theme .nav-link.active {
+  color: var(--cyan);
+  background: var(--topbar-active);
+}
+
+/* ── Botões nav ── */
+html[data-theme="dark"] .btn-nav-solid,
+html[data-theme="dark"] .btn-nav-ghost,
+body.dark-theme .btn-nav-solid,
+body.dark-theme .btn-nav-ghost {
+  color: var(--text-primary);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] .btn-nav-ghost,
+body.dark-theme .btn-nav-ghost {
+  color: var(--text-secondary);
+}
+
+html[data-theme="dark"] .btn-nav-ghost:hover,
+body.dark-theme .btn-nav-ghost:hover {
+  background: var(--topbar-hover);
+  color: var(--text-primary);
+  border-color: var(--border-bright);
+}
+
+/* ── User menu ── */
+html[data-theme="dark"] .user-dropdown,
+body.dark-theme .user-dropdown {
+  background: var(--bg-card);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] .user-dropdown-item,
+body.dark-theme .user-dropdown-item {
+  color: var(--text-primary);
+}
+
+html[data-theme="dark"] .user-dropdown-item:hover,
+body.dark-theme .user-dropdown-item:hover {
+  background: var(--bg-card2);
+  color: var(--cyan);
+}
+
+/* ── Formulários ── */
+html[data-theme="dark"] input[type="text"],
+html[data-theme="dark"] input[type="email"],
+html[data-theme="dark"] input[type="password"],
+html[data-theme="dark"] input[type="number"],
+html[data-theme="dark"] input[type="tel"],
+html[data-theme="dark"] input[type="search"],
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] select,
+body.dark-theme input[type="text"],
+body.dark-theme input[type="email"],
+body.dark-theme input[type="password"],
+body.dark-theme input[type="number"],
+body.dark-theme input[type="tel"],
+body.dark-theme input[type="search"],
+body.dark-theme textarea,
+body.dark-theme select {
+  background: var(--input-bg);
+  color: var(--text-primary);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] input:focus,
+html[data-theme="dark"] textarea:focus,
+html[data-theme="dark"] select:focus,
+body.dark-theme input:focus,
+body.dark-theme textarea:focus,
+body.dark-theme select:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px var(--glow-cyan);
+}
+
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder,
+body.dark-theme input::placeholder,
+body.dark-theme textarea::placeholder {
+  color: var(--text-dim);
+}
+
+/* ── Hero e seções ── */
+html[data-theme="dark"] .page-hero,
+html[data-theme="dark"] .page-hero--purchase,
+body.dark-theme .page-hero,
+body.dark-theme .page-hero--purchase {
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  border-bottom-color: var(--border);
+}
+
+/* ── Eyebrows / labels de seção ── */
+html[data-theme="dark"] .page-eyebrow,
+body.dark-theme .page-eyebrow {
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
+}
+
+html[data-theme="dark"] .eyebrow,
+body.dark-theme .eyebrow {
+  color: var(--cyan);
+}
+
+html[data-theme="dark"] .section-title,
+body.dark-theme .section-title {
+  color: var(--text-primary);
+}
+
+html[data-theme="dark"] .section-title span,
+body.dark-theme .section-title span {
+  color: var(--cyan);
+}
+
+/* ── Tags / chips / badges genéricos ── */
+html[data-theme="dark"] .feat-tag,
+html[data-theme="dark"] .hero-badge,
+html[data-theme="dark"] .proto-detail-badge,
+body.dark-theme .feat-tag,
+body.dark-theme .hero-badge,
+body.dark-theme .proto-detail-badge {
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
+  color: var(--accent);
+}
+
+/* ── Sidebar documentação ── */
+html[data-theme="dark"] .sidebar,
+body.dark-theme .sidebar {
+  background: var(--bg-card);
+  border-right-color: var(--border);
+}
+
+html[data-theme="dark"] .sb-section-label,
+body.dark-theme .sb-section-label {
+  color: var(--text-secondary);
+}
+
+html[data-theme="dark"] .sb-link,
+body.dark-theme .sb-link {
+  color: var(--text-secondary);
+}
+
+html[data-theme="dark"] .sb-link:hover,
+body.dark-theme .sb-link:hover {
+  background: var(--bg-card2);
+  color: var(--text-primary);
+}
+
+html[data-theme="dark"] .sb-link.active,
+body.dark-theme .sb-link.active {
+  background: var(--topbar-active);
+  color: var(--cyan);
+}
+
+/* ── Cards genéricos ── */
+html[data-theme="dark"] .card,
+body.dark-theme .card {
+  background: var(--bg-card);
+  border-color: var(--border);
+  color: var(--text-secondary);
+}
+
+html[data-theme="dark"] .card:hover,
+body.dark-theme .card:hover {
+  border-color: var(--border-bright);
+  background: var(--bg-card2);
+}
+
+/* ── Theme toggle ── */
+html[data-theme="dark"] .theme-toggle-btn,
+body.dark-theme .theme-toggle-btn {
+  color: var(--text-secondary);
+  border-color: var(--border);
+  background: transparent;
+}
+
+html[data-theme="dark"] .theme-toggle-btn:hover,
+body.dark-theme .theme-toggle-btn:hover {
+  background: var(--topbar-hover);
+  color: var(--text-primary);
+  border-color: var(--border-bright);
+}
+
+/* ══════════════════════════════════════════════════════════
+   TRANSIÇÕES SUAVES GLOBAIS
+   ══════════════════════════════════════════════════════════ */
+html, body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html * {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}

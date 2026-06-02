@@ -1,0 +1,2795 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+  <title>MONITECH — Monitor de Energia Residencial</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0057ff">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MONITECH">
+  <link rel="apple-touch-icon" href="/assets/images/logo.svg">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Syne:wght@700;800;900&display=swap"
+    rel="stylesheet">
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" as="script">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <!-- CSS Compartilhado -->
+  <link rel="stylesheet" href="../assets/css/shared/variables.css">
+  <link rel="stylesheet" href="../assets/css/shared/theme-toggle.css">
+  <!-- CSS do Sistema -->
+  <link rel="stylesheet" href="./css/system.css">
+  <link rel="stylesheet" href="../assets/css/shared/icons.css">
+  <script src="../assets/js/vendor/lucide.min.js" defer></script>
+  <!-- CSS para Fotos de Perfil -->
+  <link rel="stylesheet" href="../assets/css/shared/profile-photo-styles.css">
+  <!-- Scripts Globais -->
+  <script src="../assets/js/shared/profile-photo-manager.js" defer></script>
+  <script src="../assets/js/shared/magnific-icons-loader.js" defer></script>
+  <script src="../assets/js/shared/theme-toggle.js" defer></script>
+  <script src="../assets/js/shared/theme-loader.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+
+<body>
+
+  <div class="grid-bg"></div>
+  <canvas id="particles"></canvas>
+
+
+  <!-- ===== TELA DE LOGIN ===== -->
+  <div class="page active" id="page-login">
+
+    <div class="login-topbar">
+      <button class="onboard-back-btn" onclick="window.location.href='/'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Voltar
+      </button>
+      <button class="theme-toggle-btn" id="login-theme-toggle" title="Alternar tema">
+        <span class="theme-toggle-icon"></span>
+      </button>
+    </div>
+
+    <div class="auth-wrap">
+      <div class="auth-box">
+
+        <div class="logo">
+          <svg class="onboard-logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 230" aria-label="MONITECH">
+            <path d="M100,18 C72,18 50,40 50,66 C50,86 60,100 74,110 C80,114 82,120 82,126 L118,126 C118,120 120,114 126,110 C140,100 150,86 150,66 C150,40 128,18 100,18Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M83,130 C91,127 109,127 117,130" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M84,138 C92,134 108,134 116,138" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/>
+            <path d="M86,146 C93,142 107,142 114,146" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            <path d="M88,154 C91,148 98,148 100,152 C102,155 105,153 108,148 C110,150 114,155 114,158" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M90,162 C94,158 106,158 110,162" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M94,170 C97,167 103,167 106,170" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M78,116 C76,100 80,82 86,72 C90,64 96,66 98,76 C100,84 99,98 99,110" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M99,110 C99,96 100,82 103,72 C106,62 114,64 116,74 C118,84 116,104 113,118" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M113,118 C115,122 114,128 110,127 C107,126 107,121 110,119" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <div class="auth-title">ACESSO AO PAINEL</div>
+        <div class="auth-sub">Acompanhe o consumo energético da sua residência em tempo real</div>
+
+        <!-- Passo 1: e-mail e senha -->
+        <div id="login-step-credentials">
+          <div class="form-group">
+            <label class="form-label">E-mail</label>
+            <input class="form-input" type="email" id="login-email" placeholder="seu@email.com">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Senha</label>
+            <input class="form-input" type="password" id="login-pass" placeholder="Digite sua senha">
+          </div>
+
+          <button class="btn btn-primary" onclick="fazerLogin()">ENTRAR NO SISTEMA</button>
+        </div>
+
+        <!-- Passo 2: código 2FA (oculto até ser necessário) -->
+        <div id="login-step-2fa" style="display:none;">
+          <div style="text-align:center;margin-bottom:16px;">
+            <div style="font-size:28px;margin-bottom:8px;">🔐</div>
+            <div style="font-size:13px;color:var(--text-secondary);">Abra seu aplicativo autenticador e insira o código de 6 dígitos.</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Código de verificação</label>
+            <input class="form-input" type="text" id="login-2fa-codigo" placeholder="000000"
+              maxlength="6" inputmode="numeric" style="font-size:22px;letter-spacing:8px;text-align:center;"
+              oninput="this.value=this.value.replace(/\D/g,'')"
+              onkeydown="if(event.key==='Enter') verificar2FaLogin()">
+          </div>
+          <button class="btn btn-primary" onclick="verificar2FaLogin()">VERIFICAR CÓDIGO</button>
+          <button class="btn btn-secondary" onclick="cancelar2FaLogin()" style="margin-top:8px;width:100%;">Voltar ao login</button>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px; margin-top:18px; margin-bottom:4px;">
+          <div style="flex:1; height:1px; background:rgba(72,197,217,0.18);"></div>
+          <span style="font-size:11px; color:var(--text-dim); letter-spacing:0.08em; text-transform:uppercase; white-space:nowrap;">ou continue com</span>
+          <div style="flex:1; height:1px; background:rgba(72,197,217,0.18);"></div>
+        </div>
+
+        <button id="system-google-btn" onclick="fazerLoginGoogle()"
+          style="display:flex; align-items:center; justify-content:center; gap:10px; width:100%; padding:10px 16px; margin-top:10px; background:transparent; border:1px solid rgba(72,197,217,0.28); border-radius:8px; color:var(--text-primary); font-family:'Rajdhani',sans-serif; font-size:14px; font-weight:600; letter-spacing:0.04em; cursor:pointer; transition:border-color 0.2s, background 0.2s;"
+          onmouseover="this.style.background='rgba(72,197,217,0.07)'; this.style.borderColor='rgba(72,197,217,0.55)';"
+          onmouseout="this.style.background='transparent'; this.style.borderColor='rgba(72,197,217,0.28)';">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style="width:18px;height:18px;flex-shrink:0;">
+            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/>
+            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-3.58-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+          </svg>
+          Entrar com Google
+        </button>
+
+        <div class="esqueceuSenha">
+          <a href="../pages-documents/resetar-senha.html"
+             
+             onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='rgba(0,212,255,0.75)'">
+            Esqueceu a senha?
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- ===== /TELA DE LOGIN ===== -->
+
+
+
+
+
+  <!-- ===== ONBOARDING ===== -->
+  <div class="page" id="page-onboard">
+    <div class="onboard-wrap">
+
+      <div class="onboard-header">
+        <div class="onboard-topbar">
+          <button class="onboard-back-btn" onclick="sair()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Sair
+          </button>
+          <button class="theme-toggle-btn" id="onboard-theme-toggle" title="Alternar tema">
+            <span class="theme-toggle-icon"></span>
+          </button>
+        </div>
+        <div class="logo logo--center">
+          <svg class="onboard-logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 230" aria-label="MONITECH">
+            <path d="M100,18 C72,18 50,40 50,66 C50,86 60,100 74,110 C80,114 82,120 82,126 L118,126 C118,120 120,114 126,110 C140,100 150,86 150,66 C150,40 128,18 100,18Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M83,130 C91,127 109,127 117,130" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M84,138 C92,134 108,134 116,138" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/>
+            <path d="M86,146 C93,142 107,142 114,146" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            <path d="M88,154 C91,148 98,148 100,152 C102,155 105,153 108,148 C110,150 114,155 114,158" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M90,162 C94,158 106,158 110,162" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M94,170 C97,167 103,167 106,170" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M78,116 C76,100 80,82 86,72 C90,64 96,66 98,76 C100,84 99,98 99,110" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M99,110 C99,96 100,82 103,72 C106,62 114,64 116,74 C118,84 116,104 113,118" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M113,118 C115,122 114,128 110,127 C107,126 107,121 110,119" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="onboard-config-label">Configuração Inicial da Residência</div>
+      </div>
+
+      <div class="onboard-box">
+
+        <div class="steps" id="onboard-steps">
+          <div class="step-wrapper"><div class="step-item active" id="s0"></div><div class="step-label">Residência</div></div>
+          <div class="step-wrapper"><div class="step-item" id="s1"></div><div class="step-label">Cômodos</div></div>
+          <div class="step-wrapper"><div class="step-item" id="s2"></div><div class="step-label">Dispositivos</div></div>
+        </div>
+
+        <!-- ETAPA 0: Dados da Residência -->
+        <div class="onboard-step active" id="step-0">
+          <div class="section-title">Sua <span>Residência</span></div>
+          <div class="step-desc">Configure os dados básicos para personalizar o monitoramento energético</div>
+
+          <!-- Tipo de residência -->
+          <div class="form-group">
+            <label class="form-label">Tipo de Residência</label>
+            <div class="res-type-grid">
+              <div class="res-type-card active" onclick="selecionarTipoResidencia(this,'house')">
+                <i data-lucide="home" class="res-type-icon"></i><span class="res-type-label">Casa</span>
+              </div>
+              <div class="res-type-card" onclick="selecionarTipoResidencia(this,'apartment')">
+                <i data-lucide="building-2" class="res-type-icon"></i><span class="res-type-label">Apartamento</span>
+              </div>
+              <div class="res-type-card" onclick="selecionarTipoResidencia(this,'farm')">
+                <i data-lucide="trees" class="res-type-icon"></i><span class="res-type-label">Sítio</span>
+              </div>
+              <div class="res-type-card" onclick="selecionarTipoResidencia(this,'commercial')">
+                <i data-lucide="store" class="res-type-icon"></i><span class="res-type-label">Comércio</span>
+              </div>
+            </div>
+            <input type="hidden" id="house-tipo" value="house">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Nome da Residência</label>
+            <input class="form-input" id="house-name" placeholder="Ex: Minha Casa, Apartamento 204...">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">CEP</label>
+              <input class="form-input" id="house-cep" placeholder="00000-000"
+                     oninput="mascaraCEP(this)" maxlength="9">
+              <div class="cep-status" id="cep-loading"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Área (m²)</label>
+              <input class="form-input" type="number" id="house-area" placeholder="Ex: 120">
+            </div>
+          </div>
+
+          <!-- Campos preenchidos automaticamente pelo CEP -->
+          <div id="cep-address-fields" style="display:none;">
+            <div class="form-row">
+              <div class="form-group" style="flex:3;">
+                <label class="form-label">Logradouro</label>
+                <input class="form-input" id="house-logradouro" placeholder="Rua / Avenida">
+              </div>
+              <div class="form-group" style="flex:1;min-width:70px;max-width:90px;">
+                <label class="form-label">Número</label>
+                <input class="form-input" id="house-numero" placeholder="Nº">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Bairro</label>
+                <input class="form-input" id="house-bairro" placeholder="Bairro">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Complemento <span class="form-label-opt">(opcional)</span></label>
+                <input class="form-input" id="house-complemento" placeholder="Apto, Bloco, Casa...">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Cidade</label>
+              <input class="form-input" id="house-cidade" placeholder="Ex: São Paulo">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Estado</label>
+              <select class="form-input" id="house-estado" onchange="onEstadoChange(this.value)">
+                <option value="">Selecione o estado</option>
+                <option value="AC">Acre (AC)</option>
+                <option value="AL">Alagoas (AL)</option>
+                <option value="AM">Amazonas (AM)</option>
+                <option value="AP">Amapá (AP)</option>
+                <option value="BA">Bahia (BA)</option>
+                <option value="CE">Ceará (CE)</option>
+                <option value="DF">Distrito Federal (DF)</option>
+                <option value="ES">Espírito Santo (ES)</option>
+                <option value="GO">Goiás (GO)</option>
+                <option value="MA">Maranhão (MA)</option>
+                <option value="MG">Minas Gerais (MG)</option>
+                <option value="MS">Mato Grosso do Sul (MS)</option>
+                <option value="MT">Mato Grosso (MT)</option>
+                <option value="PA">Pará (PA)</option>
+                <option value="PB">Paraíba (PB)</option>
+                <option value="PE">Pernambuco (PE)</option>
+                <option value="PI">Piauí (PI)</option>
+                <option value="PR">Paraná (PR)</option>
+                <option value="RJ">Rio de Janeiro (RJ)</option>
+                <option value="RN">Rio Grande do Norte (RN)</option>
+                <option value="RO">Rondônia (RO)</option>
+                <option value="RR">Roraima (RR)</option>
+                <option value="RS">Rio Grande do Sul (RS)</option>
+                <option value="SC">Santa Catarina (SC)</option>
+                <option value="SE">Sergipe (SE)</option>
+                <option value="SP">São Paulo (SP)</option>
+                <option value="TO">Tocantins (TO)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Distribuidora de Energia</label>
+              <select class="form-input" id="house-dist" onchange="onDistribuidoraChange(this.value)" disabled>
+                <option value="">— selecione o estado primeiro —</option>
+              </select>
+            </div>
+            <div class="form-group" style="max-width:160px;">
+              <label class="form-label">Tarifa (R$/kWh)</label>
+              <div class="form-input" id="house-tarifa-display"
+                   style="display:flex;align-items:center;gap:8px;cursor:default;background:var(--off);color:var(--ink);">
+                <span id="house-tarifa-valor">—</span>
+                <span id="house-bandeira-badge" style="display:none;font-size:11px;padding:2px 7px;border-radius:20px;font-weight:600;"></span>
+              </div>
+              <input type="hidden" id="house-tarifa" value="0.74">
+            </div>
+          </div>
+
+          <button class="btn btn-primary" onclick="proximoOnboarding(0)">PRÓXIMO — CÔMODOS →</button>
+        </div>
+
+        <!-- ETAPA 1: Cadastro de Cômodos -->
+        <div class="onboard-step" id="step-1">
+          <div class="section-title"><span>Cômodos</span></div>
+          <div class="step-desc--sm">Clique nos cômodos abaixo para adicioná-los. Pode repetir (ex: 2 quartos)</div>
+
+          <!-- Grid de adição rápida -->
+          <div class="room-quick-grid">
+            <button class="room-quick-btn" onclick="adicionarComodoRapido('sala','Sala de Estar')">
+              <i data-lucide="sofa" class="rq-icon"></i>Sala
+            </button>
+            <button class="room-quick-btn" onclick="adicionarComodoRapido('quarto','Quarto')">
+              <i data-lucide="bed" class="rq-icon"></i>Quarto
+            </button>
+            <button class="room-quick-btn" onclick="adicionarComodoRapido('cozinha','Cozinha')">
+              <i data-lucide="utensils" class="rq-icon"></i>Cozinha
+            </button>
+            <button class="room-quick-btn" onclick="adicionarComodoRapido('banheiro','Banheiro')">
+              <i data-lucide="bath" class="rq-icon"></i>Banheiro
+            </button>
+            <button class="room-quick-btn" onclick="adicionarComodoRapido('garagem','Garagem')">
+              <i data-lucide="car" class="rq-icon"></i>Garagem
+            </button>
+            <button class="room-quick-btn" onclick="adicionarComodoRapido('escritorio','Escritório')">
+              <i data-lucide="briefcase" class="rq-icon"></i>Escritório
+            </button>
+            <button class="room-quick-btn" onclick="adicionarComodoRapido('lavanderia','Lavanderia')">
+              <i data-lucide="shirt" class="rq-icon"></i>Lavanderia
+            </button>
+            <button class="room-quick-btn" onclick="adicionarComodoRapido('varanda','Varanda')">
+              <i data-lucide="flower-2" class="rq-icon"></i>Varanda
+            </button>
+          </div>
+
+          <div id="rooms-setup-list"></div>
+
+          <!-- Adicionar cômodo personalizado -->
+          <div class="room-custom-section">
+            <div class="room-custom-toggle" onclick="toggleComodoCustom()">
+              <span id="comodo-custom-icon">▶</span> Adicionar cômodo personalizado
+            </div>
+            <div id="comodo-custom-form" style="display:none; margin-top:12px;">
+              <div class="room-add-row">
+                <select class="form-input select-flex" id="new-room-type">
+                  <option value="sala">Sala de Estar</option>
+                  <option value="quarto">Quarto</option>
+                  <option value="cozinha">Cozinha</option>
+                  <option value="banheiro">Banheiro</option>
+                  <option value="garagem">Garagem</option>
+                  <option value="escritorio">Escritório</option>
+                  <option value="lavanderia">Lavanderia</option>
+                  <option value="varanda">Varanda</option>
+                  <option value="outro">Outro</option>
+                </select>
+                <input class="form-input input-flex" id="new-room-name" placeholder="Nome personalizado">
+                <button class="btn btn-secondary btn--nowrap" onclick="adicionarComodoConfiguracao()">Adicionar</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-secondary btn-group__back" onclick="voltarOnboarding(1)">← VOLTAR</button>
+            <button class="btn btn-primary btn-group__next" onclick="proximoOnboarding(1)">PRÓXIMO — DISPOSITIVOS →</button>
+          </div>
+        </div>
+
+        <!-- ETAPA 2: Cadastro de Dispositivos -->
+        <div class="onboard-step" id="step-2">
+          <div class="section-title">Dispositivos</div>
+          <div class="step-desc--sm">Adicione os equipamentos elétricos que deseja acompanhar em cada cômodo</div>
+
+          <div id="devices-setup-list"></div>
+
+          <div class="device-add-card">
+            <div class="form-row">
+              <div class="form-group form-group--compact">
+                <label class="form-label">Tipo de Dispositivo</label>
+                <select class="form-input" id="dev-type" onchange="autoPreencherDispositivo()">
+                  <option value="ar">Ar-condicionado</option>
+                  <option value="geladeira">Geladeira</option>
+                  <option value="tv">Televisão</option>
+                  <option value="maquina">Máq. de Lavar</option>
+                  <option value="chuveiro">Chuveiro Elétrico</option>
+                  <option value="computador">Computador / Notebook</option>
+                  <option value="microondas">Micro-ondas</option>
+                  <option value="iluminacao">Iluminação</option>
+                  <option value="bomba">Bomba d'água</option>
+                  <option value="forno">Forno Elétrico</option>
+                  <option value="ferro">Ferro de Passar</option>
+                  <option value="outro">Outro</option>
+                </select>
+              </div>
+              <div class="form-group form-group--compact">
+                <label class="form-label">Nome do Dispositivo</label>
+                <input class="form-input" id="dev-name" placeholder="Ex: Ar-condicionado Quarto 1">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group form-group--flush">
+                <label class="form-label">Cômodo</label>
+                <select class="form-input" id="dev-room"></select>
+              </div>
+              <div class="form-group form-group--flush">
+                <label class="form-label">Potência (W)</label>
+                <input class="form-input" type="number" id="dev-watts" placeholder="Ex: 1500">
+                <div class="watts-hint" id="watts-hint"></div>
+              </div>
+            </div>
+            <button class="btn btn-secondary btn-sm mt-12" onclick="adicionarDispositivoConfiguracao()">
+              + Adicionar Dispositivo
+            </button>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-secondary btn-group__back" onclick="voltarOnboarding(2)">← VOLTAR</button>
+            <button class="btn btn-primary btn-group__next" id="btn-finalizar-onboard" onclick="finalizarOnboarding()">✓ ACESSAR O PAINEL</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- ===== /ONBOARDING ===== -->
+
+
+  <!-- ===== APLICAÇÃO PRINCIPAL ===== -->
+  <div class="page" id="page-app">
+    <div class="app-layout">
+
+      <!-- BARRA SUPERIOR -->
+      <div class="topbar">
+
+        <div class="topbar-left">
+          <div class="topbar-logo">
+            <img src="/assets/images/logo.svg" alt="MONITECH" style="height:36px;width:auto;">
+            <span class="logo-text">MONITECH</span>
+          </div>
+          <div id="topbar-live-badge" class="live-badge live-badge--disconnected">
+            <span class="status-dot"></span> AO VIVO
+          </div>
+        </div>
+
+        <div class="nav-tabs" id="nav-tabs-mobile">
+          <button class="nav-tab active" onclick="exibirAba('dashboard')" id="tab-dashboard">
+            <span class="nav-icon"></span>
+            <span>Dashboard</span>
+          </button>
+          <button class="nav-tab" onclick="exibirAba('planta')" id="tab-planta">
+            <span class="nav-icon"></span>
+            <span>Planta</span>
+          </button>
+          <button class="nav-tab" onclick="exibirAba('rooms')" id="tab-rooms">
+            <span class="nav-icon"></span>
+            <span>Cômodos</span>
+          </button>
+          <button class="nav-tab" onclick="exibirAba('devices')" id="tab-devices">
+            <span class="nav-icon"></span>
+            <span>Dispositivos</span>
+          </button>
+          <button class="nav-tab" onclick="exibirAba('reports')" id="tab-reports">
+            <span class="nav-icon"></span>
+            <span>Relatórios</span>
+          </button>
+          <button class="nav-tab" onclick="exibirAba('alerts')" id="tab-alerts">
+            <span class="nav-icon"></span>
+            <span>Alertas</span>
+          </button>
+          <button class="nav-tab nav-tab--rel" onclick="exibirAba('esp32')" id="tab-esp32">
+            <span class="nav-icon"></span>
+            <span>Dispositivo MONITECH</span>
+            <span id="esp32-nav-dot" class="esp32-nav-dot"></span>
+          </button>
+          <button class="nav-tab nav-tab--admin" onclick="exibirAba('admin')" id="tab-admin" data-admin-only style="display:none">
+            <i data-lucide="shield" style="width:14px;height:14px;flex-shrink:0;"></i>
+            <span>Admin</span>
+          </button>
+        </div>
+
+        <div class="topbar-right">
+          <!-- Botão Menu Hamburguer (Mobile) -->
+          <button type="button" class="mobile-menu-btn" id="mobile-menu-btn" onclick="alternarMenuMobile()">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          
+          <!-- Toggle de Tema -->
+        <button class="theme-toggle-btn" id="theme-toggle-btn" title="Alternar tema">
+          <span class="theme-toggle-icon"></span>
+        </button>
+
+          <div class="user-menu-wrapper">
+            <button class="user-menu-btn" id="user-menu-btn" onclick="toggleUserMenu()">
+              <div class="user-avatar">U</div>
+            </button>
+            <div class="user-dropdown" id="user-dropdown">
+              <!-- Header com dados do usuário (aparece quando logado) -->
+              <div class="user-dropdown-header" id="user-dropdown-header">
+                <div class="user-dropdown-avatar-lg" id="user-dropdown-avatar-lg">U</div>
+                <div class="user-dropdown-info">
+                  <div class="user-dropdown-nome" id="user-dropdown-nome">Usuário</div>
+                  <div class="user-dropdown-email" id="user-dropdown-email">email@example.com</div>
+                </div>
+              </div>
+              <div class="user-dropdown-divider" id="user-dropdown-divider"></div>
+              
+              <a href="#" id="dropdown-minha-conta" class="user-dropdown-item" onclick="irParaMinhaContaSystem(); event.preventDefault();">
+                <span><i data-lucide="user"></i></span> Minha Conta
+              </a>
+              <a href="#" id="dropdown-config" class="user-dropdown-item" onclick="irParaConfiguracoes(); event.preventDefault();">
+                <span><i data-lucide="settings-2"></i></span> Configurações
+              </a>
+              <a href="#" id="dropdown-admin" class="user-dropdown-item" data-admin-only style="display:none" onclick="irParaAdmin(); event.preventDefault();">
+                <span><i data-lucide="shield"></i></span> Painel Admin
+              </a>
+              <a href="../index.html" target="_blank" id="dropdown-institucional" class="user-dropdown-item">
+                <span><i data-lucide="layout-dashboard"></i></span> Página Institucional
+              </a>
+              <button id="dropdown-logout" class="user-dropdown-item user-dropdown-logout" onclick="sair();">
+                <span><i data-lucide="log-out"></i></span> Sair da Sessão
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- /BARRA SUPERIOR -->
+
+      <!-- Overlay para menu mobile -->
+      <div class="mobile-menu-overlay" id="mobile-menu-overlay" onclick="alternarMenuMobile()"></div>
+
+      <div class="main-content">
+
+
+        <!-- ===== ABA: DASHBOARD ===== -->
+        <div class="view active" id="view-dashboard">
+
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-title-icon"><i data-lucide="zap" style="width:20px;height:20px;"></i></span>
+              <span>Dashboard</span> de Energia
+            </div>
+            <div class="period-filter">
+              <select class="form-input select-inline" id="period-select" onchange="atualizarGraficos()">
+                <option value="day">Hoje</option>
+                <option value="week">Esta Semana</option>
+                <option value="month">Este Mês</option>
+                <option value="year">Este Ano</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Medidores ao vivo -->
+          <div class="chart-card chart-card--mb">
+            <div class="chart-title">
+              LEITURA AO VIVO — DISPOSITIVO ID:
+              <span id="device-id" class="device-id-span">---</span>
+            </div>
+            <div class="gauge-wrap" id="gauges-wrap">
+
+              <div class="gauge-item">
+                <div class="gauge-ring">
+                  <svg class="gauge-svg" viewBox="0 0 90 90">
+                    <circle class="gauge-bg" cx="45" cy="45" r="36" />
+                    <circle class="gauge-fill" id="g-volts" cx="45" cy="45" r="36" stroke="#1a7eff"
+                      stroke-dasharray="226" stroke-dashoffset="57" />
+                  </svg>
+                  <div class="gauge-val" id="gv-volts">---</div>
+                </div>
+                <div class="gauge-unit">VOLTS</div>
+                <div class="gauge-label">Tensão</div>
+              </div>
+
+              <div class="gauge-item">
+                <div class="gauge-ring">
+                  <svg class="gauge-svg" viewBox="0 0 90 90">
+                    <circle class="gauge-bg" cx="45" cy="45" r="36" />
+                    <circle class="gauge-fill" id="g-amps" cx="45" cy="45" r="36" stroke="#00d4ff"
+                      stroke-dasharray="226" stroke-dashoffset="160" />
+                  </svg>
+                  <div class="gauge-val" id="gv-amps">---</div>
+                </div>
+                <div class="gauge-unit">AMPERES</div>
+                <div class="gauge-label">Corrente</div>
+              </div>
+
+              <div class="gauge-item">
+                <div class="gauge-ring">
+                  <svg class="gauge-svg" viewBox="0 0 90 90">
+                    <circle class="gauge-bg" cx="45" cy="45" r="36" />
+                    <circle class="gauge-fill" id="g-watts" cx="45" cy="45" r="36" stroke="#00ff9d"
+                      stroke-dasharray="226" stroke-dashoffset="90" />
+                  </svg>
+                  <div class="gauge-val" id="gv-watts">---</div>
+                </div>
+                <div class="gauge-unit">WATTS</div>
+                <div class="gauge-label">Potência</div>
+              </div>
+
+              <div class="gauge-item">
+                <div class="gauge-ring">
+                  <svg class="gauge-svg" viewBox="0 0 90 90">
+                    <circle class="gauge-bg" cx="45" cy="45" r="36" />
+                    <circle class="gauge-fill" id="g-pf" cx="45" cy="45" r="36" stroke="#ffaa00" stroke-dasharray="226"
+                      stroke-dashoffset="34" />
+                  </svg>
+                  <div class="gauge-val" id="gv-pf">---</div>
+                </div>
+                <div class="gauge-unit">FP</div>
+                <div class="gauge-label">Fator de Potência</div>
+              </div>
+
+              <div class="gauge-item">
+                <div class="gauge-ring">
+                  <svg class="gauge-svg" viewBox="0 0 90 90">
+                    <circle class="gauge-bg" cx="45" cy="45" r="36" />
+                    <circle class="gauge-fill" id="g-freq" cx="45" cy="45" r="36" stroke="#7df9ff"
+                      stroke-dasharray="226" stroke-dashoffset="45" />
+                  </svg>
+                  <div class="gauge-val" id="gv-freq">---</div>
+                </div>
+                <div class="gauge-unit">Hz</div>
+                <div class="gauge-label">Frequência</div>
+              </div>
+
+              <div class="gauge-item">
+                <div class="gauge-ring">
+                  <svg class="gauge-svg" viewBox="0 0 90 90">
+                    <circle class="gauge-bg" cx="45" cy="45" r="36" />
+                    <circle class="gauge-fill" id="g-kwh" cx="45" cy="45" r="36" stroke="#ff3d6b" stroke-dasharray="226"
+                      stroke-dashoffset="100" />
+                  </svg>
+                  <div class="gauge-val" id="gv-kwh">---</div>
+                </div>
+                <div class="gauge-unit">%</div>
+                <div class="gauge-label">Carga Atual</div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ⚠️ Banner de discrepância de energia — exibido automaticamente pelo sistema -->
+          <div id="banner-discrepancia" style="display:none; margin-bottom:16px; border-radius:10px; overflow:hidden; animation: fadeInUp 0.4s ease;">
+            <!-- Ícone lateral colorido -->
+            <div style="display:flex; align-items:stretch; border-radius:10px; border:1px solid; overflow:hidden;"
+                 id="banner-discrepancia-inner">
+              <div id="banner-cor-lateral" style="width:6px; flex-shrink:0; min-height:100%;"></div>
+              <div style="flex:1; padding:16px 18px; display:flex; align-items:flex-start; gap:14px;">
+                <span id="banner-icone" style="font-size:28px; flex-shrink:0; margin-top:2px;"></span>
+                <div style="flex:1;">
+                  <div id="banner-titulo" style="font-family:'Orbitron',monospace; font-size:13px; font-weight:700; letter-spacing:1px; margin-bottom:6px;"></div>
+                  <div id="banner-mensagem" style="font-size:13px; line-height:1.6; color:var(--text-secondary);"></div>
+                  <!-- Barra de comparação -->
+                  <div style="margin-top:12px;">
+                    <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-dim); margin-bottom:5px; letter-spacing:1px; text-transform:uppercase;">
+                      <span>Cadastrado no sistema</span>
+                      <span>Medido pelo sensor</span>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.06); border-radius:6px; height:10px; position:relative; overflow:hidden;">
+                      <div id="banner-barra-cadastrado" style="position:absolute; left:0; top:0; height:100%; border-radius:6px; background:rgba(0,212,255,0.5); transition:width 0.8s ease;"></div>
+                      <div id="banner-barra-medido"    style="position:absolute; left:0; top:0; height:100%; border-radius:6px; opacity:0.45; transition:width 0.8s ease;"></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-family:'Orbitron',monospace; font-size:12px; margin-top:6px;">
+                      <span id="banner-watts-cadastrado" style="color:var(--cyan);"></span>
+                      <span id="banner-watts-medido"     style="color:var(--warn);"></span>
+                    </div>
+                  </div>
+                  <!-- Ações -->
+                  <div style="display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;">
+                    <button onclick="exibirAba('devices'); fecharBannerDiscrepancia()"
+                      style="font-family:'Rajdhani',sans-serif; font-weight:700; font-size:12px; letter-spacing:1px; text-transform:uppercase; padding:7px 16px; border-radius:6px; border:none; background:rgba(0,212,255,0.12); color:var(--cyan); cursor:pointer; border:1px solid rgba(0,212,255,0.25);">
+                      <i data-lucide="plug"></i> Ver Dispositivos
+                    </button>
+                    <button onclick="abrirModalAdicionarDispositivo()"
+                      style="font-family:'Rajdhani',sans-serif; font-weight:700; font-size:12px; letter-spacing:1px; text-transform:uppercase; padding:7px 16px; border-radius:6px; border:none; background:rgba(0,212,255,0.12); color:var(--cyan); cursor:pointer; border:1px solid rgba(0,212,255,0.25);">
+                      + Cadastrar Dispositivo
+                    </button>
+                    <button onclick="fecharBannerDiscrepancia()"
+                      style="font-family:'Rajdhani',sans-serif; font-weight:600; font-size:12px; padding:7px 12px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--text-dim); cursor:pointer; margin-left:auto;">
+                      ✕ Ignorar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cartões de estatísticas -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon"><i data-lucide="zap"></i></div>
+              <div><span class="stat-value" id="stat-kwh">---</span><span class="stat-unit">kWh</span></div>
+              <div class="stat-label" id="stat-label-kwh">Consumo de Hoje</div>
+              <div class="stat-change" id="stat-change-kwh">Aguardando leitura</div>
+              <div class="stat-glow stat-glow--blue"></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i data-lucide="banknote"></i></div>
+              <div><span class="stat-value" id="stat-cost">R$ ---</span></div>
+              <div class="stat-label" id="stat-label-cost">Custo Estimado Hoje</div>
+              <div class="stat-change" id="stat-change-cost">Baseado na tarifa configurada</div>
+              <div class="stat-glow stat-glow--warn"></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i data-lucide="calendar"></i></div>
+              <div><span class="stat-value" id="stat-month">---</span><span class="stat-unit">kWh</span></div>
+              <div class="stat-label" id="stat-label-month">Consumo no Mês</div>
+              <div class="stat-change" id="stat-change-month">Acumulado até agora</div>
+              <div class="stat-glow stat-glow--success"></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i data-lucide="trending-up"></i></div>
+              <div><span class="stat-value" id="stat-peak">---</span><span class="stat-unit">kW</span></div>
+              <div class="stat-label" id="stat-label-peak">Pico de Potência</div>
+              <div class="stat-change" id="stat-change-peak">Maior valor registrado hoje</div>
+              <div class="stat-glow stat-glow--danger"></div>
+            </div>
+          </div>
+
+          <!-- Gráficos -->
+          <div class="charts-grid">
+            <div class="chart-card">
+              <div class="chart-title" id="chart-title-hourly">
+                <span class="ct-icon"><i data-lucide="activity" style="width:14px;height:14px;"></i></span>
+                CONSUMO POR HORA (kWh)
+                <span class="ct-badge">Ao vivo</span>
+              </div>
+              <div class="chart-wrap chart-wrap--h260"><canvas id="chart-hourly"></canvas></div>
+            </div>
+            <div class="chart-card">
+              <div class="chart-title">
+                <span class="ct-icon"><i data-lucide="pie-chart" style="width:14px;height:14px;"></i></span>
+                CARGA POR CÔMODO
+                <span class="ct-badge">Nominal</span>
+              </div>
+              <div class="chart-wrap chart-wrap--h260"><canvas id="chart-rooms-pie"></canvas></div>
+            </div>
+          </div>
+
+          <div class="charts-grid">
+            <div class="chart-card">
+              <div class="chart-title" id="chart-title-monthly">
+                <span class="ct-icon"><i data-lucide="bar-chart-2" style="width:14px;height:14px;"></i></span>
+                HISTÓRICO DO DIA (kWh)
+              </div>
+              <div class="chart-wrap chart-wrap--h220"><canvas id="chart-monthly"></canvas></div>
+            </div>
+            <div class="chart-card">
+              <div class="chart-title">
+                <span class="ct-icon"><i data-lucide="list" style="width:14px;height:14px;"></i></span>
+                TOP DISPOSITIVOS
+                <span class="ct-badge">Estimado</span>
+              </div>
+              <div class="chart-wrap chart-wrap--h220"><canvas id="chart-devices-bar"></canvas></div>
+            </div>
+          </div>
+
+        </div>
+        <!-- ===== /ABA: DASHBOARD ===== -->
+
+
+        <!-- ===== ABA: PLANTA INTERATIVA ===== -->
+        <div class="view" id="view-planta">
+
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-title-icon"><i data-lucide="layout-dashboard" style="width:20px;height:20px;"></i></span>
+              Planta <span>Interativa</span>
+            </div>
+            <div class="live-badge"><span class="status-dot"></span> TEMPO REAL</div>
+          </div>
+
+          <div class="floor-plan-wrap">
+            <div class="floor-plan-header">
+              <div>
+                <div class="house-name-label" id="house-label">Minha Casa</div>
+                <div class="floor-hint">Clique em um cômodo para visualizar consumo detalhado e dispositivos</div>
+              </div>
+              <div class="floor-legend">
+                <span>● Normal</span>
+                <span class="floor-legend__warn">● Médio</span>
+                <span class="floor-legend__danger">● Alto</span>
+              </div>
+            </div>
+            <div class="floor-grid" id="floor-grid"></div>
+          </div>
+
+          <div id="room-detail-panel" class="room-detail-panel">
+            <div class="chart-card">
+              <div class="chart-title" id="detail-room-title">SALA DE ESTAR</div>
+              <div class="room-detail-inner">
+                <div>
+                  <div class="room-detail-hint">Dispositivos instalados neste cômodo:</div>
+                  <div id="detail-devices-list"></div>
+                </div>
+                <div class="chart-wrap chart-wrap--h200">
+                  <canvas id="chart-room-detail"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- ===== /ABA: PLANTA INTERATIVA ===== -->
+
+
+        <!-- ===== ABA: CÔMODOS ===== -->
+        <div class="view" id="view-rooms">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-title-icon"><i data-lucide="grid-3x3" style="width:20px;height:20px;"></i></span>
+              <span>Cômodos</span>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="abrirModalAdicionarComodo()">+ Novo Cômodo</button>
+          </div>
+          <div class="rooms-grid" id="rooms-grid"></div>
+        </div>
+        <!-- ===== /ABA: CÔMODOS ===== -->
+
+
+        <!-- ===== ABA: DISPOSITIVOS ===== -->
+        <div class="view" id="view-devices">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-title-icon"><i data-lucide="plug" style="width:20px;height:20px;"></i></span>
+              Dispositivos
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="abrirModalAdicionarDispositivo()">+ Novo
+              Dispositivo</button>
+          </div>
+          <div class="table-scroll">
+            <table class="devices-table" id="devices-table">
+              <thead>
+                <tr>
+                  <th>Dispositivo</th>
+                  <th>Cômodo</th>
+                  <th>Status</th>
+                  <th>Potência (W)</th>
+                  <th>Consumo Est./Dia</th>
+                  <th>kWh/Mês (est.)</th>
+                  <th>Ativo</th>
+                </tr>
+              </thead>
+              <tbody id="devices-tbody"></tbody>
+            </table>
+          </div>
+          <div class="chart-card devices-chart">
+            <div class="chart-title chart-title--flex">
+              ESTIMADO vs. MEDIDO PELO SENSOR
+              <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+                <select class="form-input select-inline" id="nilm-horas">
+                  <option value="6">6h</option>
+                  <option value="24" selected>24h</option>
+                  <option value="48">48h</option>
+                  <option value="72">72h</option>
+                </select>
+                <button class="btn btn-secondary btn-sm" onclick="_carregarNilm()">
+                  <i data-lucide="refresh-cw" style="width:13px;height:13px;"></i>
+                </button>
+              </div>
+            </div>
+            <div id="nilm-resultado"></div>
+          </div>
+        </div>
+        <!-- ===== /ABA: DISPOSITIVOS ===== -->
+
+
+        <!-- ===== ABA: RELATÓRIOS ===== -->
+        <div class="view" id="view-reports">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-title-icon"><i data-lucide="bar-chart-2" style="width:20px;height:20px;"></i></span>
+              Relatórios
+            </div>
+            <div class="report-actions">
+              <select class="form-input select-inline" id="report-period" onchange="inicializarGraficosRelatorio(); _carregarHistoricoRelatorio();">
+                <option value="week">Última Semana</option>
+                <option value="month">Último Mês</option>
+                <option value="year">Último Ano</option>
+              </select>
+              <div class="export-dropdown" id="export-dropdown">
+                <button class="btn btn-secondary btn-sm" onclick="toggleExportMenu(event)">
+                  <i data-lucide="download"></i> Exportar <i data-lucide="chevron-down" style="width:13px;height:13px;margin-left:2px;"></i>
+                </button>
+                <div class="export-menu" id="export-menu">
+                  <button class="export-menu-item" onclick="exportarCSV()"><i data-lucide="table-2"></i> CSV</button>
+                  <button class="export-menu-item" onclick="exportarPDF()"><i data-lucide="file-text"></i> PDF</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- KPIs de resumo do período -->
+          <div class="report-kpi-grid">
+            <div class="report-kpi" style="--kpi-color: #1a7eff;">
+              <div class="report-kpi__icon"><i data-lucide="zap" style="width:15px;height:15px;"></i></div>
+              <div><span class="report-kpi__value" id="rep-kpi-kwh">---</span><span class="report-kpi__unit">kWh</span></div>
+              <div class="report-kpi__label">Consumo Total</div>
+            </div>
+            <div class="report-kpi" style="--kpi-color: var(--warn);">
+              <div class="report-kpi__icon" style="background:rgba(255,170,0,0.1);border-color:rgba(255,170,0,0.25);"><i data-lucide="banknote" style="width:15px;height:15px;"></i></div>
+              <div><span class="report-kpi__value" id="rep-kpi-custo">---</span><span class="report-kpi__unit" style="color:var(--warn);">R$</span></div>
+              <div class="report-kpi__label">Custo Total</div>
+            </div>
+            <div class="report-kpi" style="--kpi-color: var(--danger);">
+              <div class="report-kpi__icon" style="background:rgba(255,61,107,0.1);border-color:rgba(255,61,107,0.22);"><i data-lucide="trending-up" style="width:15px;height:15px;"></i></div>
+              <div><span class="report-kpi__value" id="rep-kpi-pico">---</span><span class="report-kpi__unit" style="color:var(--danger);">W</span></div>
+              <div class="report-kpi__label">Pico Registrado</div>
+            </div>
+            <div class="report-kpi" style="--kpi-color: var(--success);">
+              <div class="report-kpi__icon" style="background:rgba(0,255,157,0.1);border-color:rgba(0,255,157,0.22);"><i data-lucide="calendar" style="width:15px;height:15px;"></i></div>
+              <div><span class="report-kpi__value" id="rep-kpi-media">---</span><span class="report-kpi__unit" style="color:var(--success);">kWh</span></div>
+              <div class="report-kpi__label">Média Diária</div>
+            </div>
+          </div>
+
+          <div class="report-grid">
+            <div class="chart-card">
+              <div class="chart-title">
+                <span class="ct-icon"><i data-lucide="bar-chart-2" style="width:14px;height:14px;"></i></span>
+                CONSUMO DIÁRIO (kWh)
+              </div>
+              <div class="chart-wrap chart-wrap--h240"><canvas id="chart-rep-daily"></canvas></div>
+            </div>
+            <div class="chart-card">
+              <div class="chart-title">
+                <span class="ct-icon" style="background:rgba(255,170,0,0.1);border-color:rgba(255,170,0,0.25);"><i data-lucide="dollar-sign" style="width:14px;height:14px;color:var(--warn);"></i></span>
+                CUSTO ESTIMADO (R$)
+              </div>
+              <div class="chart-wrap chart-wrap--h240"><canvas id="chart-rep-cost"></canvas></div>
+            </div>
+            <div class="chart-card">
+              <div class="chart-title">
+                <span class="ct-icon" style="background:rgba(125,249,255,0.08);border-color:rgba(125,249,255,0.2);"><i data-lucide="zap" style="width:14px;height:14px;color:#7df9ff;"></i></span>
+                TENSÃO MÉDIA (V)
+              </div>
+              <div class="chart-wrap chart-wrap--h220"><canvas id="chart-rep-volts"></canvas></div>
+            </div>
+            <div class="chart-card">
+              <div class="chart-title">
+                <span class="ct-icon"><i data-lucide="activity" style="width:14px;height:14px;"></i></span>
+                CORRENTE MÉDIA (A)
+              </div>
+              <div class="chart-wrap chart-wrap--h220"><canvas id="chart-rep-amps"></canvas></div>
+            </div>
+          </div>
+
+          <div class="chart-card report-summary">
+            <div class="chart-title chart-title--mb-16">
+              <span class="ct-icon"><i data-lucide="table-2" style="width:14px;height:14px;"></i></span>
+              RESUMO DO PERÍODO SELECIONADO
+            </div>
+            <div class="table-scroll">
+              <table class="devices-table" id="report-table">
+                <thead>
+                  <tr>
+                    <th>Período</th>
+                    <th>Consumo (kWh)</th>
+                    <th>Custo (R$)</th>
+                    <th>Pico (W)</th>
+                    <th>Tensão Média (V)</th>
+                    <th>Corrente Média (A)</th>
+                  </tr>
+                </thead>
+                <tbody id="report-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+        <!-- ===== /ABA: RELATÓRIOS ===== -->
+
+
+        <!-- ===== ABA: ALERTAS ===== -->
+        <div class="view" id="view-alerts">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-title-icon"><i data-lucide="bell" style="width:20px;height:20px;"></i></span>
+              Alertas &amp; <span>Notificações</span>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="limparAlertas()">Limpar todos</button>
+          </div>
+
+          <div class="alerts-layout">
+            <div>
+              <div class="alert-list" id="alerts-list"></div>
+            </div>
+            <div>
+              <div class="chart-card">
+                <div class="chart-title chart-title--mb-12">CONFIGURAR LIMITES DE ALERTA</div>
+                <div class="form-group">
+                  <label class="form-label">Limite de Consumo (kWh/dia)</label>
+                  <input class="form-input" type="number" id="alert-kwh-limit" placeholder="Ex: 20">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Limite de Custo (R$/mês)</label>
+                  <input class="form-input" type="number" id="alert-cost-limit" placeholder="Ex: 300">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Tensão Mínima Permitida (V)</label>
+                  <input class="form-input" type="number" id="alert-volt-min" placeholder="Ex: 200">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Tensão Máxima Permitida (V)</label>
+                  <input class="form-input" type="number" id="alert-volt-max" placeholder="Ex: 240">
+                </div>
+                <button class="btn btn-primary btn-save-alerts" onclick="salvarConfiguracaoAlertas()">
+                  SALVAR CONFIGURAÇÕES
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- ===== /ABA: ALERTAS ===== -->
+
+
+        <!-- ===== ABA: Dispositivo Monitech ===== -->
+        <div class="view" id="view-esp32">
+
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-title-icon"><i data-lucide="wifi" style="width:20px;height:20px;"></i></span>
+              Conexão <span>Dispositivo Monitech</span>
+            </div>
+            <div class="esp32-status-wrap">
+              <div id="esp-live-badge" class="live-badge live-badge--disconnected">
+                <span id="esp-dot" class="esp-dot-base"></span>
+                <span id="esp-live-text">DESCONECTADO</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vista para usuário comum: status via API (sem conexão direta) -->
+          <div class="esp32-user-view" data-user-only>
+
+            <!-- ── Estado A: Nenhum sensor vinculado ── -->
+            <div id="device-sem-sensor" style="display:none">
+              <div class="device-link-grid">
+
+                <!-- Card de registro / aguardando -->
+                <div class="chart-card">
+                  <div class="chart-title chart-title--mb-16">
+                    <i data-lucide="link" style="width:16px;height:16px;vertical-align:-3px;margin-right:6px;color:var(--cyan)"></i>
+                    Vincular Dispositivo MONITECH
+                  </div>
+
+                  <!-- Sub-estado 1: Formulário inicial -->
+                  <div id="device-form-state">
+                    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:20px;line-height:1.6">
+                      Registre o código impresso na caixa do dispositivo para gerar o token de autenticação. Em seguida, siga o guia ao lado para configurá-lo.
+                    </p>
+
+                    <div class="form-group">
+                      <label class="form-label">Código do dispositivo</label>
+                      <div style="display:flex;gap:8px;">
+                        <input class="form-input" id="painel-codigo-iot"
+                          placeholder="Ex: MONITECH-001  (impresso na caixa)"
+                          style="flex:1;font-family:'Orbitron',monospace;letter-spacing:1px;">
+                        <button class="btn btn-secondary btn-sm" style="white-space:nowrap;" onclick="abrirQRScanner()" title="Escanear QR Code da caixa">
+                          <i data-lucide="camera"></i> QR
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label">Apelido do sensor (opcional)</label>
+                      <input class="form-input" id="painel-apelido-iot" placeholder="Ex: Medidor Principal">
+                    </div>
+
+                    <button class="btn btn-primary" id="btn-vincular-sensor" onclick="registrarSensorPainel()" style="width:100%;">
+                      <i data-lucide="link"></i> Gerar Token de Acesso
+                    </button>
+
+                    <!-- QR Scanner -->
+                    <div id="qr-scanner-container" style="display:none;margin-top:14px;">
+                      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">Aponte a câmera para o QR Code da caixa do dispositivo:</div>
+                      <video id="qr-video" style="width:100%;border-radius:8px;border:1px solid var(--border);max-height:220px;object-fit:cover;"></video>
+                      <button onclick="fecharQRScanner()" class="btn btn-secondary btn-sm" style="margin-top:8px;width:100%;">✕ Cancelar</button>
+                    </div>
+                  </div>
+
+                  <!-- Sub-estado 2: Aguardando conexão do dispositivo -->
+                  <div id="device-waiting-state" style="display:none">
+
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;padding:12px 14px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.25);border-radius:10px;">
+                      <div style="width:10px;height:10px;border-radius:50%;background:#10b981;flex-shrink:0;box-shadow:0 0 8px #10b981;animation:pulse 2s infinite;"></div>
+                      <div>
+                        <div style="font-size:13px;color:#10b981;font-weight:600;">Token gerado com sucesso!</div>
+                        <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">Agora configure o dispositivo com as informações abaixo.</div>
+                      </div>
+                    </div>
+
+                    <!-- Token -->
+                    <div style="margin-bottom:16px;">
+                      <div style="font-size:11px;color:var(--text-secondary);font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;">
+                        <i data-lucide="key" style="width:12px;height:12px;vertical-align:-2px;margin-right:4px;"></i> Token de autenticação
+                      </div>
+                      <div style="display:flex;gap:8px;align-items:stretch;">
+                        <div id="painel-token-valor" style="flex:1;font-family:'Orbitron',monospace;font-size:11px;color:#7df9ff;word-break:break-all;background:rgba(0,0,0,.35);padding:10px 12px;border-radius:8px;border:1px solid rgba(125,249,255,.2);user-select:all;min-height:40px;"></div>
+                        <button id="btn-copiar-token" class="btn btn-secondary btn-sm" onclick="_copiarToken()" style="flex-shrink:0;padding:0 14px;" title="Copiar token">
+                          <i data-lucide="copy" style="width:15px;height:15px;"></i>
+                        </button>
+                      </div>
+                      <div id="token-aviso-vazio" style="display:none;font-size:11px;color:#f5a623;margin-top:8px;padding:8px 10px;background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.25);border-radius:6px;">
+                        O token não está mais disponível neste navegador. Clique em <strong>"Refazer vinculação"</strong> abaixo para registrar um novo dispositivo.
+                      </div>
+                      <div id="token-aviso-copiar" style="font-size:11px;color:var(--text-dim);margin-top:6px;">Cole no portal do dispositivo em <strong style="color:#e0eaff;">http://192.168.4.1</strong></div>
+                    </div>
+
+                    <!-- URL do servidor -->
+                    <div style="margin-bottom:20px;">
+                      <div style="font-size:11px;color:var(--text-secondary);font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;">
+                        <i data-lucide="server" style="width:12px;height:12px;vertical-align:-2px;margin-right:4px;"></i> URL do servidor MONITECH
+                      </div>
+                      <div style="display:flex;gap:8px;align-items:center;">
+                        <code id="painel-servidor-url" style="flex:1;font-family:'Orbitron',monospace;font-size:11px;color:#7df9ff;word-break:break-all;background:rgba(0,0,0,.3);padding:8px 10px;border-radius:6px;"></code>
+                        <button class="btn btn-secondary btn-sm" onclick="copiarUrlServidorPainel()" style="white-space:nowrap;flex-shrink:0;">
+                          <i data-lucide="copy"></i> Copiar
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Indicador de polling -->
+                    <div class="conexao-polling-box">
+                      <div class="conexao-polling-spinner"></div>
+                      <div>
+                        <div style="font-size:13px;font-weight:600;color:var(--text-primary);">Aguardando conexão do dispositivo…</div>
+                        <div style="font-size:11px;color:var(--text-secondary);margin-top:3px;">Verificando automaticamente a cada 10 segundos.</div>
+                      </div>
+                    </div>
+
+                    <button class="btn btn-secondary" id="btn-verificar-conexao" style="width:100%;margin-top:12px;" onclick="_verificarConexaoAgora()">
+                      <i data-lucide="refresh-cw" style="width:14px;height:14px;"></i> Verificar conexão agora
+                    </button>
+
+                    <div style="text-align:center;margin-top:14px;">
+                      <button onclick="mostrarVincularDispositivo()" style="background:none;border:none;color:var(--text-dim);font-size:12px;cursor:pointer;text-decoration:underline;padding:0;line-height:1.5;">
+                        Refazer vinculação com o dispositivo
+                      </button>
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- Card do guia de configuração -->
+                <div class="chart-card">
+                  <div class="chart-title chart-title--mb-16">
+                    <i data-lucide="book-open" style="width:16px;height:16px;vertical-align:-3px;margin-right:6px;color:var(--cyan)"></i>
+                    Como configurar o dispositivo
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:16px;">
+                    <div class="device-setup-step">
+                      <div class="device-setup-num">1</div>
+                      <div>
+                        <div class="device-setup-title">Ligue o dispositivo</div>
+                        <div class="device-setup-desc">Conecte o Dispositivo MONITECH na tomada. Aguarde o LED piscar em azul — isso indica que está no modo de configuração inicial.</div>
+                      </div>
+                    </div>
+                    <div class="device-setup-step">
+                      <div class="device-setup-num">2</div>
+                      <div>
+                        <div class="device-setup-title">Conecte-se à rede do dispositivo</div>
+                        <div class="device-setup-desc">No celular ou notebook, vá em Configurações → Wi-Fi e conecte-se à rede <strong style="color:var(--cyan)">MONITECH-SETUP</strong> com a senha <strong style="color:var(--cyan)">monitech123</strong>.</div>
+                      </div>
+                    </div>
+                    <div class="device-setup-step">
+                      <div class="device-setup-num">3</div>
+                      <div>
+                        <div class="device-setup-title">Abra o portal de configuração</div>
+                        <div class="device-setup-desc">Com a rede do dispositivo ativa, acesse <strong style="color:var(--cyan)">http://192.168.4.1</strong> no navegador. A página de configuração do dispositivo abrirá.</div>
+                      </div>
+                    </div>
+                    <div class="device-setup-step">
+                      <div class="device-setup-num">4</div>
+                      <div>
+                        <div class="device-setup-title">Preencha o token e a URL</div>
+                        <div class="device-setup-desc">No portal, informe a <strong>senha do Wi-Fi</strong> da sua casa, cole o <strong>token</strong> e a <strong>URL do servidor</strong> gerados ao lado e clique em <strong>Salvar</strong>.</div>
+                      </div>
+                    </div>
+                    <div class="device-setup-step">
+                      <div class="device-setup-num">5</div>
+                      <div>
+                        <div class="device-setup-title">Aguarde a conexão automática</div>
+                        <div class="device-setup-desc">O dispositivo reinicia, conecta-se ao Wi-Fi da sua casa e começa a enviar leituras automaticamente. Esta página atualizará o status para <strong style="color:#10b981">Online</strong>.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- ── Estado B: Sensor vinculado ── -->
+            <div id="device-com-sensor" style="display:none">
+              <div class="esp32-user-grid">
+
+                <!-- Status do dispositivo -->
+                <div class="chart-card">
+                  <div class="chart-title chart-title--mb-16">Status do Dispositivo</div>
+                  <div class="user-status-row">
+                    <div class="user-status-indicator" id="user-status-dot"></div>
+                    <div>
+                      <div class="user-status-label" id="user-status-text">Verificando...</div>
+                      <div class="user-status-sub" id="user-status-since"></div>
+                    </div>
+                  </div>
+                  <div class="user-device-id-row">
+                    <div class="user-info-item" style="flex:1; min-width:0;">
+                      <span class="user-info-key">Device ID</span>
+                      <span class="user-info-val user-device-id-val" id="user-device-id">—</span>
+                    </div>
+                    <button class="user-copy-btn" title="Copiar Device ID" onclick="(()=>{ const v=document.getElementById('user-device-id')?.textContent; if(v&&v!=='—'){ navigator.clipboard.writeText(v).then(()=>{ const b=this; b.classList.add('copied'); setTimeout(()=>b.classList.remove('copied'),1500); }); } })()">
+                      <i data-lucide="copy" style="width:13px;height:13px;"></i>
+                    </button>
+                  </div>
+                  <div class="user-info-grid">
+                    <div class="user-info-item">
+                      <span class="user-info-key">Firmware</span>
+                      <span class="user-info-val" id="user-fw-ver">—</span>
+                    </div>
+                    <div class="user-info-item">
+                      <span class="user-info-key">Sinal Wi-Fi</span>
+                      <span class="user-info-val" id="user-rssi">—</span>
+                    </div>
+                    <div class="user-info-item">
+                      <span class="user-info-key">Modelo</span>
+                      <span class="user-info-val" id="user-modelo">—</span>
+                    </div>
+                    <div class="user-info-item">
+                      <span class="user-info-key">Rede Wi-Fi</span>
+                      <span class="user-info-val" id="user-ssid">—</span>
+                    </div>
+                    <div class="user-info-item">
+                      <span class="user-info-key">IP Local</span>
+                      <span class="user-info-val" id="user-ip">—</span>
+                    </div>
+                    <div class="user-info-item">
+                      <span class="user-info-key">Protocolo</span>
+                      <span class="user-info-val" id="user-protocolo">—</span>
+                    </div>
+                  </div>
+                  <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
+                    <button class="btn btn-secondary btn-sm" onclick="mostrarVincularDispositivo()" style="font-size:12px;">
+                      <i data-lucide="refresh-cw" style="width:13px;height:13px"></i> Trocar dispositivo
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Última leitura -->
+                <div class="chart-card">
+                  <div class="chart-title chart-title--mb-16">Última Leitura</div>
+                  <div class="user-reading-grid">
+                    <div class="user-reading-item">
+                      <div class="user-reading-val" id="user-volts">—</div>
+                      <div class="user-reading-key">VOLTS</div>
+                    </div>
+                    <div class="user-reading-item">
+                      <div class="user-reading-val" id="user-amps">—</div>
+                      <div class="user-reading-key">AMPERES</div>
+                    </div>
+                    <div class="user-reading-item">
+                      <div class="user-reading-val" id="user-watts">—</div>
+                      <div class="user-reading-key">WATTS</div>
+                    </div>
+                    <div class="user-reading-item">
+                      <div class="user-reading-val" id="user-kwh">—</div>
+                      <div class="user-reading-key">kWh HOJE</div>
+                    </div>
+                  </div>
+                  <div class="user-reading-ts" id="user-reading-ts">Aguardando dados...</div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Grid principal: configuração + status -->
+          <div class="esp32-main-grid" data-admin-only>
+
+            <!-- Configuração de conexão -->
+            <div class="chart-card">
+              <div class="chart-title chart-title--mb-20">Configuração de Conexão Dispositivo Monitech</div>
+
+              <!-- Campos HTTP -->
+              <div id="fields-http" style="display:block;">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Endereço IP do Dispositivo Monitech</label>
+                    <input class="form-input" id="esp-ip-http" placeholder="192.168.1.100" value="192.168.1.100">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Porta HTTP</label>
+                    <input class="form-input" id="esp-port-http" placeholder="80" value="80">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Endpoint de Leitura de Dados</label>
+                  <input class="form-input" id="esp-http-path" placeholder="/api/data" value="/api/data">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Intervalo de Atualização (ms)</label>
+                  <input class="form-input" type="number" id="esp-poll-interval" value="2000" min="500" max="60000">
+                </div>
+              </div>
+
+              <!-- Campos WS/MQTT/Serial mantidos ocultos para compatibilidade com JS -->
+              <div id="fields-ws"     style="display:none;"></div>
+              <div id="fields-mqtt"   style="display:none;"></div>
+              <div id="fields-serial" style="display:none;"></div>
+
+              <div class="divider"></div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">ID do Dispositivo</label>
+                  <input class="form-input" id="esp-device-id" placeholder="Ex: MONITECH-001" value="">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Apelido do Dispositivo</label>
+                  <input class="form-input" id="esp-device-alias" placeholder="Ex: Medidor Principal">
+                </div>
+              </div>
+
+              <div class="conn-actions">
+                <button class="btn btn-primary btn--flex-2" id="btn-connect" onclick="conectarESP32()">CONECTAR</button>
+                <button class="btn btn-secondary btn--flex-1" id="btn-disconnect" onclick="desconectarESP32()"
+                  disabled>DESCONECTAR</button>
+                <button class="btn btn-secondary btn-sm" onclick="verificarConexaoESP32()"
+                  title="Testar conectividade com o dispositivo">PING</button>
+              </div>
+
+              <!-- Token secreto — exibido após registrar o sensor -->
+              <div id="esp-token-box" style="display:none; margin-top:16px; padding:14px; background:rgba(0,255,157,0.07); border:1px solid rgba(0,255,157,0.3); border-radius:8px;">
+                <div style="font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--success); margin-bottom:8px; font-weight:700;">
+                  ✓ TOKEN SECRETO GERADO — copie e grave no ESP32
+                </div>
+                <div id="esp-token-display" style="font-family:'Orbitron',monospace; font-size:11px; color:var(--electric); word-break:break-all; background:var(--bg-void); padding:10px; border-radius:6px; border:1px solid var(--border); cursor:pointer;" onclick="navigator.clipboard.writeText(this.textContent).then(()=>alert('Token copiado!'))"></div>
+                <div style="font-size:11px; color:var(--text-secondary); margin-top:8px;">⚠ Este token não será exibido novamente. Grave-o no firmware do ESP32 antes de fechar.</div>
+              </div>
+            </div>
+
+            <!-- Coluna de status -->
+            <div class="esp-status-col">
+
+              <div class="chart-card">
+                <div class="chart-title chart-title--mb-16">STATUS DA CONEXãO</div>
+                <div class="conn-status-body">
+
+                  <div class="conn-diagram">
+                    <div class="conn-node">
+                      <div class="conn-node__icon"><i data-lucide="monitor"></i></div>
+                      <div class="conn-node__label">NAVEGADOR</div>
+                    </div>
+                    <div class="conn-wire">
+                      <div id="conn-line" class="conn-line">
+                        <div id="conn-pulse" class="conn-pulse"></div>
+                      </div>
+                      <div id="conn-proto-label" class="conn-proto-name">WebSocket</div>
+                    </div>
+                    <div class="conn-node">
+                      <div id="esp-icon" class="conn-esp__icon"><i data-lucide="cpu"></i></div>
+                      <div class="conn-node__label">Dispositivo Monitech</div>
+                    </div>
+                  </div>
+
+                  <div class="conn-metrics">
+                    <div class="conn-metric">
+                      <div class="conn-metric__value" id="conn-latency">--</div>
+                      <div class="conn-metric__label">LATÊNCIA (ms)</div>
+                    </div>
+                    <div class="conn-metric">
+                      <div class="conn-metric__value" id="conn-packets">0</div>
+                      <div class="conn-metric__label">PACOTES RECEBIDOS</div>
+                    </div>
+                    <div class="conn-metric">
+                      <div class="conn-metric__value--sm" id="conn-uptime">--</div>
+                      <div class="conn-metric__label">TEMPO ATIVO</div>
+                    </div>
+                    <div class="conn-metric">
+                      <div class="conn-metric__value--sm" id="conn-rssi">--</div>
+                      <div class="conn-metric__label">SINAL Wi-Fi (dBm)</div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="chart-card">
+                <div class="chart-title chart-title--mb-12">INFORMAÇÕES DO DISPOSITIVO</div>
+                <div id="esp-info-empty" class="esp-info-empty">
+                  Conecte um Dispositivo Monitech para visualizar as informações do hardware
+                </div>
+                <div id="esp-info-data">
+                  <div class="esp-info-list">
+                    <div class="esp-info-row">
+                      <span class="esp-info-key">Versão do Firmware</span>
+                      <span id="esp-fw" class="esp-info-val">---</span>
+                    </div>
+                    <div class="esp-info-row">
+                      <span class="esp-info-key">Chip ID</span>
+                      <span id="esp-chip" class="esp-info-val">---</span>
+                    </div>
+                    <div class="esp-info-row">
+                      <span class="esp-info-key">IP Local</span>
+                      <span id="esp-local-ip" class="esp-info-val">---</span>
+                    </div>
+                    <div class="esp-info-row">
+                      <span class="esp-info-key">Rede Wi-Fi (SSID)</span>
+                      <span id="esp-ssid" class="esp-info-val">---</span>
+                    </div>
+                    <div class="esp-info-row">
+                      <span class="esp-info-key">Sensor de Medição</span>
+                      <span id="esp-sensor" class="esp-info-val">---</span>
+                    </div>
+                    <div class="esp-info-row--last">
+                      <span class="esp-info-key">Memória Livre (Heap)</span>
+                      <span id="esp-heap" class="esp-info-val">---</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+          <!-- /Grid principal -->
+
+          <!-- Leituras ao vivo -->
+          <div class="esp32-live-grid" data-admin-only>
+
+            <div class="chart-card">
+              <div class="chart-title chart-title--flex">
+                <span>LEITURA EM TEMPO REAL — Dispositivo Monitech</span>
+                <div class="esp-metric-selector">
+                  <button class="proto-btn active" id="esp-ch-volts"
+                    onclick="definirMetricaGraficoESP32('volts')">Volts</button>
+                  <button class="proto-btn" id="esp-ch-amps"
+                    onclick="definirMetricaGraficoESP32('amps')">Amperes</button>
+                  <button class="proto-btn" id="esp-ch-watts"
+                    onclick="definirMetricaGraficoESP32('watts')">Watts</button>
+                </div>
+              </div>
+              <div class="esp-live-chart-wrap">
+                <canvas id="chart-esp-live"></canvas>
+                <div id="esp-chart-overlay" class="esp-chart-overlay">
+                  <div class="esp-overlay-icon"><i data-lucide="wifi"></i></div>
+                  <div class="esp-overlay-text">Aguardando conexão com o dispositivo Dispositivo Monitech...</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-title chart-title--mb-12">ÚLTIMO PACOTE JSON RECEBIDO</div>
+              <pre id="esp-last-packet" class="esp-last-packet">{
+  "aguardando": true
+}</pre>
+            </div>
+
+          </div>
+
+          <!-- Terminal de log (apenas admin) -->
+          <div class="chart-card chart-card--mb" data-admin-only>
+            <div class="terminal-header">
+              <span>TERMINAL DE LOG</span>
+              <div class="terminal-controls">
+                <label class="terminal-autoscroll">
+                  <input type="checkbox" id="esp-autoscroll" checked>
+                  Rolagem automática
+                </label>
+                <button class="btn btn-secondary btn-sm" onclick="limparTerminal()"><i data-lucide="trash-2"></i> Limpar</button>
+              </div>
+            </div>
+            <div id="esp-terminal" class="esp-terminal"></div>
+          </div>
+
+          <!-- Guia de firmware -->
+          <div class="chart-card" data-admin-only>
+            <div class="chart-title chart-title--mb-16">FIRMWARE PARA Dispositivo Monitech — CÓDIGO DE REFERÊNCIA</div>
+
+            <!-- Credenciais Wi-Fi para preencher o código -->
+            <div class="fw-cred-row">
+              <div class="form-group">
+                <label class="form-label">Nome da rede Wi-Fi (SSID)</label>
+                <input class="form-input" id="fw-ssid" placeholder="MinhaRedeWiFi" oninput="preencherCodigo()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Senha Wi-Fi</label>
+                <input class="form-input" id="fw-pass" placeholder="SuaSenha" oninput="preencherCodigo()">
+              </div>
+              <button class="btn btn-secondary btn-sm fw-fill-btn" onclick="preencherCodigo()">
+                <i data-lucide="refresh-cw"></i> Atualizar código
+              </button>
+            </div>
+
+            <div class="code-tab-selector">
+              <button class="proto-btn" id="code-tab-ws" onclick="exibirAbaCodigo('ws')">WebSocket</button>
+              <button class="proto-btn active" id="code-tab-http" onclick="exibirAbaCodigo('http')">HTTP POST</button>
+              <button class="proto-btn" id="code-tab-mqtt" onclick="exibirAbaCodigo('mqtt')">MQTT</button>
+            </div>
+
+            <!-- Código WebSocket -->
+            <div id="codetab-ws">
+              <div class="code-header">
+                <span class="code-meta">Arduino IDE — Dispositivo Monitech com Leitor Monitech e Sensor Monitech</span>
+                <div style="display:flex;gap:8px;">
+                  <button class="btn btn-secondary btn-sm" onclick="copiarCodigo('code-ws')"><i data-lucide="clipboard"></i> Copiar</button>
+                  <button class="btn btn-secondary btn-sm" onclick="baixarFirmware('ws')"><i data-lucide="download"></i> .ino</button>
+                </div>
+              </div>
+              <pre id="code-ws" class="code-block">#include &lt;WiFi.h&gt;
+#include &lt;WebSocketsServer.h&gt;
+#include &lt;ArduinoJson.h&gt;
+// Para PZEM-004T: #include &lt;PZEM004Tv30.h&gt;
+
+const char* SSID      = "SUA_REDE_WIFI";
+const char* PASSWORD  = "SUA_SENHA_WIFI";
+const char* DEVICE_ID = "MONITECH-001";
+const char* FW_VER    = "1.0.0";
+
+WebSocketsServer ws(81);
+// PZEM004Tv30 pzem(Serial2, 16, 17); // RX=16, TX=17
+
+unsigned long ultimoEnvio = 0;
+const int INTERVALO_ENVIO = 2000; // ms
+
+float lerVolts()  { return 0; }
+float lerAmps()   { return 0; }
+float lerWatts()  { return 0; }
+float lerFP()     { return 0; }
+float lerHz()     { return 0; }
+float lerKwh()    { return 0; }
+
+// Com PZEM-004T real (descomente):
+// float lerVolts()  { return pzem.voltage(); }
+// float lerAmps()   { return pzem.current(); }
+// float lerWatts()  { return pzem.power(); }
+// float lerFP()     { return pzem.pf(); }
+// float lerHz()     { return pzem.frequency(); }
+// float lerKwh()    { return pzem.energy(); }
+
+void enviarDados() {
+  StaticJsonDocument&lt;256&gt; doc;
+  doc["id"]     = DEVICE_ID;
+  doc["fw"]     = FW_VER;
+  doc["chip"]   = ESP.getEfuseMac();
+  doc["ip"]     = WiFi.localIP().toString();
+  doc["ssid"]   = WiFi.SSID();
+  doc["rssi"]   = WiFi.RSSI();
+  doc["heap"]   = ESP.getFreeHeap();
+  doc["sensor"] = "Leitor Monitech";
+  doc["volts"]  = lerVolts();
+  doc["amps"]   = lerAmps();
+  doc["watts"]  = lerWatts();
+  doc["pf"]     = lerFP();
+  doc["hz"]     = lerHz();
+  doc["kwh"]    = lerKwh();
+  doc["ts"]     = millis();
+  String payload;
+  serializeJson(doc, payload);
+  ws.broadcastTXT(payload);
+}
+
+void eventoWS(uint8_t num, WStype_t tipo, uint8_t* payload, size_t tamanho) {
+  if (tipo == WStype_CONNECTED) enviarDados();
+}
+
+void setup() {
+  Serial.begin(115200);
+  WiFi.begin(SSID, PASSWORD);
+  while (WiFi.status() != WL_CONNECTED) { delay(500); }
+  ws.begin();
+  ws.onEvent(eventoWS);
+}
+
+void loop() {
+  ws.loop();
+  if (millis() - ultimoEnvio >= INTERVALO_ENVIO) { enviarDados(); ultimoEnvio = millis(); }
+}</pre>
+            </div>
+
+            <!-- Código HTTP POST -->
+            <div id="codetab-http">
+              <div class="code-header">
+                <span class="code-meta">Arduino IDE — Dispositivo Monitech envia leituras via HTTP POST para o servidor</span>
+                <div style="display:flex;gap:8px;">
+                  <button class="btn btn-secondary btn-sm" onclick="copiarCodigo('code-http')"><i data-lucide="clipboard"></i> Copiar</button>
+                  <button class="btn btn-secondary btn-sm" onclick="baixarFirmware('http')"><i data-lucide="download"></i> .ino</button>
+                </div>
+              </div>
+              <pre id="code-http" class="code-block"></pre>
+            </div>
+
+            <!-- Código MQTT -->
+            <div id="codetab-mqtt">
+              <div class="code-header">
+                <span class="code-meta">Arduino IDE — Dispositivo Monitech como Publisher MQTT</span>
+                <div style="display:flex;gap:8px;">
+                  <button class="btn btn-secondary btn-sm" onclick="copiarCodigo('code-mqtt')"><i data-lucide="clipboard"></i> Copiar</button>
+                  <button class="btn btn-secondary btn-sm" onclick="baixarFirmware('mqtt')"><i data-lucide="download"></i> .ino</button>
+                </div>
+              </div>
+              <pre id="code-mqtt" class="code-block">#include &lt;WiFi.h&gt;
+#include &lt;PubSubClient.h&gt;
+#include &lt;ArduinoJson.h&gt;
+
+const char* SSID        = "SUA_REDE_WIFI";
+const char* PASSWORD    = "SUA_SENHA_WIFI";
+const char* MQTT_SERVER = "broker.hivemq.com";
+const int   MQTT_PORT   = 1883;
+const char* TOPICO      = "MONITECH/home/energy";
+const char* DEVICE_ID   = "MONITECH-001";
+
+WiFiClient   espClient;
+PubSubClient mqtt(espClient);
+unsigned long ultimaMensagem = 0;
+
+float lerVolts() { return 220.0 + random(-10, 10) * 0.1; }
+float lerAmps()  { return 5.0  + random(-5, 5)  * 0.1; }
+
+void reconectar() {
+  while (!mqtt.connected()) {
+    if (mqtt.connect(DEVICE_ID)) mqtt.publish(TOPICO "/status", "online");
+    else delay(3000);
+  }
+}
+
+void publicarDados() {
+  StaticJsonDocument&lt;256&gt; doc;
+  float v = lerVolts(), a = lerAmps();
+  doc["id"]    = DEVICE_ID;
+  doc["volts"] = v; doc["amps"] = a;
+  doc["watts"] = v * a * 0.85;
+  doc["pf"]    = 0.85; doc["hz"] = 60.0;
+  doc["kwh"]   = 12.4 + millis() / 3600000.0;
+  doc["rssi"]  = WiFi.RSSI(); doc["ts"] = millis();
+  char buf[256];
+  serializeJson(doc, buf);
+  mqtt.publish(TOPICO, buf);
+}
+
+void setup() {
+  Serial.begin(115200);
+  WiFi.begin(SSID, PASSWORD);
+  while (WiFi.status() != WL_CONNECTED) { delay(500); }
+  mqtt.setServer(MQTT_SERVER, MQTT_PORT);
+}
+
+void loop() {
+  if (!mqtt.connected()) reconectar();
+  mqtt.loop();
+  if (millis() - ultimaMensagem > 2000) { publicarDados(); ultimaMensagem = millis(); }
+}</pre>
+            </div>
+
+            <div class="libs-box">
+              <div class="libs-title">BIBLIOTECAS NECESSÁRIAS (Arduino Library Manager)</div>
+              <div class="libs-list" id="libs-needed">
+                <span class="tag tag-blue">ArduinoJson (Benoit Blanchon)</span>
+                <span class="tag tag-cyan">PZEM-004T-v30</span>
+                <span class="tag tag-cyan">PubSubClient (MQTT)</span>
+              </div>
+            </div>
+
+          </div>
+          <!-- /Guia de firmware -->
+
+          <!-- OTA — Atualização sem cabo -->
+          <div class="chart-card ota-card">
+            <div class="ota-header">
+              <div class="ota-header__icon"><i data-lucide="cpu"></i></div>
+              <div>
+                <div class="chart-title" style="margin-bottom:2px;">ATUALIZAR DISPOSITIVO</div>
+                <div class="ota-subtitle">Instale o firmware pelo Wi-Fi, sem cabo</div>
+              </div>
+            </div>
+
+            <!-- Versão atual + botão principal -->
+            <div class="ota-version-row">
+              <div class="ota-version-info">
+                <div class="ota-version-label">FIRMWARE INSTALADO</div>
+                <div class="ota-version-val" id="ota-fw-atual">—</div>
+              </div>
+              <div class="ota-version-info">
+                <div class="ota-version-label">DISPONÍVEL NO SERVIDOR</div>
+                <div class="ota-version-val" id="ota-fw-server">—</div>
+              </div>
+            </div>
+
+            <button class="ota-btn-main" id="btn-ota-auto" onclick="atualizarDispositivo()">
+              Instalar Atualização
+            </button>
+
+            <!-- Barra de progresso -->
+            <div id="ota-progress-wrap" class="ota-progress-wrap" style="display:none;">
+              <div class="ota-progress-track">
+                <div class="ota-progress-bar" id="ota-progress-bar" style="width:0%"></div>
+              </div>
+              <div class="ota-status" id="ota-status">Aguardando...</div>
+            </div>
+
+            <!-- Avançado: upload manual (oculto por padrão) -->
+            <button class="ota-advanced-toggle" data-admin-only onclick="toggleOtaAvancado(this)">
+              <i data-lucide="settings-2"></i> Instalação manual (avançado)
+              <i data-lucide="chevron-down" class="ota-chevron"></i>
+            </button>
+            <!-- Upload de firmware pelo admin -->
+            <div class="fw-pub-card" data-admin-only>
+              <div class="fw-pub-header">
+                <i data-lucide="upload-cloud"></i>
+                <div>
+                  <div class="fw-pub-title">Publicar novo firmware</div>
+                  <div class="fw-pub-sub">O arquivo será disponibilizado para todos os dispositivos</div>
+                </div>
+              </div>
+              <div class="fw-pub-row">
+                <div class="form-group" style="width:140px;flex-shrink:0;">
+                  <label class="form-label">Versão</label>
+                  <input class="form-input" id="fw-upload-ver" placeholder="1.0.1" value="1.0.0">
+                </div>
+                <div class="form-group" style="flex:1;">
+                  <label class="form-label">Arquivo compilado (.bin)</label>
+                  <div class="fw-dropzone" id="fw-dropzone"
+                    ondragover="event.preventDefault(); this.classList.add('fw-dropzone--drag')"
+                    ondragleave="this.classList.remove('fw-dropzone--drag')"
+                    ondrop="fwDropHandler(event)"
+                    onclick="document.getElementById('fw-upload-input').click()">
+                    <i data-lucide="file-code-2"></i>
+                    <span id="fw-drop-text">Arraste o .bin aqui ou clique para selecionar</span>
+                    <span class="fw-drop-sub" id="fw-drop-sub"></span>
+                  </div>
+                  <input type="file" id="fw-upload-input" accept=".bin" style="display:none"
+                    onchange="fwFileSelected(this)">
+                </div>
+              </div>
+              <div class="fw-pub-actions">
+                <button class="btn btn-primary" id="btn-fw-upload" onclick="uploadFirmware()" disabled>
+                  <i data-lucide="upload"></i> Publicar para usuários
+                </button>
+                <span class="fw-upload-status" id="fw-upload-status"></span>
+              </div>
+            </div>
+
+            <div id="ota-avancado" class="ota-avancado" data-admin-only style="display:none;">
+              <div class="ota-upload-row">
+                <div class="form-group" style="flex:1;min-width:130px;">
+                  <label class="form-label">IP do dispositivo</label>
+                  <input class="form-input" id="ota-ip" placeholder="192.168.1.100" value="192.168.1.100">
+                </div>
+                <div class="form-group" style="width:80px;flex-shrink:0;">
+                  <label class="form-label">Porta</label>
+                  <input class="form-input" id="ota-porta" placeholder="80" value="80">
+                </div>
+              </div>
+              <div class="ota-file-row">
+                <label class="ota-file-label" for="ota-file-input">
+                  <i data-lucide="upload-cloud"></i>
+                  <span id="ota-file-name">Selecionar arquivo .bin</span>
+                </label>
+                <input type="file" id="ota-file-input" accept=".bin" style="display:none"
+                  onchange="document.getElementById('ota-file-name').textContent = this.files[0]?.name || 'Selecionar arquivo .bin'">
+                <button class="btn btn-secondary btn-sm" id="btn-ota-enviar" onclick="enviarOTA()">
+                  <i data-lucide="send"></i> Enviar
+                </button>
+              </div>
+            </div>
+
+          </div>
+          <!-- /OTA -->
+
+        </div>
+        <!-- ===== /ABA: Dispositivo Monitech ===== -->
+
+
+        <!-- ===== ABA: CONFIGURAÇÕES ===== -->
+        <div class="view" id="view-settings">
+
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-title-icon"><i data-lucide="settings-2" style="width:20px;height:20px;"></i></span>
+              Configurações
+            </div>
+            <div class="settings-header-sub">Gerencie sua conta e preferências do sistema</div>
+          </div>
+
+          <div class="settings-container">
+
+            <div class="settings-tabs">
+              <button class="settings-tab active" onclick="exibirAbaConfiguracoes('profile')" id="tab-profile">
+                <i data-lucide="user" style="width:14px;height:14px;flex-shrink:0;"></i> Perfil
+              </button>
+              <button class="settings-tab" onclick="exibirAbaConfiguracoes('house')" id="tab-house">
+                <i data-lucide="home" style="width:14px;height:14px;flex-shrink:0;"></i> Residência
+              </button>
+              <button class="settings-tab" onclick="exibirAbaConfiguracoes('notifications')" id="tab-notifications">
+                <i data-lucide="bell" style="width:14px;height:14px;flex-shrink:0;"></i> Notificações
+              </button>
+              <button class="settings-tab" onclick="exibirAbaConfiguracoes('personalization')" id="tab-personalization">
+                <i data-lucide="palette" style="width:14px;height:14px;flex-shrink:0;"></i> Visual
+              </button>
+              <button class="settings-tab" onclick="exibirAbaConfiguracoes('security')" id="tab-security">
+                <i data-lucide="shield" style="width:14px;height:14px;flex-shrink:0;"></i> Segurança
+              </button>
+              <button class="settings-tab" onclick="exibirAbaConfiguracoes('billing')" id="tab-billing">
+                <i data-lucide="credit-card" style="width:14px;height:14px;flex-shrink:0;"></i> Plano
+              </button>
+              <button class="settings-tab" onclick="exibirAbaConfiguracoes('about')" id="tab-about">
+                <i data-lucide="info" style="width:14px;height:14px;flex-shrink:0;"></i> Sobre
+              </button>
+            </div>
+
+            <div class="settings-content">
+
+              <!-- Perfil -->
+              <div class="settings-panel active" id="panel-profile">
+                <div class="panel-title">Informações do Perfil</div>
+                <div class="form-group">
+                  <label class="form-label">Nome Completo</label>
+                  <input class="form-input" type="text" id="set-name" placeholder="Seu nome completo">
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">E-mail</label>
+                    <input class="form-input" type="email" id="set-email" placeholder="seu@email.com" readonly>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Telefone (opcional)</label>
+                    <input class="form-input" type="tel" id="set-phone" placeholder="(XX) XXXXX-XXXX">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Foto de Perfil</label>
+                  <div class="avatar-wrapper">
+                    <div class="avatar-circle" id="profile-avatar"><i data-lucide="user"></i></div>
+                    <input type="file" id="set-avatar" accept="image/*" onchange="visualizarAvatar()"
+                      class="input-hidden">
+                    <button class="btn btn-secondary btn-sm"
+                      onclick="document.getElementById('set-avatar').click()">Alterar Foto</button>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Idioma do Sistema</label>
+                  <select class="form-input" id="set-language">
+                    <option value="pt-BR">Português (Brasil)</option>
+                    <option value="en-US">English (USA)</option>
+                    <option value="es-ES">Español (España)</option>
+                  </select>
+                </div>
+                <button class="btn btn-primary" onclick="salvarPerfil()">Salvar Alterações</button>
+              </div>
+
+              <!-- Residência -->
+              <div class="settings-panel" id="panel-house">
+                <div class="panel-title">Configurações da Residência</div>
+                <div class="form-group">
+                  <label class="form-label">Nome da Residência</label>
+                  <input class="form-input" type="text" id="set-house-name" placeholder="Ex: Minha Casa">
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">CEP</label>
+                    <input class="form-input" type="text" id="set-house-cep" placeholder="00000-000"
+                           oninput="mascaraCEP(this)" maxlength="9">
+                    <div class="cep-status" id="set-cep-loading"></div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Área (m²)</label>
+                    <input class="form-input" type="number" id="set-house-area" placeholder="Ex: 120">
+                  </div>
+                </div>
+                <div id="set-cep-address-fields" style="display:none;">
+                  <div class="form-row">
+                    <div class="form-group" style="flex:3;">
+                      <label class="form-label">Logradouro</label>
+                      <input class="form-input" type="text" id="set-house-logradouro" placeholder="Rua / Avenida">
+                    </div>
+                    <div class="form-group" style="flex:1;min-width:70px;max-width:90px;">
+                      <label class="form-label">Número</label>
+                      <input class="form-input" type="text" id="set-house-numero" placeholder="Nº">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label class="form-label">Bairro</label>
+                      <input class="form-input" type="text" id="set-house-bairro" placeholder="Bairro">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Cidade</label>
+                      <input class="form-input" type="text" id="set-house-cidade" placeholder="Cidade">
+                    </div>
+                    <div class="form-group" style="max-width:80px;">
+                      <label class="form-label">Estado</label>
+                      <input class="form-input" type="text" id="set-house-estado" placeholder="UF" maxlength="2">
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Distribuidora de Energia</label>
+                  <select class="form-input" id="set-house-dist" onchange="onSetDistribuidoraChange(this.value)">
+                  </select>
+                </div>
+                <div class="form-group" style="max-width:180px;">
+                  <label class="form-label">Tarifa (R$/kWh)</label>
+                  <div class="form-input" id="set-house-rate-display"
+                       style="display:flex;align-items:center;gap:8px;cursor:default;background:var(--off);color:var(--ink);">
+                    <span id="set-house-rate-valor">—</span>
+                    <span id="set-house-bandeira-badge" style="display:none;font-size:11px;padding:2px 7px;border-radius:20px;font-weight:600;"></span>
+                  </div>
+                  <input type="hidden" id="set-house-rate" value="">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Tipo de Imóvel</label>
+                  <select class="form-input" id="set-house-type">
+                    <option value="house">Casa</option>
+                    <option value="apartment">Apartamento</option>
+                    <option value="commercial">Comercial</option>
+                  </select>
+                </div>
+                <button class="btn btn-primary" onclick="salvarConfiguracoesCasa()">Salvar Alterações</button>
+              </div>
+
+              <!-- Notificações -->
+              <div class="settings-panel" id="panel-notifications">
+                <div class="panel-title">Preferências de Notificações</div>
+                <div class="notification-section">
+                  <div class="notification-title">Notificações por E-mail</div>
+                  <div class="toggle-group">
+                    <label class="toggle-label"><input type="checkbox" class="toggle-input" id="not-email-alerts"
+                        checked onchange="salvarNotificacoes()"><span>Alertas de Consumo Elevado</span></label>
+                    <label class="toggle-label"><input type="checkbox" class="toggle-input" id="not-email-cost" checked
+                        onchange="salvarNotificacoes()"><span>Aviso ao Atingir Limite de Custo</span></label>
+                    <label class="toggle-label"><input type="checkbox" class="toggle-input" id="not-email-anomaly"
+                        checked onchange="salvarNotificacoes()"><span>Anomalias de Tensão ou Corrente
+                        Detectadas</span></label>
+                    <label class="toggle-label"><input type="checkbox" class="toggle-input" id="not-email-device"
+                        onchange="salvarNotificacoes()"><span>Novos Dispositivos Disponíveis para
+                        Cadastro</span></label>
+                  </div>
+                </div>
+                <div class="notification-section">
+                  <div class="notification-title">Notificações no Navegador</div>
+                  <div class="toggle-group">
+                    <label class="toggle-label"><input type="checkbox" class="toggle-input" id="not-browser-alerts"
+                        checked onchange="salvarNotificacoes()"><span>Ativar notificações push no
+                        navegador</span></label>
+                    <label class="toggle-label"><input type="checkbox" class="toggle-input" id="not-browser-sound"
+                        checked onchange="salvarNotificacoes()"><span>Som nas notificações de alerta</span></label>
+                  </div>
+                </div>
+                <div class="notification-section">
+                  <div class="notification-title">Frequência de Envio de Alertas</div>
+                  <div class="form-group">
+                    <label class="form-label">Agrupar alertas a cada (minutos)</label>
+                    <select class="form-input" id="not-frequency" onchange="salvarNotificacoes()">
+                      <option value="0">Imediato</option>
+                      <option value="5">5 minutos</option>
+                      <option value="15" selected>15 minutos</option>
+                      <option value="30">30 minutos</option>
+                      <option value="60">1 hora</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Personalização -->
+              <div class="settings-panel" id="panel-personalization">
+                <div class="panel-title">Personalização do Sistema</div>
+                <div class="notification-section">
+                  <div class="notification-title">Tema da Interface</div>
+                  <div class="theme-options">
+                    <label class="theme-option-card" for="theme-dark">
+                      <input class="theme-option-input" type="radio" name="theme-preference" id="theme-dark"
+                        value="dark" onchange="salvarPersonalizacao()">
+                      <span class="theme-option-check"></span>
+                      <span class="theme-option-preview theme-option-preview-dark"></span>
+                      <span class="theme-option-content">
+                        <span class="theme-option-title">Escuro</span>
+                        <span class="theme-option-text">Ideal para ambientes com pouca luz e foco no painel.</span>
+                      </span>
+                    </label>
+
+                    <label class="theme-option-card" for="theme-light">
+                      <input class="theme-option-input" type="radio" name="theme-preference" id="theme-light"
+                        value="light" onchange="salvarPersonalizacao()">
+                      <span class="theme-option-check"></span>
+                      <span class="theme-option-preview theme-option-preview-light"></span>
+                      <span class="theme-option-content">
+                        <span class="theme-option-title">Claro</span>
+                        <span class="theme-option-text">Visual limpo e luminoso para uso durante o dia.</span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="info-box">
+                  Tema atual:
+                  <strong id="theme-current-label">Escuro</strong>
+                </div>
+              </div>
+
+              <!-- Segurança -->
+              <div class="settings-panel" id="panel-security">
+                <div class="panel-title">Configurações de Segurança</div>
+                <div class="security-block">
+                  <div class="security-block-title">Alterar Senha de Acesso</div>
+                  <div class="form-group">
+                    <label class="form-label">Senha Atual</label>
+                    <input class="form-input" type="password" id="set-pass-current"
+                      placeholder="Digite sua senha atual">
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label class="form-label">Nova Senha</label>
+                      <input class="form-input" type="password" id="set-pass-new" placeholder="Mínimo 8 caracteres">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Confirmar Nova Senha</label>
+                      <input class="form-input" type="password" id="set-pass-confirm" placeholder="Repita a nova senha">
+                    </div>
+                  </div>
+                  <button class="btn btn-secondary" onclick="alterarSenha()">Alterar Senha</button>
+                </div>
+                <div class="security-block">
+                  <div class="security-block-title--lg">Autenticação de Dois Fatores (2FA)</div>
+                  <div class="twofa-row">
+                    <div>
+                      <div class="twofa-status-label">Status:
+                        <span id="2fa-status-badge" class="twofa-badge twofa-badge--off">Desativado</span>
+                      </div>
+                      <div class="twofa-hint">Proteja sua conta exigindo um código do aplicativo autenticador além da senha.</div>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" id="btn-2fa" onclick="habilitarAutenticacao2FA()">Ativar 2FA</button>
+                  </div>
+                  <div id="2fa-apps-hint" style="margin-top:12px;font-size:12px;color:var(--text-secondary);line-height:1.6;">
+                    Use aplicativos como <strong>Google Authenticator</strong>, <strong>Authy</strong> ou <strong>Microsoft Authenticator</strong> para escanear o QR Code.
+                  </div>
+                </div>
+                <div class="security-block">
+                  <div class="security-block-title--lg">Sessões Ativas</div>
+                  <div id="sessions-list">
+                    <div class="sessions-item">
+                      <div>
+                        <div class="sessions-item-name">Navegador Atual</div>
+                        <div class="sessions-item-info">Este dispositivo — Agora</div>
+                      </div>
+                      <span class="sessions-active-badge">ATIVO</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Faturamento -->
+              <div class="settings-panel" id="panel-billing">
+                <div class="panel-title">Informações de Faturamento</div>
+                <div class="billing-plan-card">
+                  <div class="billing-plan-grid">
+                    <div>
+                      <div class="billing-plan-label">Plano Atual</div>
+                      <div class="billing-plan-name">Gratuito</div>
+                      <div class="billing-plan-desc">Funcionalidades básicas de monitoramento</div>
+                    </div>
+                    <div class="billing-plan-action">
+                      <button class="btn btn-primary btn-sm" onclick="atualizarPlano()">Fazer Upgrade de Plano</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="panel-title panel-title--history">Histórico de Pagamentos</div>
+                <div class="table-scroll">
+                  <table class="devices-table">
+                    <thead>
+                      <tr>
+                        <th>Data</th>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>19/03/2026</td>
+                        <td>Plano Gratuito — Cadastro Inicial</td>
+                        <td>R$ 0,00</td>
+                        <td><span class="sessions-active-badge">Gratuito</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Sobre -->
+              <div class="settings-panel" id="panel-about">
+                <div class="panel-title">Sobre o MONITECH</div>
+                <div class="about-section">
+                  <div class="about-hero">
+                    <div class="about-hero-icon about-logo-wrap">
+                      <svg class="about-logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 230" aria-hidden="true">
+                        <path d="M100,18 C72,18 50,40 50,66 C50,86 60,100 74,110 C80,114 82,120 82,126 L118,126 C118,120 120,114 126,110 C140,100 150,86 150,66 C150,40 128,18 100,18Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+                        <path d="M83,130 C91,127 109,127 117,130" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>
+                        <path d="M84,138 C92,134 108,134 116,138" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/>
+                        <path d="M86,146 C93,142 107,142 114,146" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                        <path d="M88,154 C91,148 98,148 100,152 C102,155 105,153 108,148 C110,150 114,155 114,158" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M90,162 C94,158 106,158 110,162" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M94,170 C97,167 103,167 106,170" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M78,116 C76,100 80,82 86,72 C90,64 96,66 98,76 C100,84 99,98 99,110" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M99,110 C99,96 100,82 103,72 C106,62 114,64 116,74 C118,84 116,104 113,118" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M113,118 C115,122 114,128 110,127 C107,126 107,121 110,119" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
+                    <div class="about-hero-title">MONITECH</div>
+                    <div class="about-hero-sub">Monitor de Energia Residencial em Tempo Real</div>
+                  </div>
+                  <div class="info-box">
+                    <div>
+                      <div class="about-info-label">Versão do Software</div>
+                      <div>v2.1.0 (Build 2026.03.19)</div>
+                    </div>
+                    <div>
+                      <div class="about-info-label--mt">Data de Criação</div>
+                      <div>Março de 2026</div>
+                    </div>
+                    <div>
+                      <div class="about-info-label--mt">Desenvolvido por</div>
+                      <div>MONITECH Dev Team</div>
+                    </div>
+                  </div>
+                  <div class="about-desc-box">
+                    <div class="about-desc-text">
+                      <p class="about-desc-p"><strong>MONITECH</strong> é uma plataforma de monitoramento de energia
+                        elétrica em tempo real, desenvolvida para residências e pequenos comércios.</p>
+                      <p class="about-desc-p">Utiliza comunicação HTTP com o Leitor Monitech e o Sensor Monitech, oferecendo análise detalhada de consumo, tensão, corrente e fator de potência.</p>
+                      <p>
+                        <a href="#" class="about-link">Documentação</a> |
+                        <a href="#" class="about-link">Reportar Bug</a> |
+                        <a href="#" class="about-link">Sugestões</a>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="about-actions">
+                    <button class="btn btn-secondary btn-sm" onclick="verificarAtualizacoes()">Verificar
+                      Atualizações</button>
+                    <button class="btn btn-secondary btn-sm btn--ml" onclick="exportarDados()">Exportar Dados</button>
+                    <button class="btn btn-danger btn-sm btn--ml" onclick="deletarConta()">Deletar Conta</button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <!-- ===== /ABA: CONFIGURAÇÕES ===== -->
+
+
+        <!-- ===== ABA: MINHA CONTA ===== -->
+        <div class="view" id="view-account">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-title-icon"><i data-lucide="user-circle" style="width:20px;height:20px;"></i></span>
+              Minha <span>Conta</span>
+            </div>
+            <div class="section-subtitle">Gerencie suas informações pessoais e preferências</div>
+          </div>
+
+          <div class="account-layout">
+            <!-- Coluna de Perfil e Avatar -->
+            <div class="account-sidebar">
+              <div class="chart-card account-profile-card">
+                <div class="account-avatar-wrapper">
+                  <div class="account-avatar" id="account-avatar"><i data-lucide="user"></i></div>
+                  <button class="btn btn-secondary btn-sm"
+                    onclick="document.getElementById('account-avatar-input').click()" title="Alterar foto de perfil">✏
+                    Editar</button>
+                  <input type="file" id="account-avatar-input" accept="image/*" class="input-hidden"
+                    onchange="atualizarAvatarConta()">
+                </div>
+                <div class="account-profile-name" id="account-name-display">Carregando...</div>
+                <div class="account-profile-email" id="account-email-display">---</div>
+                <div class="account-profile-role">Membro Ativo</div>
+                <div class="account-member-since">Membro desde <span id="member-date">—</span></div>
+              </div>
+
+              <div class="chart-card account-quick-stats">
+                <div class="chart-title chart-title--sm">RESUMO DA CONTA</div>
+                <div class="account-stat-item">
+                  <div class="account-stat-label">Residências Cadastradas</div>
+                  <div class="account-stat-value" id="account-residences-count">1</div>
+                </div>
+                <div class="account-stat-item">
+                  <div class="account-stat-label">Dispositivos Configurados</div>
+                  <div class="account-stat-value" id="account-devices-count">0</div>
+                </div>
+                <div class="account-stat-item">
+                  <div class="account-stat-label">Plano Atual</div>
+                  <div class="account-stat-value account-plan-badge">GRATUITO</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Coluna de Formulários -->
+            <div class="account-main">
+              <!-- Seção 1: Informações Pessoais -->
+              <div class="account-section">
+                <div class="account-section-title">Informações Pessoais</div>
+                <div class="account-section-desc">Atualize seus dados de contato e perfil</div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Nome Completo</label>
+                    <input class="form-input" type="text" id="account-name" placeholder="Seu nome completo">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">E-mail Registrado</label>
+                    <input class="form-input" type="email" id="account-email" placeholder="seu@email.com" readonly>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Telefone (opcional)</label>
+                    <input class="form-input" type="tel" id="account-phone" placeholder="(XX) XXXXX-XXXX">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Data de Nascimento (opcional)</label>
+                    <input class="form-input" type="date" id="account-birth">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Gênero (opcional)</label>
+                  <select class="form-input" id="account-gender">
+                    <option value="">Prefiro não informar</option>
+                    <option value="masculino">Masculino</option>
+                    <option value="feminino">Feminino</option>
+                    <option value="outro">Outro</option>
+                  </select>
+                </div>
+
+                <div class="account-section-actions">
+                  <button class="btn btn-primary" onclick="salvarAlteracoesConta()"><i data-lucide="save"></i> Salvar Alterações</button>
+                </div>
+              </div>
+
+              <!-- Seção 2: Segurança e Senha -->
+              <div class="account-section">
+                <div class="account-section-title">Segurança</div>
+                <div class="account-section-desc">Proteja sua conta com uma senha forte</div>
+
+                <div class="security-alert-box" id="security-2fa-inactive">
+                  <span class="security-alert-icon"><i data-lucide="shield"></i></span>
+                  <div>
+                    <div class="security-alert-title">Autenticação de Dois Fatores não ativada</div>
+                    <div class="security-alert-text">Ative a verificação em duas etapas para maior segurança</div>
+                  </div>
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="habilitarAutenticacao2FA()"
+                    style="white-space: nowrap;">Ativar 2FA</button>
+                </div>
+
+                <div class="divider-thin"></div>
+
+                <div class="security-section-title">Alterar Senha</div>
+                <div class="form-group">
+                  <label class="form-label">Senha Atual</label>
+                  <input class="form-input" type="password" id="account-pass-current"
+                    placeholder="Digite sua senha atual">
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Nova Senha</label>
+                    <input class="form-input" type="password" id="account-pass-new" placeholder="Mínimo 8 caracteres">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Confirmar Nova Senha</label>
+                    <input class="form-input" type="password" id="account-pass-confirm"
+                      placeholder="Repita a nova senha">
+                  </div>
+                </div>
+
+                <div class="account-section-actions">
+                  <button type="button" class="btn btn-secondary" onclick="alterarSenhaConta()"><i data-lucide="key"></i> Alterar Senha</button>
+                </div>
+              </div>
+
+              <!-- Seção 3: Preferências de Notificação -->
+              <div class="account-section">
+                <div class="account-section-title">Notificações</div>
+                <div class="account-section-desc">Escolha como deseja ser notificado sobre eventos importantes</div>
+
+                <div class="notification-group">
+                  <!-- Salvo no backend -->
+                  <div class="notification-item">
+                    <div class="notification-checkbox">
+                      <input type="checkbox" id="notify-email-alerts" checked>
+                      <label for="notify-email-alerts" class="notification-label">
+                        <div class="notification-title">Alertas por E-mail</div>
+                        <div class="notification-desc">Receba e-mail quando consumo anômalo, tensão fora do padrão ou limite for atingido</div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="notification-item">
+                    <div class="notification-checkbox">
+                      <input type="checkbox" id="notify-sensor-alerts" checked>
+                      <label for="notify-sensor-alerts" class="notification-label">
+                        <div class="notification-title">Alerta de Sensor Offline por E-mail</div>
+                        <div class="notification-desc">Receba e-mail quando o dispositivo MONITECH ficar sem conexão</div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Salvo localmente -->
+                  <div class="notification-item">
+                    <div class="notification-checkbox">
+                      <input type="checkbox" id="notify-email-summary" checked>
+                      <label for="notify-email-summary" class="notification-label">
+                        <div class="notification-title">Resumo Semanal por E-mail</div>
+                        <div class="notification-desc">Receba um sumário do seu consumo de energia toda segunda-feira</div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="notification-item">
+                    <div class="notification-checkbox">
+                      <input type="checkbox" id="notify-browser" checked>
+                      <label for="notify-browser" class="notification-label">
+                        <div class="notification-title">Notificações no Navegador</div>
+                        <div class="notification-desc">Receba alertas em tempo real enquanto está usando o sistema</div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="notification-item">
+                    <div class="notification-checkbox">
+                      <input type="checkbox" id="notify-sound">
+                      <label for="notify-sound" class="notification-label">
+                        <div class="notification-title">Som nas Notificações</div>
+                        <div class="notification-desc">Reproduza um som ao receber um alerta de consumo anômalo</div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Frequência de Resumos</label>
+                  <select class="form-input" id="account-summary-frequency">
+                    <option value="daily">Diário</option>
+                    <option value="weekly" selected>Semanal</option>
+                    <option value="monthly">Mensal</option>
+                    <option value="never">Nunca</option>
+                  </select>
+                </div>
+
+                <div class="account-section-actions">
+                  <button class="btn btn-primary" onclick="salvarNotificacoesConta()"><i data-lucide="bell"></i> Salvar Preferências</button>
+                </div>
+              </div>
+
+              <!-- Seção 4: Privacidade e Dados -->
+              <div class="account-section">
+                <div class="account-section-title">Privacidade e Dados</div>
+                <div class="account-section-desc">Controle seus dados pessoais e privacidade</div>
+
+                <div class="data-control-item">
+                  <div>
+                    <div class="data-control-title">Exportar Meus Dados</div>
+                    <div class="data-control-desc">Baixe uma cópia de todos os seus dados em formato JSON. Inclui
+                      perfil, residência, dispositivos e histórico.</div>
+                  </div>
+                  <button class="btn btn-secondary btn-sm" onclick="exportarMeusDados()"><i data-lucide="download"></i> Exportar</button>
+                </div>
+
+                <div class="data-control-item">
+                  <div>
+                    <div class="data-control-title">Deletar Minha Conta</div>
+                    <div class="data-control-desc">Remova permanentemente sua conta e todos os dados associados. Esta
+                      ação não pode ser desfeita.</div>
+                  </div>
+                  <button class="btn btn-danger btn-sm" onclick="iniciarExclusaoConta()"><i data-lucide="trash-2"></i> Deletar Conta</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <!-- ===== /ABA: MINHA CONTA ===== -->
+
+
+        <!-- ===== ABA: ADMIN ===== -->
+        <div class="view" id="view-admin" data-admin-only style="display:none">
+
+          <div class="section-header">
+            <div>
+              <div class="section-title">
+                <span class="section-title-icon"><i data-lucide="shield" style="width:20px;height:20px;"></i></span>
+                Painel <span>Administrativo</span>
+              </div>
+              <p class="section-sub" style="margin-top:4px;font-size:14px;color:var(--text-secondary)">Visão geral do sistema e gestão de usuários</p>
+            </div>
+          </div>
+
+          <!-- Stats Cards -->
+          <div class="admin-stats-grid" id="admin-stats-grid">
+            <div class="admin-stat-card">
+              <div class="admin-stat-icon"><i data-lucide="users"></i></div>
+              <div class="admin-stat-value" id="adm-total-usuarios">—</div>
+              <div class="admin-stat-label">Total de Usuários</div>
+            </div>
+            <div class="admin-stat-card admin-stat-card--success">
+              <div class="admin-stat-icon"><i data-lucide="user-check"></i></div>
+              <div class="admin-stat-value" id="adm-ativos">—</div>
+              <div class="admin-stat-label">Ativos</div>
+            </div>
+            <div class="admin-stat-card admin-stat-card--danger">
+              <div class="admin-stat-icon"><i data-lucide="user-x"></i></div>
+              <div class="admin-stat-value" id="adm-suspensos">—</div>
+              <div class="admin-stat-label">Suspensos</div>
+            </div>
+            <div class="admin-stat-card admin-stat-card--accent">
+              <div class="admin-stat-icon"><i data-lucide="user-plus"></i></div>
+              <div class="admin-stat-value" id="adm-novos-mes">—</div>
+              <div class="admin-stat-label">Novos este mês</div>
+            </div>
+            <div class="admin-stat-card">
+              <div class="admin-stat-icon"><i data-lucide="home"></i></div>
+              <div class="admin-stat-value" id="adm-residencias">—</div>
+              <div class="admin-stat-label">Residências</div>
+            </div>
+            <div class="admin-stat-card">
+              <div class="admin-stat-icon"><i data-lucide="cpu"></i></div>
+              <div class="admin-stat-value" id="adm-dispositivos">—</div>
+              <div class="admin-stat-label">Dispositivos</div>
+            </div>
+            <div class="admin-stat-card admin-stat-card--muted">
+              <div class="admin-stat-icon"><i data-lucide="activity"></i></div>
+              <div class="admin-stat-value" id="adm-leituras">—</div>
+              <div class="admin-stat-label">Leituras Totais</div>
+            </div>
+          </div>
+
+          <!-- User Management Table -->
+          <div class="chart-card" style="margin-top:24px">
+            <div class="admin-table-header">
+              <h3 class="admin-table-title">Gestão de Usuários</h3>
+              <div class="admin-search-wrap">
+                <i data-lucide="search" class="admin-search-icon"></i>
+                <input type="text" class="admin-search-input" id="admin-search"
+                       placeholder="Buscar por nome ou e-mail..."
+                       oninput="adminBuscarUsuarios(this.value)">
+              </div>
+            </div>
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Usuário</th>
+                    <th>E-mail</th>
+                    <th>Cargo</th>
+                    <th>Status</th>
+                    <th>Cadastro</th>
+                    <th>Último acesso</th>
+                    <th class="admin-th-center">Res.</th>
+                    <th class="admin-th-center">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-tbody"></tbody>
+              </table>
+              <div class="admin-table-empty" id="admin-table-empty" style="display:none">
+                <i data-lucide="users"></i>
+                <p>Nenhum usuário encontrado.</p>
+              </div>
+            </div>
+            <div class="admin-pagination" id="admin-pagination"></div>
+          </div>
+
+        </div>
+        <!-- ===== /ABA: ADMIN ===== -->
+
+      </div>
+      <!-- /CONTEÚDO PRINCIPAL -->
+
+    </div>
+  </div>
+  <!-- ===== /APLICAÇÃO PRINCIPAL ===== -->
+
+
+  <!-- MODAL: Novo Cômodo -->
+  <div class="modal-overlay" id="modal-room">
+    <div class="modal">
+      <div class="modal-title">NOVO CÔMODO</div>
+      <div class="form-group">
+        <label class="form-label">Tipo do Cômodo</label>
+        <select class="form-input" id="modal-room-type">
+          <option value="sala">Sala de Estar</option>
+          <option value="quarto">Quarto</option>
+          <option value="cozinha">Cozinha</option>
+          <option value="banheiro">Banheiro</option>
+          <option value="garagem">Garagem</option>
+          <option value="escritorio">Escritório</option>
+          <option value="lavanderia">Lavanderia</option>
+          <option value="varanda">Varanda</option>
+          <option value="outro">Outro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nome do Cômodo</label>
+        <input class="form-input" id="modal-room-name" placeholder="Ex: Quarto Principal">
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="fecharModal('modal-room')">CANCELAR</button>
+        <button class="btn btn-primary modal-btn--auto" onclick="adicionarComodoDoModal()">+ ADICIONAR</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Novo Dispositivo -->
+  <div class="modal-overlay" id="modal-device">
+    <div class="modal">
+      <div class="modal-title">NOVO DISPOSITIVO</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Tipo de Dispositivo</label>
+          <select class="form-input" id="modal-dev-type">
+            <option value="ar">Ar-condicionado</option>
+            <option value="geladeira">Geladeira</option>
+            <option value="tv">Televisão</option>
+            <option value="maquina">Máq. de Lavar</option>
+            <option value="chuveiro">Chuveiro Elétrico</option>
+            <option value="computador">Computador / Notebook</option>
+            <option value="microondas">Micro-ondas</option>
+            <option value="iluminacao">Iluminação</option>
+            <option value="bomba">Bomba d'água</option>
+            <option value="outro">Outro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nome do Dispositivo</label>
+          <input class="form-input" id="modal-dev-name" placeholder="Ex: Ar-condicionado Sala">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Cômodo</label>
+          <select class="form-input" id="modal-dev-room"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Potência (W)</label>
+          <input class="form-input" type="number" id="modal-dev-watts" placeholder="Ex: 1500">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="fecharModal('modal-device')">CANCELAR</button>
+        <button class="btn btn-primary modal-btn--auto" onclick="adicionarDispositivoDoModal()">+ ADICIONAR</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Aviso sobre Dispositivo de Medição -->
+  <div class="modal-overlay" id="modal-alert">
+    <div class="modal">
+      <div class="modal-title">AVISO IMPORTANTE</div>
+      <div class="modal-body-text">
+        Para receber leituras de energia em tempo real, você precisa conectar um
+        <strong>dispositivo de medição Dispositivo Monitech</strong> ao seu painel.
+        Ele irá monitorar tensão, corrente, potência e consumo da sua residência continuamente.
+      </div>
+      <div class="modal-guide-box">
+        <div class="modal-guide-title"><strong>Como configurar o dispositivo:</strong></div>
+        <ul class="modal-guide-list">
+          <li>Monte um Dispositivo Monitech com o Leitor Monitech e o Sensor Monitech</li>
+          <li>Conecte o dispositivo à sua rede Wi-Fi doméstica</li>
+          <li>Acesse a aba <strong>"Dispositivo MONITECH"</strong> no painel</li>
+          <li>Escolha o protocolo de comunicação: WebSocket, HTTP ou MQTT</li>
+          <li>Insira o IP do Dispositivo Monitech e clique em <strong>CONECTAR</strong></li>
+        </ul>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" onclick="fecharModal('modal-alert'); entrarNoApp();">ACESSAR O PAINEL</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Script para cálculo dinâmico de viewport em mobile -->
+  <script>
+    // Calcular altura real da viewport em todo momento (importante para mobile com address bar)
+    function ajustarAlturaDinamicaViewport() {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', vh + 'px');
+    }
+
+    // Ajustar ao carregar
+    window.addEventListener('load', ajustarAlturaDinamicaViewport);
+
+    // Ajustar ao fazer resize
+    window.addEventListener('resize', ajustarAlturaDinamicaViewport);
+
+    // Ajustar ao mudar orientação
+    window.addEventListener('orientationchange', () => {
+      setTimeout(ajustarAlturaDinamicaViewport, 100);
+    });
+
+    // Iniciar cálculo logo que possível
+    ajustarAlturaDinamicaViewport();
+
+    // Em alguns navegadores mobile, a altura muda quando a address bar aparece/desaparece
+    window.addEventListener('focus', ajustarAlturaDinamicaViewport);
+    window.addEventListener('blur', ajustarAlturaDinamicaViewport);
+
+    // Ajuste contínuo a cada 500ms durante os primeiros 5 segundos
+    const intervaloAjuste = setInterval(() => {
+      ajustarAlturaDinamicaViewport();
+    }, 500);
+    setTimeout(() => clearInterval(intervaloAjuste), 5000);
+  </script>
+
+  <!-- MODAL: Excluir Conta -->
+  <div class="modal-overlay" id="modal-delete-account">
+    <div class="modal modal--danger">
+      <div class="mdanger-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <div class="mdanger-title">Excluir Conta Permanentemente</div>
+      <p class="mdanger-desc">Esta ação é <strong>irreversível</strong>. Todos os seus dados serão removidos:</p>
+      <ul class="mdanger-list">
+        <li>Residências, cômodos e dispositivos</li>
+        <li>Histórico de leituras e consumo energético</li>
+        <li>Alertas, sensores e configurações</li>
+      </ul>
+      <div class="mdanger-input-wrap">
+        <label class="mdanger-input-label">Para confirmar, digite <strong>EXCLUIR</strong> abaixo</label>
+        <input type="text" id="sys-delete-input" class="form-input" placeholder="EXCLUIR"
+               autocomplete="off" oninput="verificarInputExclusao(this.value)">
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="fecharModal('modal-delete-account')">Cancelar</button>
+        <button class="btn btn-danger" id="btn-confirmar-exclusao" disabled onclick="confirmarExclusaoConta()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          Excluir Conta
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./js/system.js" defer></script>
+
+  <!-- BOTTOM NAV (mobile) -->
+  <nav class="bottom-nav" id="bottom-nav">
+    <button class="bottom-nav-item active" id="bnav-dashboard" onclick="exibirAba('dashboard')">
+      <i data-lucide="layout-dashboard"></i>
+      <span>Dashboard</span>
+    </button>
+    <button class="bottom-nav-item" id="bnav-rooms" onclick="exibirAba('rooms')">
+      <i data-lucide="home"></i>
+      <span>Cômodos</span>
+    </button>
+    <button class="bottom-nav-item" id="bnav-devices" onclick="exibirAba('devices')">
+      <i data-lucide="cpu"></i>
+      <span>Dispositivos</span>
+    </button>
+    <button class="bottom-nav-item" id="bnav-alerts" onclick="exibirAba('alerts')">
+      <i data-lucide="bell"></i>
+      <span>Alertas</span>
+      <span class="bnav-badge" id="bnav-alerts-badge"></span>
+    </button>
+    <button class="bottom-nav-item" id="bnav-more" onclick="alternarBnavMais()">
+      <i data-lucide="more-horizontal"></i>
+      <span>Mais</span>
+    </button>
+  </nav>
+
+  <!-- BOTTOM NAV SHEET (Mais) -->
+  <div class="bnav-sheet-overlay" id="bnav-sheet-overlay" onclick="fecharBnavMais()"></div>
+  <div class="bnav-sheet" id="bnav-sheet">
+    <div class="bnav-sheet-handle"></div>
+    <button class="bnav-sheet-item" onclick="exibirAba('planta'); fecharBnavMais()">
+      <i data-lucide="map"></i> Planta
+    </button>
+    <button class="bnav-sheet-item" onclick="exibirAba('reports'); fecharBnavMais()">
+      <i data-lucide="bar-chart-2"></i> Relatórios
+    </button>
+    <button class="bnav-sheet-item" onclick="exibirAba('esp32'); fecharBnavMais()">
+      <i data-lucide="wifi"></i> Dispositivo MONITECH
+    </button>
+  </div>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+  </script>
+
+  <!-- ===== MODAL 2FA ===== -->
+  <!-- Modal de confirmação genérico -->
+  <div id="modal-confirm" class="modal-overlay" style="display:none;" onclick="if(event.target===this)_fecharConfirm(false)">
+    <div class="modal-box" style="max-width:380px;text-align:center;padding:32px 28px;">
+      <div id="modal-confirm-icon" style="font-size:36px;margin-bottom:12px;"></div>
+      <div id="modal-confirm-titulo" style="font-size:16px;font-weight:700;color:var(--text-primary);margin-bottom:8px;letter-spacing:.5px;"></div>
+      <div id="modal-confirm-mensagem" style="font-size:13px;color:var(--text-secondary);margin-bottom:24px;line-height:1.6;"></div>
+      <div style="display:flex;gap:10px;justify-content:center;">
+        <button class="btn btn-secondary" style="min-width:110px;" onclick="_fecharConfirm(false)">Cancelar</button>
+        <button id="modal-confirm-ok" class="btn btn-primary" style="min-width:110px;" onclick="_fecharConfirm(true)">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-2fa" class="modal-overlay" style="display:none;" onclick="if(event.target===this)fecharModal2FA()">
+    <div class="modal-box modal-box--2fa">
+
+      <!-- Etapa 1: configurar -->
+      <div id="2fa-step-setup">
+        <div class="modal-2fa-header">
+          <i data-lucide="shield" style="width:24px;height:24px;color:var(--accent);"></i>
+          <div>
+            <div class="modal-2fa-title">Ativar Autenticação de Dois Fatores</div>
+            <div class="modal-2fa-subtitle">Escaneie o QR Code com seu aplicativo autenticador</div>
+          </div>
+        </div>
+        <div class="modal-2fa-steps">
+          <div class="modal-2fa-step-item"><span class="modal-2fa-step-num">1</span> Instale o <strong>Google Authenticator</strong> ou <strong>Authy</strong> no seu celular.</div>
+          <div class="modal-2fa-step-item"><span class="modal-2fa-step-num">2</span> Abra o app e escaneie o QR Code abaixo.</div>
+          <div class="modal-2fa-step-item"><span class="modal-2fa-step-num">3</span> Digite o código de 6 dígitos gerado pelo app para confirmar.</div>
+        </div>
+        <div id="2fa-qr-box" style="display:flex;justify-content:center;margin:20px 0;min-height:180px;align-items:center;">
+          <div class="modal-2fa-spinner"></div>
+        </div>
+        <div style="margin-bottom:12px;">
+          <div style="font-size:11px;color:var(--text-secondary);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Ou copie o código manual:</div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <code id="2fa-secret-text" style="flex:1;font-family:'Orbitron',monospace;font-size:11px;color:#7df9ff;background:rgba(0,0,0,.3);padding:8px 12px;border-radius:6px;word-break:break-all;border:1px solid rgba(125,249,255,.15);"></code>
+            <button class="btn btn-secondary btn-sm" onclick="_copiar2FaSecret()" title="Copiar código">
+              <i data-lucide="copy" style="width:14px;height:14px;"></i>
+            </button>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Código do autenticador (6 dígitos)</label>
+          <input class="form-input" id="2fa-code-input" type="text" maxlength="6" inputmode="numeric" placeholder="000000" autocomplete="one-time-code" style="font-family:'Orbitron',monospace;font-size:18px;letter-spacing:4px;text-align:center;">
+        </div>
+        <div class="modal-2fa-actions">
+          <button class="btn btn-secondary" onclick="fecharModal2FA()">Cancelar</button>
+          <button class="btn btn-primary" id="btn-confirmar-2fa" onclick="confirmar2FA()">
+            <i data-lucide="check" style="width:15px;height:15px;"></i> Confirmar e Ativar
+          </button>
+        </div>
+      </div>
+
+      <!-- Etapa: desativar -->
+      <div id="2fa-step-desativar" style="display:none;">
+        <div class="modal-2fa-header">
+          <i data-lucide="shield-off" style="width:24px;height:24px;color:#f87171;"></i>
+          <div>
+            <div class="modal-2fa-title">Desativar 2FA</div>
+            <div class="modal-2fa-subtitle">Digite o código atual do seu autenticador para confirmar</div>
+          </div>
+        </div>
+        <div style="padding:16px;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.25);border-radius:10px;margin-bottom:20px;font-size:13px;color:#f87171;line-height:1.6;">
+          <strong>Atenção:</strong> ao desativar o 2FA, sua conta ficará protegida apenas pela senha.
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Código do autenticador (6 dígitos)</label>
+          <input class="form-input" id="2fa-disable-code" type="text" maxlength="6" inputmode="numeric" placeholder="000000" autocomplete="one-time-code" style="font-family:'Orbitron',monospace;font-size:18px;letter-spacing:4px;text-align:center;">
+        </div>
+        <div class="modal-2fa-actions">
+          <button class="btn btn-secondary" onclick="fecharModal2FA()">Cancelar</button>
+          <button class="btn" style="background:#f87171;color:#fff;border:none;" id="btn-desativar-2fa" onclick="desativar2FA()">
+            <i data-lucide="shield-off" style="width:15px;height:15px;"></i> Desativar 2FA
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <!-- ===== /MODAL 2FA ===== -->
+
+
+</body>
+
+</html>

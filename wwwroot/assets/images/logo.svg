@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 230">
+  <!-- Lâmpada — bulbo -->
+  <path d="
+    M100,18
+    C72,18 50,40 50,66
+    C50,86 60,100 74,110
+    C80,114 82,120 82,126
+    L118,126
+    C118,120 120,114 126,110
+    C140,100 150,86 150,66
+    C150,40 128,18 100,18Z
+  " fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+
+  <!-- Soquete — faixas do rosqueado -->
+  <path d="M83,130 C91,127 109,127 117,130" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M84,138 C92,134 108,134 116,138" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M86,146 C93,142 107,142 114,146" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+  <path d="M88,154 C91,148 98,148 100,152 C102,155 105,153 108,148 C110,150 114,155 114,158" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M90,162 C94,158 106,158 110,162" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M94,170 C97,167 103,167 106,170" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Filamento — "m" cursivo -->
+  <!-- Arco esquerdo -->
+  <path d="
+    M78,116
+    C76,100 80,82 86,72
+    C90,64 96,66 98,76
+    C100,84 99,98 99,110
+  " fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Arco direito -->
+  <path d="
+    M99,110
+    C99,96 100,82 103,72
+    C106,62 114,64 116,74
+    C118,84 116,104 113,118
+  " fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Gota / cauda no final -->
+  <path d="
+    M113,118
+    C115,122 114,128 110,127
+    C107,126 107,121 110,119
+  " fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

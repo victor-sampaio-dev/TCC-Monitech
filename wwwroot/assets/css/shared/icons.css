@@ -1,0 +1,41 @@
+/* ============================================================
+   MONITECH — Lucide Icons Base Styles
+   ============================================================ */
+
+/* SVG gerado pelo Lucide após createIcons() */
+svg.lucide {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  stroke: currentColor;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Contextos específicos de tamanho */
+.nav-icon svg.lucide            { width: 22px; height: 22px; }
+.theme-toggle-icon svg.lucide   { width: 18px; height: 18px; }
+.feat-icon svg.lucide           { width: 36px; height: 36px; }
+.stat-icon svg.lucide           { width: 28px; height: 28px; }
+.compat-item svg.lucide         { width: 16px; height: 16px; margin-right: 4px; }
+.hw-card-icon svg.lucide        { width: 32px; height: 32px; }
+.proto-icon-wrap svg.lucide     { width: 24px; height: 24px; }
+.proto-detail-icon svg.lucide   { width: 32px; height: 32px; }
+.conn-node__icon svg.lucide,
+.conn-esp__icon svg.lucide      { width: 44px; height: 44px; }
+.sidebar-item svg.lucide        { width: 18px; height: 18px; margin-right: 8px; }
+.dropdown-option-icon svg.lucide{ width: 18px; height: 18px; }
+.sidebar-nav svg.lucide         { width: 18px; height: 18px; }
+.page-hero-icon svg.lucide      { width: 40px; height: 40px; }
+.contact-type-icon svg.lucide   { width: 20px; height: 20px; }
+.resource-icon svg.lucide       { width: 24px; height: 24px; }
+.sb-icon svg.lucide             { width: 16px; height: 16px; }
+.doc-tip-icon svg.lucide        { width: 18px; height: 18px; }
+.doc-step-icon svg.lucide       { width: 20px; height: 20px; }
+.changelog-badge svg.lucide     { width: 14px; height: 14px; }
+.board-device-icon svg.lucide   { width: 52px; height: 52px; }
+
+/* Botões com ícone inline */
+.btn svg.lucide,
+.btn-copy svg.lucide            { width: 14px; height: 14px; vertical-align: -2px; margin-right: 4px; }

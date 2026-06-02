@@ -1,0 +1,381 @@
+/* ============================================================
+   ESTILOS DO WEBSITE - GERAL
+   Inclui variáveis específicas e componentes comuns
+   ============================================================ */
+
+@import './theme-colors.css';
+
+/* ========== VARIÁVEIS UTILITÁRIAS DO WEBSITE ========== */
+/* Dark como padrão — alinhado com a paleta monitech */
+:root {
+  --white: #182F48;
+  --off:   #1F3A58;
+  --off2:  #254568;
+  --ink:   #E2F0FA;
+  --ink-2: #C8E0F0;
+  --ink-3: #8BBDD6;
+  --blue:    #0057ff;
+  --blue-2:  #0044cc;
+  --blue-bg:  rgba(0, 87, 255, 0.18);
+  --blue-mid: rgba(72, 197, 217, 0.40);
+  --muted:  #7AAFC8;
+  --subtle: rgba(72, 197, 217, 0.20);
+  --line:   rgba(72, 197, 217, 0.22);
+  --shadow-sm: 0 1px 4px rgba(0, 15, 30, 0.25);
+  --shadow-md: 0 4px 20px rgba(0, 15, 30, 0.35);
+  --shadow-lg: 0 12px 48px rgba(0, 15, 30, 0.45);
+  --r:    12px;
+  --r-sm: 8px;
+  --display: 'Syne', sans-serif;
+  --body:    'IBM Plex Sans', sans-serif;
+  --mono:    'IBM Plex Mono', monospace;
+}
+
+/* Dark theme explícito */
+.dark-theme,
+[data-theme="dark"] {
+  --white: #182F48;
+  --off:   #1F3A58;
+  --off2:  #254568;
+  --ink:   #E2F0FA;
+  --ink-2: #C8E0F0;
+  --ink-3: #8BBDD6;
+  --blue-bg:  rgba(0, 87, 255, 0.18);
+  --blue-mid: rgba(72, 197, 217, 0.40);
+  --muted:  #7AAFC8;
+  --subtle: rgba(72, 197, 217, 0.20);
+  --line:   rgba(72, 197, 217, 0.22);
+  --shadow-sm: 0 1px 4px rgba(0, 15, 30, 0.25);
+  --shadow-md: 0 4px 20px rgba(0, 15, 30, 0.35);
+  --shadow-lg: 0 12px 48px rgba(0, 15, 30, 0.45);
+}
+
+/* Light theme */
+html[data-theme="light"] {
+  --white: #E0EEF8;
+  --off: #C8DCF0;
+  --off2: #BDD4E8;
+  --ink: #0A1A2C;
+  --ink-2: #1E3D58;
+  --ink-3: #4A6C88;
+  --blue: #005EA8;
+  --blue-2: #004B8C;
+  --blue-bg: #C8DCEE;
+  --blue-mid: #9ABDD8;
+  --muted: #5A82A0;
+  --subtle: #A8C4DC;
+  --line: #AECADE;
+  --shadow-sm: 0 1px 4px rgba(10, 26, 44, 0.08);
+  --shadow-md: 0 4px 20px rgba(10, 26, 44, 0.10);
+  --shadow-lg: 0 12px 48px rgba(10, 26, 44, 0.14);
+}
+
+/* RESET WEBSITE */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0
+}
+
+html {
+  scroll-behavior: smooth
+}
+
+body {
+  font-family: var(--body);
+  background: var(--bg-void);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased
+}
+
+a {
+  text-decoration: none;
+  color: inherit
+}
+
+::-webkit-scrollbar {
+  width: 5px
+}
+
+::-webkit-scrollbar-track {
+  background: var(--off)
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--subtle);
+  border-radius: 3px
+}
+
+/* HERO */
+.page-hero {
+  padding: 120px 48px 72px;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+  overflow: hidden
+}
+
+.page-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--subtle) 1px, transparent 1px);
+  background-size: 28px 28px;
+  opacity: 0.35;
+  mask-image: radial-gradient(ellipse 60% 100% at 50% 0%, black, transparent)
+}
+
+.page-hero-inner {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  z-index: 1
+}
+
+.page-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 12px;
+  background: var(--blue-bg);
+  border: 1px solid var(--blue-mid);
+  border-radius: 40px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--blue);
+  margin-bottom: 20px
+}
+
+.page-hero h1 {
+  font-family: var(--display);
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+  margin-bottom: 14px
+}
+
+.page-hero p {
+  font-size: 17px;
+  color: var(--ink-3);
+  line-height: 1.7
+}
+
+/* FOOTER SIMPLES */
+.simple-footer {
+  border-top: 1px solid var(--line);
+  padding: 24px 48px;
+  background: var(--off)
+}
+
+.simple-footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px
+}
+
+.sf-copy {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--muted)
+}
+
+.sf-links {
+  display: flex;
+  gap: 20px
+}
+
+.sf-link {
+  font-size: 13px;
+  color: var(--muted);
+  transition: color .18s
+}
+
+.sf-link:hover {
+  color: var(--blue)
+}
+
+/* RESPONSIVIDADE */
+@media(max-width:900px) {
+  nav,
+  .page-hero,
+  .simple-footer {
+    padding-left: 20px;
+    padding-right: 20px
+  }
+}
+
+/* Menu hambúrguer e responsividade mobile: ver assets/css/shared/navbar.css */
+
+.mobile-menu-btn:hover {
+   background: rgba(0, 87, 255, 0.1);
+}
+
+.mobile-menu-btn span {
+   display: block;
+   width: 24px;
+   height: 2px;
+   background: var(--blue);
+   border-radius: 2px;
+   transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+   transform-origin: center;
+}
+
+/* Animação moderna do hambúrguer para X */
+.mobile-menu-btn.active span:nth-child(1) {
+   transform: rotate(45deg) translate(6px, 6px);
+}
+
+.mobile-menu-btn.active span:nth-child(2) {
+   opacity: 0;
+   transform: scaleX(0);
+}
+
+.mobile-menu-btn.active span:nth-child(3) {
+   transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Menu mobile oculto por padrão */
+.nav-menu-mobile {
+   display: none;
+}
+
+.nav-menu-footer {
+   display: none;
+}
+
+/* Backdrop */
+.nav-backdrop {
+   position: fixed;
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   background: rgba(11, 18, 32, 0.6);
+   z-index: 99;
+   opacity: 0;
+   visibility: hidden;
+   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-backdrop.active {
+   opacity: 1;
+   visibility: visible;
+}
+
+/* Responsividade mobile - menu hambúrguer */
+@media (max-width: 768px) {
+   .mobile-menu-btn {
+      display: flex;
+      margin-left: auto;
+   }
+
+   .nav-links-desktop {
+      display: none !important;
+   }
+
+   .nav-end {
+      display: none;
+   }
+
+   /* Menu mobile dropdown */
+   .nav-menu-mobile {
+      position: absolute;
+      top: 60px;
+      left: 20px;
+      right: 20px;
+      width: calc(100% - 40px);
+      background: var(--off2);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      display: none;
+      flex-direction: column;
+      padding: 24px 20px;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.2), 0 10px 40px rgba(0, 87, 255, 0.15);
+      z-index: 100;
+      max-height: calc(100vh - 90px);
+      overflow-y: auto;
+      transform: translateY(-30px) scale(0.9);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+   }
+
+   .nav-menu-mobile.active {
+      display: flex;
+      transform: translateY(0) scale(1);
+      opacity: 1;
+      visibility: visible;
+   }
+
+   .nav-menu-mobile .nav-links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+   }
+
+   .nav-menu-mobile .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      color: var(--ink-3);
+      font-size: 15px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      text-decoration: none;
+   }
+
+   .nav-menu-mobile .nav-link:hover {
+      color: var(--blue);
+      background: rgba(0, 87, 255, 0.08);
+      transform: translateX(6px);
+   }
+
+   .nav-menu-mobile .nav-link.active {
+      color: var(--blue);
+      background: rgba(0, 87, 255, 0.1);
+   }
+
+   .nav-menu-footer {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-top: 12px;
+   }
+
+   .btn-nav-solid-mobile {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-family: var(--body);
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      background: var(--blue);
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 87, 255, 0.3);
+      transition: all 0.2s;
+      text-decoration: none;
+   }
+
+   .btn-nav-solid-mobile:hover {
+      background: var(--blue-2);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(0, 87, 255, 0.4);
+   }
+}

@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentação — MONITECH</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <!-- Theme Loader - DEVE estar antes de qualquer CSS -->
+  <script src="../assets/js/shared/theme-loader.js"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/shared/navbar.css">
+  <link rel="stylesheet" href="../assets/css/shared/userMenu.css">
+  <link rel="stylesheet" href="../assets/css/shared/profile-photo-styles.css">
+  <link rel="stylesheet" href="../website/css/docs.css">
+  <link rel="stylesheet" href="../assets/css/shared/auth-modal.css">
+  <link rel="stylesheet" href="../assets/css/shared/theme-toggle.css">
+  <link rel="stylesheet" href="../website/css/theme-colors.css">
+  <link rel="stylesheet" href="../assets/css/shared/icons.css">
+  <script src="../assets/js/vendor/lucide.min.js" defer></script>
+  <script src="../assets/js/shared/navbar.js" defer></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="../assets/js/shared/auth-modal.js" defer></script>
+  <script src="../assets/js/shared/profile-photo-manager.js" defer></script>
+  <script src="../assets/js/shared/magnific-icons-loader.js" defer></script>
+  <script src="../assets/js/shared/theme-toggle.js" defer></script>
+  <script src="../assets/js/shared/user-info-panel.js" defer></script>
+
+<body>
+
+  <nav>
+    <div class="nav-inner">
+      <a class="nav-logo" href="../index.html">
+        <img src="/assets/images/logo.svg" alt="MONITECH" style="height:32px;width:auto;">
+        <span class="nav-brand">MONITECH</span>
+      </a>
+
+      <!-- Botão do menu hambúrguer -->
+      <button type="button" class="mobile-menu-btn" id="mobile-menu-btn" onclick="alternarMenuMobile()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <!-- Menu mobile -->
+      <div class="nav-menu-mobile" id="nav-menu-mobile">
+        <div class="nav-links">
+          <a class="nav-link" href="../index.html">
+            <span class="mmenu-icon"><i data-lucide="home"></i></span>
+            <span class="mmenu-text">Início</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a class="nav-link active" href="./docs.html">
+            <span class="mmenu-icon"><i data-lucide="book-open"></i></span>
+            <span class="mmenu-text">Documentação</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a class="nav-link" href="./changelog.html">
+            <span class="mmenu-icon"><i data-lucide="list-checks"></i></span>
+            <span class="mmenu-text">Changelog</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a class="nav-link" href="./contato.html">
+            <span class="mmenu-icon"><i data-lucide="mail"></i></span>
+            <span class="mmenu-text">Contato</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a class="nav-link" href="../website/compra.html">
+            <span class="mmenu-icon"><i data-lucide="shopping-cart"></i></span>
+            <span class="mmenu-text">Comprar</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+        </div>
+        <div class="nav-menu-footer">
+          <a class="btn-nav-solid-mobile" target="_blank" href="../system/system.html">
+            <i data-lucide="layout-dashboard"></i>
+            Acessar Painel
+          </a>
+        </div>
+      </div>
+
+      <!-- Menu desktop -->
+      <div class="nav-links nav-links-desktop">
+        <a class="nav-link" href="../index.html">Início</a>
+        <a class="nav-link active" href="./docs.html">Documentação</a>
+        <a class="nav-link" href="./changelog.html">Changelog</a>
+        <a class="nav-link" href="./contato.html">Contato</a>
+        <a class="nav-link" href="../website/compra.html">Comprar</a>
+      </div>
+
+      <div class="nav-actions">
+        <div class="nav-end">
+          <a class="btn-nav-solid" href="../system/system.html">Acessar Painel →</a>
+        </div>
+
+        <!-- Toggle de Tema -->
+        <button class="theme-toggle-btn" id="theme-toggle-btn" title="Alternar tema">
+          <span class="theme-toggle-icon"></span>
+        </button>
+
+        <div class="user-menu-wrapper">
+          <button class="user-menu-btn" id="user-menu-btn" onclick="toggleUserMenu()">
+            <div class="user-avatar">U</div>
+          </button>
+          <div class="user-dropdown" id="user-dropdown">
+            <!-- Header com dados do usuário (aparece quando logado) -->
+            <div class="user-dropdown-header" id="user-dropdown-header" style="display:none !important;">
+              <div class="user-dropdown-avatar-lg" id="user-dropdown-avatar-lg">U</div>
+              <div class="user-dropdown-info">
+                <div class="user-dropdown-nome" id="user-dropdown-nome">Usuário</div>
+                <div class="user-dropdown-email" id="user-dropdown-email">email@example.com</div>
+              </div>
+            </div>
+            <div class="user-dropdown-divider" id="user-dropdown-divider" style="display:none !important;"></div>
+            
+            <div class="dropdown-auth-section">
+              <a href="#" id="dropdown-login" onclick="openAuthModal(); event.preventDefault();" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                Entrar
+              </a>
+              <a href="#" id="dropdown-cadastro" onclick="openAuthModal(); switchAuthTab('signup'); event.preventDefault();" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                Criar conta
+              </a>
+            </div>
+            <a href="../website/settings.html" id="dropdown-config" class="user-dropdown-item" style="display:none !important;">Configurações</a>
+            <a href="../pages-documents/docs.html" id="dropdown-sobre" class="user-dropdown-item" style="display:none !important;">Sobre</a>
+            <button id="dropdown-logout" class="user-dropdown-item user-dropdown-logout" onclick="logout()" style="display:none !important;">Sair</button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Backdrop para o menu mobile -->
+  <div class="nav-backdrop" id="nav-backdrop" onclick="alternarMenuMobile()"></div>
+
+  <!-- Modal de Autenticação -->
+  <div class="auth-backdrop" id="auth-backdrop">
+    <div class="auth-modal">
+      <!-- Botão fechar -->
+      <button class="auth-close-btn" onclick="closeAuthModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <!-- Header -->
+      <div class="auth-header">
+        <h2>Bem-vindo</h2>
+        <p>Acesse sua conta profissional MONITECH</p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab" data-tab="login" onclick="switchAuthTab('login')">Login</button>
+        <button class="auth-tab" data-tab="signup" onclick="switchAuthTab('signup')">Cadastro</button>
+      </div>
+
+      <!-- Conteúdo: Login -->
+      <div class="auth-content" id="auth-login">
+        <!-- Login com Google -->
+        <button class="auth-social-btn" id="google-login-btn" onclick="loginWithGoogle()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            <path d="M1 1h22v22H1z" fill="none"/>
+          </svg>
+          Entrar com Google
+        </button>
+
+        <!-- Divisor -->
+        <div class="auth-divider">ou</div>
+
+        <!-- Formulário de Login -->
+        <form class="auth-form" id="login-form" onsubmit="loginWithEmail(event)">
+          <div class="form-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" placeholder="seu@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="login-password">Senha</label>
+            <input type="password" id="login-password" placeholder="••••••••" required>
+          </div>
+
+          <button type="submit" class="auth-submit-btn">Login</button>
+        </form>
+
+        <!-- Links de rodapé -->
+        <div class="auth-footer">
+          <a href="#" onclick="event.preventDefault(); alert('Recuperação de senha será implementada');"> Esqueceu a senha?</a>
+        </div>
+      </div>
+
+      <!-- Conteúdo: Cadastro -->
+      <div class="auth-content" id="auth-signup">
+        <!-- Cadastro com Google -->
+        <button class="auth-social-btn" id="google-signup-btn" onclick="signupWithGoogle()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            <path d="M1 1h22v22H1z" fill="none"/>
+          </svg>
+          Cadastrar com Google
+        </button>
+
+        <!-- Divisor -->
+        <div class="auth-divider">ou</div>
+
+        <!-- Formulário de Cadastro -->
+        <form class="auth-form" id="signup-form" onsubmit="signupWithEmail(event)">
+          <div class="form-group">
+            <label for="signup-name">Nome Completo</label>
+            <input type="text" id="signup-name" placeholder="Seu nome" required>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-email">Email</label>
+            <input type="email" id="signup-email" placeholder="seu@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-password">Senha</label>
+            <input type="password" id="signup-password" placeholder="••••••••" required>
+          </div>
+
+          <div class="form-checkbox">
+            <input type="checkbox" id="signup-terms" required>
+            <label for="signup-terms">Concordo com os <a href="#" onclick="event.preventDefault();">Termos de Serviço</a></label>
+          </div>
+
+          <button type="submit" class="auth-submit-btn">Criar Conta</button>
+        </form>
+
+        <!-- Links de rodapé -->
+        <div class="auth-footer">
+          Já tem uma conta? <a href="#" onclick="switchAuthTab('login');">Faça login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="docs-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sb-section">
+        <div class="sb-section-label">Comece Aqui</div>
+        <a class="sb-link active" href="#visao-geral"><span class="sb-link-icon"><i data-lucide="hand"></i></span>O que é MONITECH?</a>
+        <a class="sb-link" href="#o-dispositivo"><span class="sb-link-icon"><i data-lucide="package"></i></span>O Dispositivo</a>
+        <a class="sb-link" href="#instalacao-fisica"><span class="sb-link-icon"><i data-lucide="plug"></i></span>Instalação Física</a>
+      </div>
+      <div class="sb-section">
+        <div class="sb-section-label">Guia de Integração</div>
+        <a class="sb-link" href="#criar-conta"><span class="sb-link-icon"><i data-lucide="file-pen-line"></i></span>1. Criar Conta</a>
+        <a class="sb-link" href="#conectar-dispositivo"><span class="sb-link-icon"><i data-lucide="link"></i></span>2. Conectar Dispositivo</a>
+        <a class="sb-link" href="#configurar-residencia"><span class="sb-link-icon"><i data-lucide="home"></i></span>3. Configurar Casa</a>
+        <a class="sb-link" href="#primeiro-acesso"><span class="sb-link-icon"><i data-lucide="sparkles"></i></span>4. Primeiro Acesso</a>
+      </div>
+      <div class="sb-section">
+        <div class="sb-section-label">Painel de Controle</div>
+        <a class="sb-link" href="#dashboard"><span class="sb-link-icon"><i data-lucide="bar-chart-2"></i></span>Dashboard</a>
+        <a class="sb-link" href="#alertas"><span class="sb-link-icon"><i data-lucide="bell"></i></span>Alertas</a>
+        <a class="sb-link" href="#relatorios"><span class="sb-link-icon"><i data-lucide="file-text"></i></span>Relatórios</a>
+        <a class="sb-link" href="#configuracoes"><span class="sb-link-icon"><i data-lucide="settings-2"></i></span>Configurações</a>
+      </div>
+      <div class="sb-section">
+        <div class="sb-section-label">Técnico</div>
+        <a class="sb-link" href="#como-funciona-tecnicamente"><span class="sb-link-icon"><i data-lucide="wrench"></i></span>Como Funciona</a>
+        <a class="sb-link" href="#protocolo-dados"><span class="sb-link-icon"><i data-lucide="package"></i></span>Protocolo de Dados</a>
+        <a class="sb-link" href="#troubleshooting"><span class="sb-link-icon"><i data-lucide="bug"></i></span>Solução de Problemas</a>
+      </div>
+    </aside>
+
+    <!-- CONTEÚDO -->
+    <main class="docs-content">
+
+      <!-- VISÃO GERAL -->
+      <div id="visao-geral">
+        <div class="page-eyebrow">Guia do Usuário MONITECH</div>
+        <h1>Bem-vindo ao MONITECH</h1>
+        <p class="page-desc">
+          Parabéns! Você agora tem acesso a um sistema completo para monitorar o consumo de energia da sua casa
+          em tempo real. Este guia mostra como instalar, conectar e usar o Dispositivo MONITECH passo a passo.
+        </p>
+
+        <div class="info-box info-box--info">
+          <span class="info-box-icon"><i data-lucide="info"></i></span>
+          <div><strong>Dica:</strong> Se é a primeira vez, comece pela seção "<strong>O Dispositivo</strong>" à esquerda e siga em ordem. Leva apenas 15 minutos para ter tudo funcionando!</div>
+        </div>
+
+        <h2 id="o-dispositivo">O Dispositivo MONITECH <a class="doc-anchor" href="#o-dispositivo">#</a></h2>
+        <p>O Dispositivo MONITECH é uma <strong>caixa pronta para usar</strong> que mede o consumo elétrico da sua residência.</p>
+
+        <div class="hw-cards">
+          <div class="hw-card reveal">
+            <div class="hw-card-icon"><i data-lucide="package"></i></div>
+            <div>
+              <div class="hw-card-name">O que vem dentro da caixa</div>
+              <p class="hw-card-desc">Dentro da caixa branca/preta você encontra todos os componentes eletrônicos integrados. Não há nada para montar ou configurar internamente — tudo já vem pronto!</p>
+            </div>
+          </div>
+          <div class="hw-card reveal">
+            <div class="hw-card-icon"><i data-lucide="plug"></i></div>
+            <div>
+              <div class="hw-card-name">3 Cabos que saem da caixa</div>
+              <p class="hw-card-desc"><strong>1) Cabo de Energia:</strong> Conecta na tomada (com fonte 110V/220V). <strong>2) Sensor CT:</strong> Pinça que prende no fio principal de energia da casa. <strong>3) USB:</strong> Para atualizações (se precisar modificar código).</p>
+            </div>
+          </div>
+        </div>
+
+        <h2 id="instalacao-fisica">Instalação Física <a class="doc-anchor" href="#instalacao-fisica">#</a></h2>
+        <p>Antes de usar o painel online, instale o Dispositivo MONITECH em sua casa:</p>
+
+        <div class="step-cards">
+          <div class="step-card">
+            <div class="step-num-badge">1</div>
+            <div>
+              <div class="step-card-title">Escolha um Local</div>
+              <p class="step-card-text">Procure um local seguro e protegido (preferentemente em um armário ou embaixo da escada) perto do quadro de energia. O dispositivo precisa estar próximo ao cabo principal da casa.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num-badge">2</div>
+            <div>
+              <div class="step-card-title">Prenda o Sensor CT</div>
+              <p class="step-card-text">Sem desligar a energia, abra a pinça do sensor CT e prenda-a firmemente no cabo principal de energia da sua casa. A pinça é magnética e segura. Não faz contato com alta tensão.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num-badge">3</div>
+            <div>
+              <div class="step-card-title">Conecte a Energia</div>
+              <p class="step-card-text">Conecte o cabo de energia do Dispositivo na tomada. Ele tem uma fonte automática que funciona em 110V ou 220V. Aguarde alguns segundos até o dispositivo ligar (LED verde acenderá).</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num-badge">4</div>
+            <div>
+              <div class="step-card-title">Conecte ao Wi-Fi</div>
+              <p class="step-card-text">O Dispositivo MONITECH procura automaticamente redes Wi-Fi disponíveis. Ele se conectará à sua rede Wi-Fi de casa automaticamente (configure isto no painel do MONITECH, confira próximas seções).</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-box info-box--warn">
+          <span class="info-box-icon"><i data-lucide="alert-triangle"></i></span>
+          <div><strong>Segurança:</strong> Se não tiver confiança em fazer esta instalação, peça para um eletricista habilitado. A pinça do sensor CT não toca em alta tensão, mas se você não tiver certeza, não faça.</div>
+        </div>
+      </div>
+
+      <div class="doc-divider"></div>
+
+      <!-- CRIAR CONTA -->
+      <div id="criar-conta">
+        <h2>1. Criar Sua Conta MONITECH <a class="doc-anchor" href="#criar-conta">#</a></h2>
+        <p>O primeiro passo é criar uma conta no painel. Aqui você armazenará todas as suas configurações e dados de consumo.</p>
+
+        <div class="step-cards">
+          <div class="step-card">
+            <div class="step-num-badge">1.1</div>
+            <div>
+              <div class="step-card-title">Abra o Painel</div>
+              <p class="step-card-text">No seu navegador (Chrome, Edge ou Firefox), navegue até o endereço do painel MONITECH. Você verá uma página de login/cadastro.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num-badge">1.2</div>
+            <div>
+              <div class="step-card-title">Clique em "Cadastro"</div>
+              <p class="step-card-text">Preencha seu email, crie uma senha forte e confirme-a. Você pode também usar sua conta Google se preferir.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num-badge">1.3</div>
+            <div>
+              <div class="step-card-title">Confirme seu Email</div>
+              <p class="step-card-text">Verifique seu email e clique no link de confirmação que enviamos. Sua conta será ativada em segundos.</p>
+            </div>
+          </div>
+        </div>
+
+        <p><strong>Pronto!</strong> Você agora tem uma conta e pode acessar o painel. Na primeira vez, será solicitado que configure sua residência.</p>
+      </div>
+
+      <!-- CONECTAR DISPOSITIVO -->
+      <div id="conectar-dispositivo">
+        <h2>2. Conectar o Dispositivo ao Painel <a class="doc-anchor" href="#conectar-dispositivo">#</a></h2>
+        <p>Agora que o Dispositivo MONITECH está instalado em sua casa e ligado, você precisa conectá-lo ao painel online.</p>
+
+        <div class="step-cards">
+          <div class="step-card">
+            <div class="step-num-badge">2.1</div>
+            <div>
+              <div class="step-card-title">Acesse "Conectar Dispositivo"</div>
+              <p class="step-card-text">No painel, procure a seção "Dispositivo MONITECH" ou "Conectar Novo Dispositivo". Você verá um formulário para adicionar seu dispositivo.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num-badge">2.2</div>
+            <div>
+              <div class="step-card-title">Configure a Conexão</div>
+              <p class="step-card-text">O sistema detectará automaticamente seu Dispositivo na rede. Ele mostrará o nome do dispositivo (ex: "MONITECH-001") e um botão de conectar.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num-badge">2.3</div>
+            <div>
+              <div class="step-card-title">Clique em Conectar</div>
+              <p class="step-card-text">Uma vez detectado, clique em "Conectar". O painel estabelecerá comunicação com o Dispositivo e começará a receber os dados de consumo em tempo real.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-box info-box--info">
+          <span class="info-box-icon"><i data-lucide="info"></i></span>
+          <div><strong>Dica:</strong> Se o painel não encontrar o dispositivo automaticamente, certifique-se de que ele está ligado e conectado à mesma rede Wi-Fi que seu computador. O LED verde da caixa deve estar aceso.</div>
+        </div>
+      </div>
+
+      <!-- CONFIGURAR RESIDÊNCIA -->
+      <div id="configurar-residencia">
+        <h2>3. Configurar Sua Residência <a class="doc-anchor" href="#configurar-residencia">#</a></h2>
+        <p>Com o dispositivo conectado, você agora configura as informações da sua casa. Isto ajuda o painel a calcular custos com precisão.</p>
+
+        <div class="step-cards">
+          <div class="step-card">
+            <div class="step-num-badge">3.1</div>
+            <div>
+              <div class="step-card-title">Dados da Residência</div>
+              <p class="step-card-text">Informe o tipo (casa, apartamento, comercial, etc), sua distribuidora de energia e a modalidade tarifária (simples, branca, azul ou verde).</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num-badge">3.2</div>
+            <div>
+              <div class="step-card-title">Adicione Cômodos</div>
+              <p class="step-card-text">Liste os cômodos da sua casa (sala, quarto, cozinha, garagem, escritório, etc). O painel mostrará quanto cada cômodo consome.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num-badge">3.3</div>
+            <div>
+              <div class="step-card-title">Configure Tarifas</div>
+              <p class="step-card-text">Insira o valor da sua tarifa de energia (R$/kWh). Você pode obter esta informação na sua conta de luz. O painel usará isto para calcular seus gastos.</p>
+            </div>
+          </div>
+        </div>
+
+        <p><strong>Excelente!</strong> Seu perfil está configurado. Agora você pode começar a monitorar seu consumo.</p>
+      </div>
+
+      <!-- PRIMEIRO ACESSO -->
+      <div id="primeiro-acesso">
+        <h2>4. Seu Primeiro Acesso ao Dashboard <a class="doc-anchor" href="#primeiro-acesso">#</a></h2>
+        <p>Agora é a hora de explorar! Aqui está o que você verá no painel:</p>
+
+        <h3><i data-lucide="bar-chart-2"></i> Dashboard (Página Principal)</h3>
+        <p>Mostra seis medidores em tempo real:</p>
+        <ul>
+          <li><strong>Tensão (V):</strong> Voltagem da rede neste momento</li>
+          <li><strong>Corrente (A):</strong> Amperes fluindo agora</li>
+          <li><strong>Potência (W):</strong> Watts que você está usando agora</li>
+          <li><strong>Fator de Potência:</strong> Eficiência da sua energia</li>
+          <li><strong>Frequência (Hz):</strong> Frequência da rede (sempre 60 Hz no Brasil)</li>
+          <li><strong>Consumo (kWh):</strong> Quanto você já consumiu até agora</li>
+        </ul>
+
+        <h3><i data-lucide="trending-up"></i> Gráficos de Consumo</h3>
+        <p>Veja como seu consumo varia ao longo do dia, semana ou mês. Identifique picos de consumo.</p>
+
+        <h3><i data-lucide="bell"></i> Alertas</h3>
+        <p>Defina limites de consumo. Se você ultrapassá-los, receberá um alerta automático.</p>
+
+        <h3><i data-lucide="banknote"></i> Custo Estimado</h3>
+        <p>O painel calcula automaticamente quanto você está gastando com a tarifa que configurou.</p>
+
+        <p><strong>Parabéns!</strong> Você está monitorando sua energia com sucesso!</p>
+      </div>
+
+      <div class="doc-divider"></div>
+
+      <!-- DASHBOARD -->
+      <div id="dashboard">
+        <h2>Entendendo o Dashboard <a class="doc-anchor" href="#dashboard">#</a></h2>
+        <p>O dashboard é a página principal onde você vê todos os dados sobre seu consumo de energia em tempo real.</p>
+
+        <h3>Os 6 Medidores</h3>
+        <table class="docs-table">
+          <thead>
+            <tr>
+              <th>Medidor</th>
+              <th>Unidade</th>
+              <th>O que significa</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Tensão</strong></td>
+              <td>V (Volts)</td>
+              <td>A voltagem da rede em este momento. Normalmente 220V ou 110V no Brasil</td>
+            </tr>
+            <tr>
+              <td><strong>Corrente</strong></td>
+              <td>A (Amperes)</td>
+              <td>Quanto de corrente está fluindo. Quanto maior, mais energia você está consumindo</td>
+            </tr>
+            <tr>
+              <td><strong>Potência</strong></td>
+              <td>W (Watts)</td>
+              <td>A potência instantânea. Seu ar-condicionado poderia usar 2000W, sua geladeira 500W</td>
+            </tr>
+            <tr>
+              <td><strong>Fator de Potência</strong></td>
+              <td>0.00 a 1.00</td>
+              <td>Eficiência da sua energia. Quanto mais perto de 1.0, melhor</td>
+            </tr>
+            <tr>
+              <td><strong>Frequência</strong></td>
+              <td>Hz (Hertz)</td>
+              <td>Frequência da rede. Sempre 60 Hz no Brasil. Não precisa se preocupar com isto</td>
+            </tr>
+            <tr>
+              <td><strong>Consumo</strong></td>
+              <td>kWh (Kilowatt-hora)</td>
+              <td>Quanto você já consumiu. Este número sempre sobe. Isto é o que você paga na conta de luz</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ALERTAS -->
+      <div id="alertas">
+        <h2>Configurar Alertas <a class="doc-anchor" href="#alertas">#</a></h2>
+        <p>Alertas ajudam você a controlar seu consumo. Você pode configurar alertas automáticos para:</p>
+        <ul>
+          <li><strong>Consumo diário:</strong> Alerta se você consumir mais de X kWh em um dia</li>
+          <li><strong>Custo mensal:</strong> Alerta se sua conta atingir R$ X por mês</li>
+          <li><strong>Tensão baixa:</strong> Alerta se a tensão cair muito (pode danificar equipamentos)</li>
+          <li><strong>Tensão alta:</strong> Alerta se a tensão aumentar muito</li>
+          <li><strong>Pico de potência:</strong> Alerta se o consumo instantâneo for muito alto</li>
+        </ul>
+
+        <p>Quando um alerta é acionado, você recebe uma notificação no painel. Em futuras versões, você receberá também por email.</p>
+      </div>
+
+      <!-- RELATÓRIOS -->
+      <div id="relatorios">
+        <h2>Acessar Relatórios <a class="doc-anchor" href="#relatorios">#</a></h2>
+        <p>Os relatórios mostram seu histórico de consumo em detalhes.</p>
+
+        <h3>Relatório Diário</h3>
+        <p>Veja quanto você consumiu cada dia. Identifique os dias de maior consumo.</p>
+
+        <h3>Relatório Semanal</h3>
+        <p>Compare as semanas. Você está consumindo menos? Ou mais?</p>
+
+        <h3>Relatório Mensal</h3>
+        <p>Compare com meses anteriores. Este é o período mais importante, pois sua conta de luz é cobrada mensalmente.</p>
+
+        <h3>Exportar Dados</h3>
+        <p>Você pode exportar todos os dados em formato JSON para análise em Excel ou outros programas.</p>
+      </div>
+
+      <!-- CONFIGURAÇÕES -->
+      <div id="configuracoes">
+        <h2>Configurações da Conta <a class="doc-anchor" href="#configuracoes">#</a></h2>
+        <p>Acesse as configurações para:</p>
+        <ul>
+          <li>Mudar sua senha</li>
+          <li>Atualizar tarifa de energia</li>
+          <li>Adicionar/remover cômodos</li>
+          <li>Desconectar o dispositivo</li>
+          <li>Alterar preferências de alerta</li>
+        </ul>
+      </div>
+
+      <div class="doc-divider"></div>
+
+      <!-- TÉCNICO -->
+      <div id="como-funciona-tecnicamente">
+        <h2>Como Funciona Tecnicamente <a class="doc-anchor" href="#como-funciona-tecnicamente">#</a></h2>
+        <p>Esta seção é para usuários mais técnicos que querem entender a arquitetura do sistema.</p>
+
+        <h3>Os Componentes Internos</h3>
+        <p>Dentro da caixa MONITECH há dois componentes principais:</p>
+        <ul>
+          <li><strong>ESP32:</strong> Um microcontrolador pequeno com Wi-Fi integrado. Ele lê os dados do sensor e envia pela internet</li>
+          <li><strong>PZEM-004T:</strong> Um sensor de energia de alta precisão que mede todos os dados elétricos</li>
+        </ul>
+
+        <h3>Como Funciona o Fluxo de Dados</h3>
+        <ol>
+          <li>O sensor PZEM-004T mede a energia continuamente via o cabo CT prensado no fio principal</li>
+          <li>O ESP32 lê esses dados a cada 2 segundos</li>
+          <li>O ESP32 envia os dados para o painel via Wi-Fi em formato JSON</li>
+          <li>O painel recebe e armazena os dados em banco de dados</li>
+          <li>O navegador atualiza os gráficos e medidores em tempo real</li>
+        </ol>
+
+        <h3>Privacidade e Segurança</h3>
+        <p>Seus dados são armazenados <strong>localmente</strong> no seu computador ou servidor. Eles nunca são enviados para nuvem. Você tem controle total.</p>
+      </div>
+
+      <!-- PROTOCOLO DE DADOS -->
+      <div id="protocolo-dados">
+        <h2>Protocolo de Dados (Técnico) <a class="doc-anchor" href="#protocolo-dados">#</a></h2>
+        <p>Se você quer modificar o firmware ou criar integrações customizadas, aqui está o formato dos dados:</p>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-block-lang">JSON</span>
+            <button class="code-copy"
+              onclick="this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',2000)">Copiar</button>
+          </div>
+          <pre>{
+  "id": "MONITECH-001",
+  "volts": 220.4,
+  "amps": 8.37,
+  "watts": 1847,
+  "pf": 0.92,
+  "hz": 60.0,
+  "kwh": 4.218,
+  "rssi": -58,
+  "ssid": "MinhaRede",
+  "ip": "192.168.1.100",
+  "fw": "1.0.0",
+  "ts": 125000
+}</pre>
+        </div>
+
+        <h3>Significado dos campos:</h3>
+        <table class="docs-table">
+          <thead>
+            <tr>
+              <th>Campo</th>
+              <th>Tipo</th>
+              <th>Descrição</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>id</code></td>
+              <td>string</td>
+              <td>Identificador único do dispositivo</td>
+            </tr>
+            <tr>
+              <td><code>volts</code></td>
+              <td>float</td>
+              <td>Tensão em Volts</td>
+            </tr>
+            <tr>
+              <td><code>amps</code></td>
+              <td>float</td>
+              <td>Corrente em Amperes</td>
+            </tr>
+            <tr>
+              <td><code>watts</code></td>
+              <td>float</td>
+              <td>Potência em Watts</td>
+            </tr>
+            <tr>
+              <td><code>kwh</code></td>
+              <td>float</td>
+              <td>Consumo acumulado em Quilowatt-hora</td>
+            </tr>
+            <tr>
+              <td><code>pf</code></td>
+              <td>float</td>
+              <td>Fator de potência (0.0 a 1.0)</td>
+            </tr>
+            <tr>
+              <td><code>hz</code></td>
+              <td>float</td>
+              <td>Frequência da rede em Hertz</td>
+            </tr>
+            <tr>
+              <td><code>rssi</code></td>
+              <td>int</td>
+              <td>Sinal Wi-Fi em dBm</td>
+            </tr>
+            <tr>
+              <td><code>fw</code></td>
+              <td>string</td>
+              <td>Versão do firmware</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- TROUBLESHOOTING -->
+      <div id="troubleshooting">
+        <h2>Solução de Problemas <a class="doc-anchor" href="#troubleshooting">#</a></h2>
+
+        <h3><i data-lucide="help-circle"></i>O dispositivo não aparece no painel</h3>
+        <ul>
+          <li>Certifique-se de que o LED verde da caixa está aceso (significa que tem energia)</li>
+          <li>Verifique se o dispositivo está na mesma rede Wi-Fi que seu computador</li>
+          <li>Reinicie o dispositivo desconectando e reconectando na tomada</li>
+          <li>Verifique se o painel está na mesma rede (por exemplo, não acesse via rede 5GHz enquanto o dispositivo está na 2.4GHz)</li>
+        </ul>
+
+        <h3><i data-lucide="help-circle"></i>Os dados não atualizam em tempo real</h3>
+        <ul>
+          <li>Espere alguns segundos — os dados atualizam a cada 2 segundos</li>
+          <li>Recarregue a página do navegador (F5 ou Ctrl+R)</li>
+          <li>Verifique sua conexão de internet</li>
+          <li>Tente desconectar e reconectar o dispositivo</li>
+        </ul>
+
+        <h3><i data-lucide="help-circle"></i>A leitura de kWh está zerada ou incorreta</h3>
+        <ul>
+          <li>O sensor CT pode não estar bem preso ao fio. Verifique se está bem encostado</li>
+          <li>O sensor CT pode estar virado para o lado oposto. Tente virá-lo</li>
+          <li>Reinicie o dispositivo</li>
+        </ul>
+
+        <h3><i data-lucide="help-circle"></i>Como atualizar o firmware?</h3>
+        <ul>
+          <li>Se você não é técnico, não precisa fazer isto — o dispositivo já vem pronto</li>
+          <li>Se precisar atualizar, conecte via USB e use o Arduino IDE. Detalhes no painel em "Sobre"</li>
+        </ul>
+
+        <h3><i data-lucide="help-circle"></i>Posso desconectar e reconectar em outra casa?</h3>
+        <ul>
+          <li>Sim! O dispositivo é portátil. Basta desconectar fisicamente e levar para outra casa</li>
+          <li>Você pode criar contas diferentes para cada residência, ou reconfigurar a mesma</li>
+        </ul>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // Highlight sidebar link ativo no scroll
+    const sections = document.querySelectorAll('[id]');
+    const sbLinks = document.querySelectorAll('.sb-link');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => { if (window.scrollY >= s.offsetTop - 100) current = s.id; });
+      sbLinks.forEach(l => {
+        l.classList.toggle('active', l.getAttribute('href') === '#' + current);
+      });
+      document.querySelector('nav').style.boxShadow = window.scrollY > 10 ? '0 4px 20px rgba(11,18,32,0.10)' : '';
+    });
+  </script>
+</body>
+
+</html>
+

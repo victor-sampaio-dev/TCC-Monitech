@@ -1,0 +1,123 @@
+/* ============================================================
+   PAINEL DE INFORMAÇÕES DO USUÁRIO
+   Exibe nome e email do usuário autenticado no navbar
+   ============================================================ */
+
+.user-info-panel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: var(--hover-bg, rgba(0, 212, 255, 0.04));
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  min-width: 200px;
+  flex-shrink: 0;
+}
+
+.user-info-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 212, 255, 0.1));
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  font-weight: 600;
+  color: var(--ink-1);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.user-info-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.user-info-nome {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-info-email {
+  font-size: 11px;
+  color: var(--ink-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Modo Dark */
+[data-theme="dark"] .user-info-panel {
+  background: rgba(0, 212, 255, 0.04);
+  border-color: rgba(0, 212, 255, 0.15);
+}
+
+[data-theme="dark"] .user-info-avatar {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 212, 255, 0.08));
+  border-color: rgba(0, 212, 255, 0.3);
+  color: #a7d8ff;
+}
+
+[data-theme="dark"] .user-info-nome {
+  color: #e8f4ff;
+}
+
+[data-theme="dark"] .user-info-email {
+  color: #6a8fa8;
+}
+
+/* Modo Light */
+[data-theme="light"] .user-info-panel {
+  background: rgba(11, 18, 32, 0.04);
+  border-color: rgba(11, 18, 32, 0.1);
+}
+
+[data-theme="light"] .user-info-avatar {
+  background: linear-gradient(135deg, rgba(11, 18, 32, 0.08), rgba(11, 18, 32, 0.04));
+  border-color: rgba(11, 18, 32, 0.15);
+  color: #0b1724;
+}
+
+[data-theme="light"] .user-info-nome {
+  color: #0b1724;
+}
+
+[data-theme="light"] .user-info-email {
+  color: #7a8fa8;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1024px) {
+  .user-info-panel {
+    min-width: 160px;
+    padding: 6px 10px;
+  }
+
+  .user-info-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+
+  .user-info-nome {
+    font-size: 12px;
+  }
+
+  .user-info-email {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .user-info-panel {
+    display: none;
+  }
+}

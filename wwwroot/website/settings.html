@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configurações — MONITECH</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <script src="../assets/js/shared/theme-loader.js"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/shared/navbar.css">
+  <link rel="stylesheet" href="../assets/css/shared/userMenu.css">
+  <link rel="stylesheet" href="../assets/css/shared/profile-photo-styles.css">
+  <link rel="stylesheet" href="../website/css/theme-colors.css">
+  <link rel="stylesheet" href="../website/css/settings.css">
+  <link rel="stylesheet" href="../assets/css/shared/auth-modal.css">
+  <link rel="stylesheet" href="../assets/css/shared/theme-toggle.css">
+  <link rel="stylesheet" href="../assets/css/shared/icons.css">
+  <script src="../assets/js/vendor/lucide.min.js" defer></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="../assets/js/shared/auth-modal.js"></script>
+  <script src="../assets/js/shared/navbar.js" defer></script>
+  <script src="../assets/js/shared/profile-photo-manager.js" defer></script>
+  <script src="../assets/js/shared/magnific-icons-loader.js" defer></script>
+  <script src="../assets/js/pages/settings.js" defer></script>
+  <script src="../assets/js/shared/theme-toggle.js" defer></script>
+  <script src="../assets/js/shared/user-info-panel.js" defer></script>
+</head>
+
+<body>
+
+  <nav id="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="../index.html">
+        <img src="/assets/images/logo.svg" alt="MONITECH" style="height:32px;width:auto;">
+        <span class="nav-brand">MONITECH</span>
+      </a>
+      <div class="nav-links-desktop" id="nav-links-desktop">
+        <a class="nav-link" href="../index.html">Início</a>
+        <a class="nav-link" href="../pages-documents/docs.html">Documentação</a>
+        <a class="nav-link" href="../pages-documents/changelog.html">Changelog</a>
+        <a class="nav-link" href="../pages-documents/contato.html">Contato</a>
+      </div>
+      <button type="button" class="mobile-menu-btn" id="mobile-menu-btn" onclick="alternarMenuMobile()">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-menu-mobile" id="nav-menu-mobile">
+        <div class="nav-links" id="nav-tabs-mobile">
+          <a class="nav-link" href="../index.html">
+            <span class="mmenu-icon"><i data-lucide="home"></i></span>
+            <span class="mmenu-text">Início</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a class="nav-link" href="../pages-documents/docs.html">
+            <span class="mmenu-icon"><i data-lucide="book-open"></i></span>
+            <span class="mmenu-text">Documentação</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a class="nav-link" href="../pages-documents/changelog.html">
+            <span class="mmenu-icon"><i data-lucide="list-checks"></i></span>
+            <span class="mmenu-text">Changelog</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a class="nav-link" href="../pages-documents/contato.html">
+            <span class="mmenu-icon"><i data-lucide="mail"></i></span>
+            <span class="mmenu-text">Contato</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+        </div>
+        <div class="nav-menu-footer">
+          <a class="btn-nav-solid-mobile" target="_blank" href="../system/system.html">
+            <i data-lucide="layout-dashboard"></i>
+            Acessar Painel
+          </a>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <div class="nav-end">
+          <a class="btn-nav-solid" target="_blank" href="../system/system.html">Acessar Painel →</a>
+        </div>
+        <!-- Toggle de Tema -->
+        <button class="theme-toggle-btn" id="theme-toggle-btn" title="Alternar tema">
+          <span class="theme-toggle-icon"></span>
+        </button>
+        <!-- Painel de Informações do Usuário -->
+        <div class="user-info-panel" id="user-info-panel" style="display:none !important;">
+          <div class="user-info-avatar">U</div>
+          <div class="user-info-details">
+            <div class="user-info-nome" id="user-info-nome">Usuário</div>
+            <div class="user-info-email" id="user-info-email">email@example.com</div>
+          </div>
+        </div>
+        <div class="user-menu-wrapper">
+          <button class="user-menu-btn" id="user-menu-btn" onclick="toggleUserMenu()">
+            <div class="user-avatar">U</div>
+          </button>
+          <div class="user-dropdown" id="user-dropdown">            <!-- Header com dados do usuário (aparece quando logado) -->
+            <div class="user-dropdown-header" id="user-dropdown-header" style="display:none !important;">
+              <div class="user-dropdown-avatar-lg" id="user-dropdown-avatar-lg">U</div>
+              <div class="user-dropdown-info">
+                <div class="user-dropdown-nome" id="user-dropdown-nome">Usuário</div>
+                <div class="user-dropdown-email" id="user-dropdown-email">email@example.com</div>
+              </div>
+            </div>
+            <div class="user-dropdown-divider" id="user-dropdown-divider" style="display:none !important;"></div>
+            <div class="dropdown-auth-section">
+              <a href="#" id="dropdown-login" onclick="openAuthModal(); event.preventDefault();" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                Entrar
+              </a>
+              <a href="#" id="dropdown-cadastro" onclick="openAuthModal(); switchAuthTab('signup'); event.preventDefault();" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                Criar conta
+              </a>
+            </div>
+            <a href="./settings.html" id="dropdown-config" class="user-dropdown-item" style="display:none !important;">Configurações</a>
+            <a href="../pages-documents/docs.html" id="dropdown-sobre" class="user-dropdown-item" style="display:none !important;">Sobre</a>
+            <button id="dropdown-logout" class="user-dropdown-item user-dropdown-logout" onclick="logout()" style="display:none !important;">Sair</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="nav-backdrop" id="nav-backdrop" onclick="alternarMenuMobile()"></div>
+
+  <!-- Modal de Autenticação -->
+  <div class="auth-backdrop" id="auth-backdrop">
+    <div class="auth-modal">
+      <!-- Botão fechar -->
+      <button class="auth-close-btn" onclick="closeAuthModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <!-- Header -->
+      <div class="auth-header">
+        <span class="auth-header-logo">MONITECH</span>
+        <h2>Bem-vindo</h2>
+        <p>Acesse sua conta profissional</p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab" data-tab="login" onclick="switchAuthTab('login')">Login</button>
+        <button class="auth-tab" data-tab="signup" onclick="switchAuthTab('signup')">Cadastro</button>
+      </div>
+
+      <!-- Conteúdo: Login -->
+      <div class="auth-content" id="auth-login">
+        <!-- Login com Google -->
+        <button class="auth-social-btn" id="google-login-btn" onclick="loginWithGoogle()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          <span class="google-divider"></span>
+          Entrar com Google
+        </button>
+
+        <!-- Divisor -->
+        <div class="auth-divider">ou</div>
+
+        <!-- Formulário de Login -->
+        <form class="auth-form" id="login-form" onsubmit="loginWithEmail(event)">
+          <div class="form-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" placeholder="seu@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="login-password">Senha</label>
+            <input type="password" id="login-password" placeholder="••••••••" required>
+          </div>
+
+          <button type="submit" class="auth-submit-btn">Login</button>
+        </form>
+
+        <!-- Links de rodapé -->
+        <div class="auth-footer">
+          <a href="#" onclick="event.preventDefault(); alert('Recuperação de senha será implementada');"> Esqueceu a senha?</a>
+        </div>
+      </div>
+
+      <!-- Conteúdo: Cadastro -->
+      <div class="auth-content" id="auth-signup">
+        <!-- Cadastro com Google -->
+        <button class="auth-social-btn" id="google-signup-btn" onclick="signupWithGoogle()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          <span class="google-divider"></span>
+          Cadastrar com Google
+        </button>
+
+        <!-- Divisor -->
+        <div class="auth-divider">ou</div>
+
+        <!-- Formulário de Cadastro -->
+        <form class="auth-form" id="signup-form" onsubmit="signupWithEmail(event)">
+          <div class="form-group">
+            <label for="signup-name">Nome Completo</label>
+            <input type="text" id="signup-name" placeholder="Seu nome" required>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-email">Email</label>
+            <input type="email" id="signup-email" placeholder="seu@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-password">Senha</label>
+            <input type="password" id="signup-password" placeholder="••••••••" required>
+          </div>
+
+          <div class="form-checkbox">
+            <input type="checkbox" id="signup-terms" required>
+            <label for="signup-terms">Concordo com os <a href="#" onclick="event.preventDefault();">Termos de Serviço</a></label>
+          </div>
+
+          <button type="submit" class="auth-submit-btn">Criar Conta</button>
+        </form>
+
+        <!-- Links de rodapé -->
+        <div class="auth-footer">
+          Já tem uma conta? <a href="#" onclick="switchAuthTab('login');">Faça login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="settings-main">
+    <div class="settings-layout">
+
+      <nav class="sidebar-nav">
+        <div class="sidebar-header">
+          <div class="sidebar-avatar" id="sidebar-avatar">U</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-username" id="sidebar-username">Usuário</div>
+            <div class="sidebar-email" id="sidebar-email">—</div>
+            <span class="sidebar-role-badge">Membro Ativo</span>
+          </div>
+        </div>
+
+        <div class="sidebar-items">
+          <button class="sidebar-item active" onclick="showTab('aparencia')" id="tab-aparencia">
+            <span class="sidebar-icon"><i data-lucide="palette"></i></span>
+            <span>Aparência</span>
+          </button>
+          <button class="sidebar-item" onclick="showTab('conta')" id="tab-conta">
+            <span class="sidebar-icon"><i data-lucide="user"></i></span>
+            <span>Conta</span>
+          </button>
+          <button class="sidebar-item" onclick="showTab('dispositivo')" id="tab-dispositivo">
+            <span class="sidebar-icon"><i data-lucide="cpu"></i></span>
+            <span>Dispositivo</span>
+          </button>
+          <button class="sidebar-item" onclick="showTab('notificacoes')" id="tab-notificacoes">
+            <span class="sidebar-icon"><i data-lucide="bell"></i></span>
+            <span>Notificações</span>
+          </button>
+        </div>
+
+        <div class="sidebar-footer">
+          <a class="sidebar-link" href="../index.html">← Voltar ao início</a>
+          <a class="sidebar-link" href="../pages-documents/docs.html">Documentação</a>
+          <a class="sidebar-link" href="../system/system.html" target="_blank">Acessar Painel</a>
+        </div>
+      </nav>
+
+
+      <!-- CONTENT -->
+      <div class="settings-content">
+
+        <!-- APARÊNCIA -->
+        <section class="settings-panel active" id="panel-aparencia">
+          <div class="panel-header">
+            <div class="panel-eyebrow">Personalização</div>
+            <h1 class="panel-title">Aparência</h1>
+            <p class="panel-desc">Escolha o tema visual que melhor se adapta ao seu ambiente de trabalho.</p>
+          </div>
+
+          <div class="settings-card">
+            <div class="card-label"><span class="card-label-icon"><i data-lucide="palette"></i></span>Tema do Site</div>
+            <div class="card-sublabel">A preferência é salva automaticamente e aplicada em todas as páginas.</div>
+            <div class="theme-grid">
+
+              <label class="theme-card" id="card-dark" for="theme-dark">
+                <input type="radio" name="theme" id="theme-dark" value="dark">
+                <div class="theme-card-preview theme-preview-dark">
+                  <div class="prev-topbar dark-tb">
+                    <div class="prev-dots"><span></span><span></span><span></span></div>
+                    <div class="prev-logo"><i data-lucide="zap"></i> MONITECH</div>
+                    <div class="prev-navbtn dark-btn"></div>
+                  </div>
+                  <div class="prev-body">
+                    <div class="prev-sidebar dark-side">
+                      <div class="prev-sitem"></div>
+                      <div class="prev-sitem pactive"></div>
+                      <div class="prev-sitem"></div>
+                      <div class="prev-sitem"></div>
+                    </div>
+                    <div class="prev-main">
+                      <div class="prev-card dark-card">
+                        <div class="prev-metric-row">
+                          <div class="prev-metric"><span class="prev-val dark-val">220</span><span
+                              class="prev-unit">V</span></div>
+                          <div class="prev-metric"><span class="prev-val dark-val">1.8</span><span
+                              class="prev-unit">kW</span></div>
+                          <div class="prev-metric"><span class="prev-val dark-val">4.2</span><span
+                              class="prev-unit">kWh</span></div>
+                        </div>
+                        <div class="prev-waveline dark-wave"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="theme-card-footer">
+                  <div class="theme-card-check"><span>✓</span></div>
+                  <div class="theme-card-text">
+                    <div class="theme-card-name"><i data-lucide="moon"></i> Escuro</div>
+                    <div class="theme-card-desc">Ideal para ambientes com pouca luz</div>
+                  </div>
+                </div>
+              </label>
+
+              <label class="theme-card" id="card-light" for="theme-light">
+                <input type="radio" name="theme" id="theme-light" value="light">
+                <div class="theme-card-preview theme-preview-light">
+                  <div class="prev-topbar light-tb">
+                    <div class="prev-dots"><span></span><span></span><span></span></div>
+                    <div class="prev-logo light-logo"><i data-lucide="zap"></i> MONITECH</div>
+                    <div class="prev-navbtn light-btn"></div>
+                  </div>
+                  <div class="prev-body">
+                    <div class="prev-sidebar light-side">
+                      <div class="prev-sitem light-sitem"></div>
+                      <div class="prev-sitem pactive light-active"></div>
+                      <div class="prev-sitem light-sitem"></div>
+                      <div class="prev-sitem light-sitem"></div>
+                    </div>
+                    <div class="prev-main">
+                      <div class="prev-card light-card">
+                        <div class="prev-metric-row">
+                          <div class="prev-metric"><span class="prev-val light-val">220</span><span
+                              class="prev-unit light-unit">V</span></div>
+                          <div class="prev-metric"><span class="prev-val light-val">1.8</span><span
+                              class="prev-unit light-unit">kW</span></div>
+                          <div class="prev-metric"><span class="prev-val light-val">4.2</span><span
+                              class="prev-unit light-unit">kWh</span></div>
+                        </div>
+                        <div class="prev-waveline light-wave"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="theme-card-footer">
+                  <div class="theme-card-check"><span>✓</span></div>
+                  <div class="theme-card-text">
+                    <div class="theme-card-name"><i data-lucide="sun"></i> Claro</div>
+                    <div class="theme-card-desc">Visual limpo para uso durante o dia</div>
+                  </div>
+                </div>
+              </label>
+
+            </div>
+            <div class="theme-status">
+              <div class="status-pip"></div>
+              <span>Tema ativo: <strong id="theme-current-label">Escuro</strong> — salvo automaticamente</span>
+            </div>
+          </div>
+
+          <!-- Live preview -->
+          <div class="settings-card">
+            <div class="card-label"><span class="card-label-icon"><i data-lucide="monitor"></i></span>Preview da Interface</div>
+            <div class="card-sublabel">Como os componentes aparecem com o tema selecionado.</div>
+            <div class="live-preview">
+              <div class="lp-topbar">
+                <div class="lp-logo-text"><i data-lucide="zap"></i> MONITECH</div>
+                <div class="lp-nav-items">
+                  <div class="lp-nav-item"></div>
+                  <div class="lp-nav-item lp-active"></div>
+                  <div class="lp-nav-item"></div>
+                </div>
+                <div class="lp-navbtn">Painel →</div>
+              </div>
+              <div class="lp-body">
+                <div class="lp-card lp-card-main">
+                  <div class="lp-card-header">Dashboard em Tempo Real</div>
+                  <div class="lp-metrics">
+                    <div class="lp-metric-cell">
+                      <div class="lp-metric-val">220<span>V</span></div>
+                      <div class="lp-metric-key">Tensão</div>
+                    </div>
+                    <div class="lp-metric-cell">
+                      <div class="lp-metric-val">1847<span>W</span></div>
+                      <div class="lp-metric-key">Potência</div>
+                    </div>
+                    <div class="lp-metric-cell">
+                      <div class="lp-metric-val">4.2<span>kWh</span></div>
+                      <div class="lp-metric-key">Consumo</div>
+                    </div>
+                    <div class="lp-metric-cell">
+                      <div class="lp-metric-val success-val">●<span>AO VIVO</span></div>
+                      <div class="lp-metric-key">Status</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="lp-badges-row">
+                  <span class="lp-badge">Open Source</span>
+                  <span class="lp-badge lp-badge-success">Sem Assinatura</span>
+                  <span class="lp-badge lp-badge-accent">Dados Locais</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- CONTA -->
+        <section class="settings-panel" id="panel-conta">
+          <div class="panel-header">
+            <div class="panel-eyebrow">Perfil</div>
+            <h1 class="panel-title">Conta</h1>
+            <p class="panel-desc">Gerencie as informações da sua conta MONITECH.</p>
+          </div>
+
+          <!-- Foto de Perfil -->
+          <div class="settings-card">
+            <div class="card-label"><span class="card-label-icon"><i data-lucide="camera"></i></span>Foto de Perfil</div>
+            <div class="card-sublabel">Escolha uma foto para sua conta. Máximo 5MB (JPG, PNG ou WebP).</div>
+            
+            <div class="profile-photo-section">
+              <!-- Avatar Container -->
+              <div class="profile-photo-container">
+                <div class="profile-photo-avatar" id="profile-avatar">
+                  <span class="avatar-initial">U</span>
+                </div>
+                <div class="profile-photo-buttons">
+                  <button type="button" class="btn-upload-photo" onclick="triggerFileInput()">
+                    <i data-lucide="camera"></i> Alterar Foto
+                  </button>
+                  <button type="button" class="btn-remove-photo" id="btn-remove-photo" onclick="removerFotoConfirm()" style="display:none;">
+                    <i data-lucide="trash-2"></i> Remover Foto
+                  </button>
+                </div>
+              </div>
+
+              <!-- Input de Arquivo (Hidden) -->
+              <input type="file" id="profile-file-input" accept="image/jpeg,image/png,image/webp" style="display:none;">
+
+              <!-- Preview -->
+              <div class="profile-photo-preview" id="profile-photo-preview" style="display:none;">
+                <div class="preview-header">
+                  <div class="preview-title">Preview da Foto</div>
+                  <button type="button" class="preview-close" onclick="cancelarPreview()">✕</button>
+                </div>
+                <img id="preview-img" alt="Preview" class="preview-image">
+                <div class="preview-info" id="preview-info"></div>
+                <div class="preview-actions">
+                  <button type="button" class="btn-save" onclick="confirmarUploadFoto()">
+                    ✓ Salvar Foto
+                  </button>
+                  <button type="button" class="btn-ghost" onclick="cancelarPreview()">
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <div class="card-label"><span class="card-label-icon"><i data-lucide="user"></i></span>Informações Pessoais</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Nome</label>
+                <input type="text" id="settings-nome" class="form-input" placeholder="Seu nome">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" id="settings-email" class="form-input" placeholder="seu@email.com" readonly style="opacity:0.6;cursor:not-allowed;" title="Alteração de e-mail não disponível">
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn-save" onclick="salvarPerfilLanding()">Salvar Alterações</button>
+            </div>
+          </div>
+          <div class="settings-card">
+            <div class="card-label"><span class="card-label-icon"><i data-lucide="lock"></i></span>Segurança</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Senha Atual</label>
+                <input type="password" id="settings-pass-atual" class="form-input" placeholder="••••••••">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Nova Senha</label>
+                <input type="password" id="settings-pass-nova" class="form-input" placeholder="Nova senha">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Confirmar Nova Senha</label>
+                <input type="password" id="settings-pass-confirmar" class="form-input" placeholder="Repita a nova senha">
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn-save" onclick="alterarSenhaLanding()">Alterar Senha</button>
+              <button class="btn-ghost" onclick="document.getElementById('settings-pass-atual').value='';document.getElementById('settings-pass-nova').value='';document.getElementById('settings-pass-confirmar').value='';">Cancelar</button>
+            </div>
+          </div>
+          <div class="settings-card danger-card">
+            <div class="card-label danger-label"><span class="card-label-icon" style="background:rgba(255,61,107,0.1);border-color:rgba(255,61,107,0.25);color:var(--danger);"><i data-lucide="alert-triangle"></i></span>Zona de Perigo</div>
+            <div class="card-sublabel">Estas ações são irreversíveis. Proceda com cuidado.</div>
+            <button class="btn-danger" onclick="deletarContaLanding()">Excluir Conta</button>
+          </div>
+        </section>
+
+        <!-- DISPOSITIVO -->
+        <section class="settings-panel" id="panel-dispositivo">
+          <div class="panel-header">
+            <div class="panel-eyebrow">Hardware</div>
+            <h1 class="panel-title">Dispositivo</h1>
+            <p class="panel-desc">Preferências de comunicação e cálculo de energia do seu ESP32 MONITECH.</p>
+          </div>
+
+          <div class="settings-card">
+            <div class="card-label"><span class="card-label-icon"><i data-lucide="globe"></i></span>Protocolo de Comunicação</div>
+            <div class="card-sublabel">O MONITECH usa HTTP para envio de dados — sem configuração extra, funciona em qualquer rede Wi-Fi doméstica.</div>
+            <div class="proto-opt proto-selected" style="cursor:default;">
+              <span class="proto-icon"><i data-lucide="globe"></i></span>
+              <div class="proto-info">
+                <div class="proto-name">HTTP · Ativo</div>
+                <div class="proto-sub">O ESP32 envia leituras via POST a cada ciclo configurado</div>
+              </div>
+              <span class="proto-check" style="background:var(--blue);border-color:var(--blue);color:#fff;">✓</span>
+            </div>
+            <div class="info-note">
+              <i data-lucide="info"></i>
+              <span>As credenciais Wi-Fi, URL e token de autenticação do sensor são configuradas diretamente no dispositivo através do portal de instalação do MONITECH.</span>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <div class="card-label"><span class="card-label-icon"><i data-lucide="clock"></i></span>Intervalo de Atualização</div>
+            <div class="card-sublabel">De quantos em quantos segundos o painel busca novos dados do servidor. Valores menores = maior precisão, maior uso de dados.</div>
+            <div class="range-row">
+              <input type="range" class="form-range" id="landing-interval" min="1" max="60" value="5"
+                oninput="updateRangeLabelLanding(this)">
+              <div class="range-label"><span id="landing-range-val">5</span>s</div>
+            </div>
+            <div class="range-hints">
+              <span>1s · Máxima precisão</span>
+              <span>60s · Economia de dados</span>
+            </div>
+            <div class="form-actions" style="margin-top:16px;">
+              <button class="btn-save" onclick="salvarConfigDispositivo()">Salvar Intervalo</button>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <div class="card-label"><span class="card-label-icon"><i data-lucide="zap"></i></span>Tarifa de Energia</div>
+            <div class="card-sublabel">Informe os dados da sua concessionária para que o MONITECH calcule o custo real em R$ no painel de consumo.</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Distribuidora</label>
+                <input type="text" id="landing-distribuidora" class="form-input" placeholder="Ex: CEMIG, COPEL, ENEL…">
+              </div>
+            </div>
+            <div class="tariff-info">
+              <i data-lucide="zap"></i>
+              <span>A tarifa é calculada automaticamente com base na sua distribuidora e na bandeira tarifária vigente da ANEEL.</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- NOTIFICAÇÕES -->
+        <section class="settings-panel" id="panel-notificacoes">
+          <div class="panel-header">
+            <div class="panel-eyebrow">Alertas</div>
+            <h1 class="panel-title">Notificações</h1>
+            <p class="panel-desc">Escolha quais eventos de energia devem gerar alertas e defina seus limites personalizados.</p>
+          </div>
+
+          <div class="settings-card">
+            <div class="card-label"><span class="card-label-icon"><i data-lucide="mail"></i></span>Alertas por E-mail</div>
+            <div class="card-sublabel">Receba um e-mail automático quando anomalias ou consumo excessivo forem detectados pelo sensor.</div>
+            <div class="toggle-list">
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <div class="toggle-title">Receber alertas por e-mail</div>
+                  <div class="toggle-sub">Ativa o envio de e-mails para o endereço da sua conta quando um alerta for gerado.</div>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="notif-email" checked>
+                  <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                </label>
+              </div>
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <div class="toggle-title">Fuga de energia / Anomalia</div>
+                  <div class="toggle-sub">E-mail quando o sensor medir 40% ou mais acima da soma dos dispositivos cadastrados.</div>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="notif-tensao" checked>
+                  <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                </label>
+              </div>
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <div class="toggle-title">Consumo acima do cadastrado</div>
+                  <div class="toggle-sub">E-mail quando o sensor medir 15% a 40% acima dos dispositivos registrados.</div>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="notif-kwh" checked>
+                  <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                </label>
+              </div>
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <div class="toggle-title">Limite de Custo Mensal</div>
+                  <div class="toggle-sub">Avisa quando o custo estimado do mês estiver próximo ou acima do valor máximo definido em R$.</div>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="notif-custo">
+                  <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                </label>
+              </div>
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <div class="toggle-title">Sensor Desconectado</div>
+                  <div class="toggle-sub">Alerta imediato quando o ESP32 parar de enviar leituras por mais de 2 minutos.</div>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="notif-sensor" checked>
+                  <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                </label>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn-save" onclick="salvarNotificacoesLanding()">Salvar Preferências</button>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <div class="card-label"><span class="card-label-icon"><i data-lucide="sliders-horizontal"></i></span>Limites Personalizados</div>
+            <div class="card-sublabel">Defina os valores de referência para os alertas de consumo e custo.</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Consumo Diário Máximo (kWh)</label>
+                <input type="number" id="notif-limite-kwh" class="form-input" placeholder="Ex: 15" step="1" min="0">
+                <span class="form-hint">Média residencial: 10–20 kWh/dia</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Custo Mensal Máximo (R$)</label>
+                <input type="number" id="notif-limite-custo" class="form-input" placeholder="Ex: 250" step="10" min="0">
+                <span class="form-hint">Baseado na tarifa configurada em Dispositivo</span>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn-save" onclick="salvarLimitesNotificacao()">Salvar Limites</button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal: Excluir Conta -->
+  <div class="settings-modal-overlay" id="modal-excluir-conta">
+    <div class="settings-modal settings-modal--danger">
+      <div class="smdanger-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <div class="smdanger-title">Excluir Conta Permanentemente</div>
+      <p class="smdanger-desc">Esta ação é <strong>irreversível</strong>. Todos os seus dados serão removidos:</p>
+      <ul class="smdanger-list">
+        <li>Residências, cômodos e dispositivos</li>
+        <li>Histórico de leituras e consumo energético</li>
+        <li>Alertas, sensores e configurações</li>
+      </ul>
+      <div class="smdanger-input-wrap">
+        <label class="smdanger-input-label">Para confirmar, digite <strong>EXCLUIR</strong> abaixo</label>
+        <input type="text" id="landing-delete-input" class="form-input" placeholder="EXCLUIR"
+               autocomplete="off" oninput="verificarInputExclusaoLanding(this.value)">
+      </div>
+      <div class="smdanger-actions">
+        <button class="btn-ghost" onclick="fecharModalSettings('modal-excluir-conta')">Cancelar</button>
+        <button class="btn-danger-modal" id="btn-confirmar-excluir-landing" disabled
+                onclick="confirmarExclusaoContaLanding()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          Excluir Conta
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <span class="toast-icon" id="toast-icon">✓</span>
+    <span id="toast-msg">Salvo!</span>
+  </div>
+
+</body>
+
+</html>
+

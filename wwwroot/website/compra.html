@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compra - MONITECH</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <!-- Theme Loader - DEVE estar antes de qualquer CSS -->
+  <script src="../assets/js/shared/theme-loader.js"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/shared/navbar.css">
+  <link rel="stylesheet" href="../assets/css/shared/userMenu.css">
+  <link rel="stylesheet" href="../assets/css/shared/profile-photo-styles.css">
+  <link rel="stylesheet" href="../assets/css/shared/auth-modal.css">
+  <link rel="stylesheet" href="../website/css/main.css">
+  <link rel="stylesheet" href="../website/css/compra.css">
+  <link rel="stylesheet" href="../assets/css/shared/theme-toggle.css">
+  <link rel="stylesheet" href="../assets/css/shared/icons.css">
+  <script src="../assets/js/vendor/lucide.min.js" defer></script>
+  <script src="../assets/js/shared/navbar.js" defer></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="../assets/js/shared/auth-modal.js" defer></script>
+  <script src="../assets/js/shared/profile-photo-manager.js" defer></script>
+  <script src="../assets/js/shared/magnific-icons-loader.js" defer></script>
+  <script src="../assets/js/shared/theme-toggle.js" defer></script>
+  <script src="../assets/js/shared/user-info-panel.js" defer></script>
+</head>
+
+<body>
+
+  <nav id="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="../index.html">
+        <img src="/assets/images/logo.svg" alt="MONITECH" style="height:32px;width:auto;">
+        <span class="nav-brand">MONITECH</span>
+      </a>
+
+      <button type="button" class="mobile-menu-btn" id="mobile-menu-btn" onclick="alternarMenuMobile()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <div class="nav-menu-mobile" id="nav-menu-mobile">
+        <div class="nav-links">
+          <a class="nav-link" href="../index.html">
+            <span class="mmenu-icon"><i data-lucide="home"></i></span>
+            <span class="mmenu-text">Início</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a class="nav-link" href="../pages-documents/docs.html">
+            <span class="mmenu-icon"><i data-lucide="book-open"></i></span>
+            <span class="mmenu-text">Documentação</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a class="nav-link" href="../pages-documents/changelog.html">
+            <span class="mmenu-icon"><i data-lucide="list-checks"></i></span>
+            <span class="mmenu-text">Changelog</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a class="nav-link" href="../pages-documents/contato.html">
+            <span class="mmenu-icon"><i data-lucide="mail"></i></span>
+            <span class="mmenu-text">Contato</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a class="nav-link active" href="./compra.html">
+            <span class="mmenu-icon"><i data-lucide="shopping-cart"></i></span>
+            <span class="mmenu-text">Comprar</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+        </div>
+        <div class="nav-menu-footer">
+          <a class="btn-nav-solid-mobile" target="_blank" href="../system/system.html">
+            <i data-lucide="layout-dashboard"></i>
+            Acessar Painel
+          </a>
+        </div>
+      </div>
+
+      <div class="nav-links nav-links-desktop">
+        <a class="nav-link" href="../index.html">Inicio</a>
+        <a class="nav-link" href="../pages-documents/docs.html">Documentacao</a>
+        <a class="nav-link" href="../pages-documents/changelog.html">Changelog</a>
+        <a class="nav-link" href="../pages-documents/contato.html">Contato</a>
+        <a class="nav-link active" href="./compra.html">Comprar</a>
+      </div>
+
+      <div class="nav-actions">
+        <div class="nav-end">
+          <a class="btn-nav-solid" target="_blank" href="../system/system.html">Acessar Painel →</a>
+        </div>
+
+        <!-- Toggle de Tema -->
+        <button class="theme-toggle-btn" id="theme-toggle-btn" title="Alternar tema">
+          <span class="theme-toggle-icon"></span>
+        </button>
+
+        <div class="user-menu-wrapper">
+          <button class="user-menu-btn" id="user-menu-btn" onclick="toggleUserMenu()">
+            <div class="user-avatar">U</div>
+          </button>
+          <div class="user-dropdown" id="user-dropdown">
+            <!-- Header com dados do usuário (aparece quando logado) -->
+            <div class="user-dropdown-header" id="user-dropdown-header" style="display:none !important;">
+              <div class="user-dropdown-avatar-lg" id="user-dropdown-avatar-lg">U</div>
+              <div class="user-dropdown-info">
+                <div class="user-dropdown-nome" id="user-dropdown-nome">Usuário</div>
+                <div class="user-dropdown-email" id="user-dropdown-email">email@example.com</div>
+              </div>
+            </div>
+            <div class="user-dropdown-divider" id="user-dropdown-divider" style="display:none !important;"></div>
+            
+            <div class="dropdown-auth-section">
+              <a href="#" id="dropdown-login" onclick="openAuthModal(); event.preventDefault();" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                Entrar
+              </a>
+              <a href="#" id="dropdown-cadastro" onclick="openAuthModal(); switchAuthTab('signup'); event.preventDefault();" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                Criar conta
+              </a>
+            </div>
+            <a href="./settings.html" id="dropdown-config" class="user-dropdown-item" style="display:none !important;">Configurações</a>
+            <a href="../pages-documents/docs.html" id="dropdown-sobre" class="user-dropdown-item" style="display:none !important;">Sobre</a>
+            <button id="dropdown-logout" class="user-dropdown-item user-dropdown-logout" onclick="logout()" style="display:none !important;">Sair</button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="nav-backdrop" id="nav-backdrop" onclick="alternarMenuMobile()"></div>
+
+  <!-- Modal de Autenticação -->
+  <div class="auth-backdrop" id="auth-backdrop">
+    <div class="auth-modal">
+      <!-- Botão fechar -->
+      <button class="auth-close-btn" onclick="closeAuthModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <!-- Header -->
+      <div class="auth-header">
+        <h2>Bem-vindo</h2>
+        <p>Acesse sua conta profissional MONITECH</p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab" data-tab="login" onclick="switchAuthTab('login')">Login</button>
+        <button class="auth-tab" data-tab="signup" onclick="switchAuthTab('signup')">Cadastro</button>
+      </div>
+
+      <!-- Conteúdo: Login -->
+      <div class="auth-content" id="auth-login">
+        <!-- Login com Google -->
+        <button class="auth-social-btn" id="google-login-btn" onclick="loginWithGoogle()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            <path d="M1 1h22v22H1z" fill="none"/>
+          </svg>
+          Entrar com Google
+        </button>
+
+        <!-- Divisor -->
+        <div class="auth-divider">ou</div>
+
+        <!-- Formulário de Login -->
+        <form class="auth-form" id="login-form" onsubmit="loginWithEmail(event)">
+          <div class="form-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" placeholder="seu@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="login-password">Senha</label>
+            <input type="password" id="login-password" placeholder="••••••••" required>
+          </div>
+
+          <button type="submit" class="auth-submit-btn">Login</button>
+        </form>
+
+        <!-- Links de rodapé -->
+        <div class="auth-footer">
+          <a href="#" onclick="event.preventDefault(); alert('Recuperação de senha será implementada');"> Esqueceu a senha?</a>
+        </div>
+      </div>
+
+      <!-- Conteúdo: Cadastro -->
+      <div class="auth-content" id="auth-signup">
+        <!-- Cadastro com Google -->
+        <button class="auth-social-btn" id="google-signup-btn" onclick="signupWithGoogle()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            <path d="M1 1h22v22H1z" fill="none"/>
+          </svg>
+          Cadastrar com Google
+        </button>
+
+        <!-- Divisor -->
+        <div class="auth-divider">ou</div>
+
+        <!-- Formulário de Cadastro -->
+        <form class="auth-form" id="signup-form" onsubmit="signupWithEmail(event)">
+          <div class="form-group">
+            <label for="signup-name">Nome Completo</label>
+            <input type="text" id="signup-name" placeholder="Seu nome" required>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-email">Email</label>
+            <input type="email" id="signup-email" placeholder="seu@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-password">Senha</label>
+            <input type="password" id="signup-password" placeholder="••••••••" required>
+          </div>
+
+          <div class="form-checkbox">
+            <input type="checkbox" id="signup-terms" required>
+            <label for="signup-terms">Concordo com os <a href="#" onclick="event.preventDefault();">Termos de Serviço</a></label>
+          </div>
+
+          <button type="submit" class="auth-submit-btn">Criar Conta</button>
+        </form>
+
+        <!-- Links de rodapé -->
+        <div class="auth-footer">
+          Já tem uma conta? <a href="#" onclick="switchAuthTab('login');">Faça login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-hero page-hero--purchase">
+    <div class="page-hero-inner">
+      <div class="page-eyebrow">Compra guiada</div>
+      <h1>Comprar MONITECH</h1>
+      <p>Receba um kit pronto para monitorar o consumo da sua casa com mais clareza, controle e uma apresentacao profissional desde o primeiro acesso.</p>
+      <div class="purchase-hero-points">
+        <span class="hero-point">Entrega nacional</span>
+        <span class="hero-point">Suporte de configuracao</span>
+        <span class="hero-point">Pagamento unico</span>
+      </div>
+    </div>
+  </div>
+
+  <section class="purchase-overview">
+    <div class="purchase-overview-card">
+      <span class="overview-kicker">Instalacao</span>
+      <strong>Kit pensado para ambiente residencial</strong>
+      <p>Estrutura de compra simples, objetiva e focada em passar seguranca para quem esta avaliando o produto.</p>
+    </div>
+    <div class="purchase-overview-card">
+      <span class="overview-kicker">Monitoramento</span>
+      <strong>Leituras em tempo real no navegador</strong>
+      <p>Acompanhe tensao, corrente, potencia e consumo acumulado sem depender de uma interface confusa.</p>
+    </div>
+    <div class="purchase-overview-card">
+      <span class="overview-kicker">Suporte</span>
+      <strong>Ativacao orientada para o primeiro uso</strong>
+      <p>Voce recebe orientacoes iniciais para conectar o dispositivo, revisar a documentacao e ativar o painel.</p>
+    </div>
+  </section>
+
+  <section class="purchase-shell">
+    <div class="purchase-grid">
+      <div class="purchase-main">
+        <div class="section-heading">
+          <span class="section-kicker">Configure seu pedido</span>
+          <h2>Preencha os dados e avance com mais confianca</h2>
+          <p>Organizamos a pagina para parecer uma compra real de produto tecnico: menos ruido, mais clareza e uma leitura muito melhor em desktop e mobile.</p>
+        </div>
+
+        <div class="purchase-form-card">
+          <div class="form-card-head">
+            <div class="form-card-copy">
+              <span class="form-card-kicker">Pedido</span>
+              <h3>Detalhes da compra</h3>
+              <p>Essas informacoes ajudam a preparar o envio, entender seu contexto de uso e tornar o atendimento mais rapido.</p>
+            </div>
+            <div class="form-step">01</div>
+          </div>
+
+          <form class="purchase-form" action="#" method="post">
+            <div class="form-section">
+              <div class="form-section-label">Contato</div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="name">Nome completo</label>
+                  <input class="form-input" type="text" id="name" name="name" placeholder="Seu nome completo" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="email">E-mail</label>
+                  <input class="form-input" type="email" id="email" name="email" placeholder="voce@email.com" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-label">Pedido</div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="quantity">Quantidade</label>
+                  <input class="form-input" type="number" id="quantity" name="quantity" min="1" value="1" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="profile">Perfil de uso</label>
+                  <select class="form-select" id="profile" name="profile">
+                    <option value="residencial">Residencial</option>
+                    <option value="apartamento">Apartamento</option>
+                    <option value="casa-inteligente">Casa inteligente</option>
+                    <option value="laboratorio">Laboratorio / testes</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-label">Entrega</div>
+              <div class="form-group form-group--full">
+                <label class="form-label" for="address">Endereco de entrega</label>
+                <textarea class="form-textarea" id="address" name="address" placeholder="Rua, numero, complemento, bairro, cidade e estado" required></textarea>
+                <p class="field-note">Inclua o maximo de detalhes para reduzir retrabalho no envio e acelerar a confirmacao.</p>
+              </div>
+            </div>
+
+            <div class="purchase-footer">
+              <div class="trust-list">
+                <div class="trust-item">Atendimento humano</div>
+                <div class="trust-item">Garantia de 12 meses</div>
+                <div class="trust-item">Atualizacoes do painel</div>
+              </div>
+              <button type="submit" class="btn-primary">Finalizar compra</button>
+              <p class="form-note">Ao prosseguir, sua solicitacao segue para validacao comercial e confirmacao de disponibilidade.</p>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <aside class="purchase-sidebar">
+        <div class="product-card">
+          <span class="product-badge">Kit principal</span>
+          <h3 class="product-title">MONITECH Smart Monitor</h3>
+          <p class="product-sub">Hardware de medicao e plataforma web para acompanhamento de consumo eletrico em tempo real.</p>
+
+          <div class="product-visual" aria-hidden="true">
+            <div class="visual-core">
+              <span class="visual-chip">ESP32</span>
+              <span class="visual-chip">PZEM</span>
+            </div>
+            <span class="visual-orbit visual-orbit--a"></span>
+            <span class="visual-orbit visual-orbit--b"></span>
+          </div>
+
+          <div class="price-card">
+            <span class="price-label">Investimento</span>
+            <strong class="price-value">R$ 299,99</strong>
+            <p class="price-note">Pagamento unico, sem mensalidade para uso local.</p>
+          </div>
+
+          <div class="feature-list">
+            <div class="feature-item">Dashboard web com leituras ao vivo</div>
+            <div class="feature-item">Compatibilidade com WebSocket, HTTP, MQTT e Serial</div>
+            <div class="feature-item">Historico local e configuracao de alertas</div>
+            <div class="feature-item">Documentacao tecnica e onboarding inicial</div>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <h4>Entrega e suporte</h4>
+          <div class="detail-list">
+            <div class="detail-row">
+              <span>Prazo medio</span>
+              <strong>ate 7 dias uteis</strong>
+            </div>
+            <div class="detail-row">
+              <span>Garantia</span>
+              <strong>12 meses</strong>
+            </div>
+            <div class="detail-row">
+              <span>Suporte inicial</span>
+              <strong>ativacao assistida</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-card sidebar-card--timeline">
+          <h4>Como funciona</h4>
+          <div class="timeline">
+            <div class="timeline-item">
+              <span class="timeline-step">1</span>
+              <div class="timeline-copy">Voce envia os dados do pedido.</div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-step">2</span>
+              <div class="timeline-copy">Nossa equipe confirma o envio e orienta os proximos passos.</div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-step">3</span>
+              <div class="timeline-copy">Voce recebe o kit e inicia o monitoramento com apoio da documentacao.</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <div class="simple-footer">
+    <div class="simple-footer-inner">
+      <span class="sf-copy">&copy; 2026 MONITECH Dev Team</span>
+      <div class="sf-links">
+        <a class="sf-link" href="../index.html">Inicio</a>
+        <a class="sf-link" href="./docs.html">Docs</a>
+        <a class="sf-link" href="./changelog.html">Changelog</a>
+        <a class="sf-link" href="./contato.html">Contato</a>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
+
+

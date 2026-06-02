@@ -1,0 +1,75 @@
+/* ============================================================
+   COMPONENTE DE TOGGLE DE TEMA
+   Botão para alternar entre dark e light mode no navbar
+   ============================================================ */
+
+.theme-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0;
+  font-size: 18px;
+  color: var(--ink-2);
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.theme-toggle-btn:hover {
+  background: rgba(0, 212, 255, 0.08);
+  border-color: rgba(0, 212, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.theme-toggle-btn:active {
+  transform: scale(0.95);
+}
+
+.theme-toggle-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.theme-toggle-btn:active .theme-toggle-icon {
+  transform: rotate(180deg);
+}
+
+/* Modo Dark */
+[data-theme="dark"] .theme-toggle-btn {
+  color: var(--ink-1);
+  border-color: rgba(0, 212, 255, 0.2);
+}
+
+[data-theme="dark"] .theme-toggle-btn:hover {
+  background: rgba(0, 212, 255, 0.1);
+  border-color: rgba(0, 212, 255, 0.3);
+}
+
+/* Modo Light */
+[data-theme="light"] .theme-toggle-btn {
+  color: var(--ink-4);
+  border-color: rgba(11, 18, 32, 0.15);
+}
+
+[data-theme="light"] .theme-toggle-btn:hover {
+  background: rgba(11, 18, 32, 0.08);
+  border-color: rgba(11, 18, 32, 0.2);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .theme-toggle-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+}

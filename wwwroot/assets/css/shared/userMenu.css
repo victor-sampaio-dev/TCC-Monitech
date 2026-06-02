@@ -1,0 +1,567 @@
+/* ============================================================
+   USER MENU - MENU DO USUÁRIO
+   Componente reutilizável para todas as páginas
+   ============================================================ */
+
+/* ========== CONTAINER DO MENU ========== */
+.user-menu-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: auto;
+  gap: 0;
+  z-index: 1001;
+}
+
+/* ========== BOTÃO DO MENU ========== */
+.user-menu-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue-core) 0%, var(--blue-bright) 100%);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 87, 255, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+  padding: 0;
+  font-size: 0;
+}
+
+.user-menu-btn:hover {
+  background: linear-gradient(135deg, var(--blue-bright) 0%, var(--electric) 100%);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 24px rgba(0, 87, 255, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.user-menu-btn:active {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 87, 255, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+.user-menu-btn.active {
+  background: linear-gradient(135deg, var(--blue-bright) 0%, var(--electric) 100%);
+  box-shadow: 0 6px 20px rgba(0, 87, 255, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* ========== AVATAR ========== */
+.user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--blue-core);
+  letter-spacing: -0.5px;
+  user-select: none;
+  overflow: hidden;
+}
+
+/* ========== MENU DROPDOWN ========== */
+.user-dropdown {
+  position: absolute !important;
+  top: calc(100% + 12px) !important;
+  right: 0 !important;
+  width: 320px !important;
+  min-width: 320px !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-12px) scale(0.95);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  backdrop-filter: none !important;
+  z-index: 200 !important;
+}
+
+.user-dropdown.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+  filter: drop-shadow(var(--dropdown-shadow)) drop-shadow(0 4px 12px var(--glow-blue));
+}
+
+/* ========== ITEMS DO DROPDOWN ========== */
+.user-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 18px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: none;
+  width: 100%;
+  max-width: 320px;
+  box-sizing: border-box;
+  text-align: left;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.user-dropdown-item:first-of-type {
+  padding-top: 13px;
+  border-top: 1px solid var(--border);
+}
+
+.user-dropdown-item:last-child {
+  padding-bottom: 13px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+
+.user-dropdown-item:hover {
+  background: linear-gradient(90deg, var(--topbar-hover) 0%, transparent 100%);
+  color: var(--blue-core);
+  padding-left: 22px;
+  border-color: var(--border-bright);
+}
+
+.user-dropdown-item.active {
+  background: linear-gradient(90deg, var(--topbar-active) 0%, transparent 100%);
+  color: var(--blue-core);
+  border-color: var(--border-bright);
+}
+
+/* ========== SEÇÃO DE AUTH (Entrar / Cadastrar) ========== */
+.dropdown-auth-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  overflow: hidden;
+}
+
+#dropdown-login {
+  border: none !important;
+  border-bottom: 1px solid var(--border) !important;
+  border-radius: 0 !important;
+  border-top-left-radius: 16px !important;
+  border-top-right-radius: 16px !important;
+  background: var(--bg-card) !important;
+  color: var(--text-secondary) !important;
+  font-weight: 500 !important;
+  padding: 14px 18px !important;
+  gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#dropdown-login:hover {
+  background: var(--topbar-hover) !important;
+  color: var(--blue-bright) !important;
+  padding-left: 22px !important;
+  border-color: var(--border-bright) !important;
+}
+
+#dropdown-cadastro {
+  border: none !important;
+  border-radius: 0 !important;
+  background: var(--bg-card) !important;
+  color: var(--blue-bright) !important;
+  font-weight: 600 !important;
+  padding: 14px 18px !important;
+  gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#dropdown-cadastro:hover {
+  background: linear-gradient(90deg, var(--topbar-hover) 0%, transparent 100%) !important;
+  color: var(--blue-bright) !important;
+  padding-left: 22px !important;
+  border-color: var(--border-bright) !important;
+}
+
+#dropdown-login svg,
+#dropdown-cadastro svg {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+/* ========== SEPARADOR ========== */
+.user-dropdown-divider {
+  height: 8px;
+  background: transparent;
+  margin: 0;
+  border-top: 1px solid var(--border);
+}
+
+/* ========== HEADER DO DROPDOWN (Dados do Usuário) ========== */
+.user-dropdown-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  padding: 32px 28px !important;
+  border: 1px solid var(--border) !important;
+  border-bottom: 2px solid var(--border-bright) !important;
+  border-top-left-radius: 16px !important;
+  border-top-right-radius: 16px !important;
+  background: var(--bg-card) !important;
+  text-align: center !important;
+  width: 100% !important;
+  max-width: 320px !important;
+  box-sizing: border-box !important;
+  flex-wrap: nowrap !important;
+  box-shadow: 0 4px 12px var(--glow-blue), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  position: relative !important;
+}
+
+.user-dropdown-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--border-bright) 50%, transparent 100%);
+  border-radius: 50%;
+}
+
+.user-dropdown-avatar-lg {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 96px !important;
+  height: 96px !important;
+  min-width: 96px !important;
+  min-height: 96px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #0057ff 0%, #00d4ff 100%) !important;
+  box-shadow: 0 8px 24px rgba(0, 87, 255, 0.35), inset 0 2px 4px rgba(255, 255, 255, 0.4) !important;
+  font-size: 36px !important;
+  font-weight: 900 !important;
+  color: #ffffff !important;
+  flex-shrink: 0 !important;
+  border: 3px solid rgba(255, 255, 255, 0.6) !important;
+  z-index: 10 !important;
+  position: relative !important;
+  overflow: hidden !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.user-dropdown-header:hover .user-dropdown-avatar-lg {
+  transform: scale(1.05) !important;
+  box-shadow: 0 12px 28px rgba(0, 87, 255, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.4) !important;
+}
+
+.user-dropdown-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  max-width: 270px;
+}
+
+.user-dropdown-nome {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.4;
+  letter-spacing: -0.3px;
+}
+
+.user-dropdown-email {
+  font-size: 13px;
+  color: var(--text-secondary);
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+/* ========== ANIMAÇÕES ========== */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.95);
+    filter: blur(1px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.95);
+  }
+}
+
+.user-dropdown.active {
+  animation: slideDown 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ========== RESPONSIVIDADE - TABLET ========== */
+@media (max-width: 768px) {
+  .user-menu-wrapper {
+    margin-left: auto;
+    display: flex !important;
+    gap: 0;
+    flex-shrink: 0;
+  }
+
+  .user-menu-btn {
+    width: 48px;
+    height: 48px;
+    box-shadow: 0 3px 12px rgba(0, 87, 255, 0.28);
+  }
+
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .user-menu-btn:hover {
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 6px 16px rgba(0, 87, 255, 0.35);
+  }
+
+  .user-dropdown {
+    min-width: 280px !important;
+    width: 280px !important;
+    right: -20px;
+  }
+
+  .user-dropdown-header {
+    padding: 28px 20px !important;
+    gap: 14px !important;
+    max-width: 280px !important;
+  }
+
+  .user-dropdown-avatar-lg {
+    width: 80px !important;
+    height: 80px !important;
+    font-size: 32px !important;
+  }
+
+  .user-dropdown-nome {
+    font-size: 15px;
+  }
+
+  .user-dropdown-email {
+    font-size: 12px;
+  }
+
+  .user-dropdown-item {
+    padding: 11px 14px;
+    font-size: 13px;
+    max-width: 280px !important;
+  }
+
+  .user-dropdown-item:hover {
+    padding-left: 18px;
+  }
+}
+
+/* ========== RESPONSIVIDADE - MOBILE ========== */
+@media (max-width: 480px) {
+  .user-menu-wrapper {
+    position: relative;
+    display: flex !important;
+    margin-left: auto;
+    flex-shrink: 0;
+    gap: 0;
+    z-index: 101;
+  }
+
+  .user-menu-btn {
+    width: 44px;
+    height: 44px;
+    box-shadow: 0 2px 8px rgba(0, 87, 255, 0.25);
+  }
+
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+
+  .user-menu-btn:hover {
+    transform: translateY(-1px) scale(1.03);
+    box-shadow: 0 4px 12px rgba(0, 87, 255, 0.3);
+  }
+
+  .user-dropdown {
+    position: absolute;
+    right: -10px;
+    top: calc(100% + 10px);
+    min-width: 260px;
+    max-width: calc(100vw - 20px);
+    width: 260px;
+    border-radius: 12px;
+    z-index: 200;
+  }
+
+  .user-dropdown-header {
+    padding: 24px 18px !important;
+    gap: 12px !important;
+    max-width: 260px;
+  }
+
+  .user-dropdown-avatar-lg {
+    width: 72px !important;
+    height: 72px !important;
+    font-size: 28px !important;
+  }
+
+  .user-dropdown-nome {
+    font-size: 14px;
+  }
+
+  .user-dropdown-email {
+    font-size: 12px;
+  }
+
+  .user-dropdown-item {
+    padding: 10px 12px;
+    font-size: 13px;
+    max-width: 260px;
+  }
+
+  .user-dropdown-item:hover {
+    padding-left: 16px;
+  }
+}
+
+  .user-dropdown-item:hover {
+    padding-left: 14px;
+  }
+
+
+/* ========== ESTADOS DE ACESSIBILIDADE ========== */
+.user-menu-btn:focus-visible {
+  outline: 2px solid #0057ff;
+  outline-offset: 2px;
+}
+
+/* ========== BOTÃO DE LOGOUT ========== */
+.user-dropdown-logout {
+  color: #dc3545;
+}
+
+.user-dropdown-logout:hover {
+  background: rgba(220, 53, 69, 0.08);
+  color: #dc3545;
+  padding-left: 20px;
+}
+
+.user-dropdown-logout:active {
+  background: rgba(220, 53, 69, 0.12);
+  color: #c82333;
+}
+
+.user-dropdown-item:focus-visible {
+  outline: 2px solid #0057ff;
+  outline-offset: -2px;
+}
+
+/* ========== PARA TOPBAR DO SISTEMA ========== */
+.topbar .user-menu-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: auto;
+  gap: 0;
+}
+
+.topbar .user-menu-btn {
+  width: auto;
+  height: 36px;
+  background: transparent;
+  border: 1px solid var(--border-bright);
+  color: var(--cyan);
+  gap: 6px;
+  padding: 0 14px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  font-family: 'Rajdhani', sans-serif;
+  box-shadow: none;
+  font-size: inherit;
+}
+
+.topbar .user-menu-btn:hover {
+  background: var(--topbar-hover);
+  border-color: var(--cyan);
+  box-shadow: 0 0 12px rgba(0, 170, 204, 0.2);
+  transform: none;
+}
+
+.topbar .user-menu-btn::after {
+  content: '▼';
+  font-size: 8px;
+  margin-left: 6px;
+  transition: transform 0.3s ease;
+}
+
+.topbar .user-menu-btn.active::after {
+  transform: rotate(180deg);
+}
+
+.topbar .user-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: auto;
+  min-width: 180px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-bright);
+  box-shadow: var(--dropdown-shadow);
+  border-radius: 8px;
+}
+
+.topbar .user-dropdown-item {
+  color: var(--text-secondary);
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'Rajdhani', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.topbar .user-dropdown-item:hover {
+  background: var(--topbar-active);
+  color: var(--cyan);
+  padding-left: 16px;
+}

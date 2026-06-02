@@ -1,0 +1,503 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contato — MONITECH</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <!-- Theme Loader - DEVE estar antes de qualquer CSS -->
+  <script src="../assets/js/shared/theme-loader.js"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <!-- CSS Compartilhado -->
+  <link rel="stylesheet" href="../assets/css/shared/navbar.css">
+  <link rel="stylesheet" href="../assets/css/shared/userMenu.css">
+  <link rel="stylesheet" href="../assets/css/shared/profile-photo-styles.css">
+  <link rel="stylesheet" href="../assets/css/shared/auth-modal.css">
+  <!-- CSS do Website -->
+  <link rel="stylesheet" href="../website/css/main.css">
+  <link rel="stylesheet" href="../website/css/contato.css">
+  <link rel="stylesheet" href="../assets/css/shared/theme-toggle.css">
+  <link rel="stylesheet" href="../assets/css/shared/icons.css">
+  <script src="../assets/js/vendor/lucide.min.js" defer></script>
+  <script src="../assets/js/shared/navbar.js" defer></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="../assets/js/shared/auth-modal.js" defer></script>
+  <script src="../assets/js/shared/profile-photo-manager.js" defer></script>
+  <script src="../assets/js/shared/magnific-icons-loader.js" defer></script>
+  <script src="../assets/js/shared/theme-toggle.js" defer></script>
+  <script src="../assets/js/shared/user-info-panel.js" defer></script>
+<body>
+
+  <nav id="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="../index.html">
+        <img src="/assets/images/logo.svg" alt="MONITECH" style="height:32px;width:auto;">
+        <span class="nav-brand">MONITECH</span>
+      </a>
+
+      <!-- Botão do menu hambúrguer -->
+      <button type="button" class="mobile-menu-btn" id="mobile-menu-btn" onclick="alternarMenuMobile()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <!-- Menu mobile -->
+      <div class="nav-menu-mobile" id="nav-menu-mobile">
+        <div class="nav-links">
+          <a class="nav-link" href="../index.html">
+            <span class="mmenu-icon"><i data-lucide="home"></i></span>
+            <span class="mmenu-text">Início</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a class="nav-link" href="./docs.html">
+            <span class="mmenu-icon"><i data-lucide="book-open"></i></span>
+            <span class="mmenu-text">Documentação</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a class="nav-link" href="./changelog.html">
+            <span class="mmenu-icon"><i data-lucide="list-checks"></i></span>
+            <span class="mmenu-text">Changelog</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a class="nav-link active" href="./contato.html">
+            <span class="mmenu-icon"><i data-lucide="mail"></i></span>
+            <span class="mmenu-text">Contato</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a class="nav-link" href="../website/compra.html">
+            <span class="mmenu-icon"><i data-lucide="shopping-cart"></i></span>
+            <span class="mmenu-text">Comprar</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+        </div>
+        <div class="nav-menu-footer">
+          <a class="btn-nav-solid-mobile" target="_blank" href="../system/system.html">
+            <i data-lucide="layout-dashboard"></i>
+            Acessar Painel
+          </a>
+        </div>
+      </div>
+
+      <!-- Menu desktop -->
+      <div class="nav-links nav-links-desktop">
+        <a class="nav-link" href="../index.html">Início</a>
+        <a class="nav-link" href="./docs.html">Documentação</a>
+        <a class="nav-link" href="./changelog.html">Changelog</a>
+        <a class="nav-link active" href="./contato.html">Contato</a>
+        <a class="nav-link" href="../website/compra.html">Comprar</a>
+      </div>
+
+      <div class="nav-actions">
+        <div class="nav-end">
+          <a class="btn-nav-solid" target="_blank" href="../system/system.html">Acessar Painel →</a>
+        </div>
+
+        <!-- Toggle de Tema -->
+        <button class="theme-toggle-btn" id="theme-toggle-btn" title="Alternar tema">
+          <span class="theme-toggle-icon"></span>
+        </button>
+
+        <div class="user-menu-wrapper">
+          <button class="user-menu-btn" id="user-menu-btn" onclick="toggleUserMenu()">
+            <div class="user-avatar">U</div>
+          </button>
+          <div class="user-dropdown" id="user-dropdown">
+            <!-- Header com dados do usuário (aparece quando logado) -->
+            <div class="user-dropdown-header" id="user-dropdown-header" style="display:none !important;">
+              <div class="user-dropdown-avatar-lg" id="user-dropdown-avatar-lg">U</div>
+              <div class="user-dropdown-info">
+                <div class="user-dropdown-nome" id="user-dropdown-nome">Usuário</div>
+                <div class="user-dropdown-email" id="user-dropdown-email">email@example.com</div>
+              </div>
+            </div>
+            <div class="user-dropdown-divider" id="user-dropdown-divider" style="display:none !important;"></div>
+            
+            <div class="dropdown-auth-section">
+              <a href="#" id="dropdown-login" onclick="openAuthModal(); event.preventDefault();" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                Entrar
+              </a>
+              <a href="#" id="dropdown-cadastro" onclick="openAuthModal(); switchAuthTab('signup'); event.preventDefault();" class="user-dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                Criar conta
+              </a>
+            </div>
+            <a href="../website/settings.html" id="dropdown-config" class="user-dropdown-item" style="display:none !important;">Configurações</a>
+            <a href="../pages-documents/docs.html" id="dropdown-sobre" class="user-dropdown-item" style="display:none !important;">Sobre</a>
+            <button id="dropdown-logout" class="user-dropdown-item user-dropdown-logout" onclick="logout()" style="display:none !important;">Sair</button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Backdrop para o menu mobile -->
+  <div class="nav-backdrop" id="nav-backdrop" onclick="alternarMenuMobile()"></div>
+
+  <!-- Modal de Autenticação -->
+  <div class="auth-backdrop" id="auth-backdrop">
+    <div class="auth-modal">
+      <!-- Botão fechar -->
+      <button class="auth-close-btn" onclick="closeAuthModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <!-- Header -->
+      <div class="auth-header">
+        <h2>Bem-vindo</h2>
+        <p>Acesse sua conta profissional MONITECH</p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab" data-tab="login" onclick="switchAuthTab('login')">Login</button>
+        <button class="auth-tab" data-tab="signup" onclick="switchAuthTab('signup')">Cadastro</button>
+      </div>
+
+      <!-- Conteúdo: Login -->
+      <div class="auth-content" id="auth-login">
+        <!-- Login com Google -->
+        <button class="auth-social-btn" id="google-login-btn" onclick="loginWithGoogle()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            <path d="M1 1h22v22H1z" fill="none"/>
+          </svg>
+          Entrar com Google
+        </button>
+
+        <!-- Divisor -->
+        <div class="auth-divider">ou</div>
+
+        <!-- Formulário de Login -->
+        <form class="auth-form" id="login-form" onsubmit="loginWithEmail(event)">
+          <div class="form-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" placeholder="seu@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="login-password">Senha</label>
+            <input type="password" id="login-password" placeholder="••••••••" required>
+          </div>
+
+          <button type="submit" class="auth-submit-btn">Login</button>
+        </form>
+
+        <!-- Links de rodapé -->
+        <div class="auth-footer">
+          <a href="#" onclick="event.preventDefault(); alert('Recuperação de senha será implementada');"> Esqueceu a senha?</a>
+        </div>
+      </div>
+
+      <!-- Conteúdo: Cadastro -->
+      <div class="auth-content" id="auth-signup">
+        <!-- Cadastro com Google -->
+        <button class="auth-social-btn" id="google-signup-btn" onclick="signupWithGoogle()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            <path d="M1 1h22v22H1z" fill="none"/>
+          </svg>
+          Cadastrar com Google
+        </button>
+
+        <!-- Divisor -->
+        <div class="auth-divider">ou</div>
+
+        <!-- Formulário de Cadastro -->
+        <form class="auth-form" id="signup-form" onsubmit="signupWithEmail(event)">
+          <div class="form-group">
+            <label for="signup-name">Nome Completo</label>
+            <input type="text" id="signup-name" placeholder="Seu nome" required>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-email">Email</label>
+            <input type="email" id="signup-email" placeholder="seu@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-password">Senha</label>
+            <input type="password" id="signup-password" placeholder="••••••••" required>
+          </div>
+
+          <div class="form-checkbox">
+            <input type="checkbox" id="signup-terms" required>
+            <label for="signup-terms">Concordo com os <a href="#" onclick="event.preventDefault();">Termos de Serviço</a></label>
+          </div>
+
+          <button type="submit" class="auth-submit-btn">Criar Conta</button>
+        </form>
+
+        <!-- Links de rodapé -->
+        <div class="auth-footer">
+          Já tem uma conta? <a href="#" onclick="switchAuthTab('login');">Faça login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <div class="page-eyebrow">Fale conosco</div>
+      <h1>Como podemos ajudar?</h1>
+      <p>Dúvida técnica, bug encontrado ou sugestão de melhoria — estamos aqui.</p>
+    </div>
+  </div>
+
+  <!-- FORM + SIDEBAR -->
+  <div class="contact-wrap">
+
+    <!-- FORMULÁRIO -->
+    <div class="form-section">
+      <h2>Enviar Mensagem</h2>
+      <p class="form-sub">Preencha o formulário e responderemos em até 48 horas úteis.</p>
+
+      <div id="contact-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nome<span>*</span></label>
+            <input class="form-input" type="text" id="f-name" placeholder="Seu nome completo">
+          </div>
+          <div class="form-group">
+            <label class="form-label">E-mail<span>*</span></label>
+            <input class="form-input" type="email" id="f-email" placeholder="seu@email.com">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Assunto<span>*</span></label>
+          <select class="form-select" id="f-subject">
+            <option value="">Selecione o tipo de mensagem...</option>
+            <option value="bug">Reportar um Bug</option>
+            <option value="feat">Sugestão de Funcionalidade</option>
+            <option value="help">Suporte Técnico</option>
+            <option value="hardware">Dúvida sobre Hardware</option>
+            <option value="docs">Documentação</option>
+            <option value="other">Outro Assunto</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Versão do MONITECH</label>
+          <select class="form-select" id="f-version">
+            <option value="">Selecione a versão...</option>
+            <option value="2.1.0">v2.1.0 (atual)</option>
+            <option value="2.0.0">v2.0.0</option>
+            <option value="1.2.0">v1.2.0</option>
+            <option value="other">Outra versão</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Mensagem<span>*</span></label>
+          <textarea class="form-textarea" id="f-msg"
+            placeholder="Descreva sua dúvida, problema ou sugestão em detalhes..." maxlength="1000"
+            oninput="document.getElementById('char-count').textContent=this.value.length+'/1000'"></textarea>
+          <div class="char-count" id="char-count">0/1000</div>
+        </div>
+
+        <button class="submit-btn" id="submit-btn" onclick="submitForm()">
+          <span>Enviar Mensagem</span> <span>→</span>
+        </button>
+        <p class="form-note">Ao enviar, você concorda com nossa política de privacidade. Seus dados serão usados apenas
+          para responder sua mensagem.</p>
+      </div>
+
+      <div class="success-state" id="success-state">
+        <div class="success-icon"><i data-lucide="check-circle-2"></i></div>
+        <h3>Mensagem enviada!</h3>
+        <p>Obrigado pelo contato. Nossa equipe analisará sua mensagem e retornará em até 48 horas úteis no e-mail
+          informado.</p>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="contact-sidebar">
+
+      <div class="sidebar-card">
+        <div class="sidebar-card-icon"><i data-lucide="book-open"></i></div>
+        <div class="sidebar-card-title">Documentação</div>
+        <p class="sidebar-card-text">Antes de abrir um ticket, verifique se sua dúvida já está coberta na documentação —
+          configuração de hardware, protocolos e JSON Schema.</p>
+        <a class="sidebar-card-link" href="docs.html">Ver Documentação →</a>
+      </div>
+
+      <div class="sidebar-card">
+        <div class="sidebar-card-icon"><i data-lucide="list-checks"></i></div>
+        <div class="sidebar-card-title">Changelog</div>
+        <p class="sidebar-card-text">Confira as notas de versão para verificar se o bug que você encontrou já foi
+          corrigido em uma versão mais recente.</p>
+        <a class="sidebar-card-link" href="./changelog.html">Ver Changelog →</a>
+      </div>
+
+      <div class="sidebar-card">
+        <div class="sidebar-card-icon"><i data-lucide="github"></i></div>
+        <div class="sidebar-card-title">GitHub</div>
+        <p class="sidebar-card-text">Prefere abrir uma issue diretamente no repositório? Contribuições são muito
+          bem-vindas — código, documentação ou reportes.</p>
+        <a class="sidebar-card-link" href="#">Abrir Issue no GitHub →</a>
+      </div>
+
+      <div class="sidebar-card">
+        <div class="sidebar-card-icon"><i data-lucide="layout-dashboard"></i></div>
+        <div class="sidebar-card-title">Acesso ao Painel</div>
+        <p class="sidebar-card-text">Conecte seu ESP32 e acesse todas as funcionalidades de monitoramento em tempo real
+          diretamente pelo painel web.</p>
+        <a class="sidebar-card-link" href="../system/system.html">Abrir o Painel →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Perguntas Frequentes</h2>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          O MONITECH funciona sem um ESP32 conectado?
+          <span class="faq-chevron">▼</span>
+        </div>
+        <div class="faq-a">Sim. Você pode navegar pelo painel, cadastrar cômodos, dispositivos e configurar alertas sem
+          nenhum hardware conectado. Os medidores e gráficos ficarão em modo de espera até que um dispositivo transmita
+          dados.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Meus dados ficam salvos na nuvem?
+          <span class="faq-chevron">▼</span>
+        </div>
+        <div class="faq-a">Não. O MONITECH é uma aplicação local — todos os dados ficam no seu próprio dispositivo
+          (localStorage do navegador) e na sua rede local. Nenhuma informação é enviada a servidores externos.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Qual a diferença entre WebSocket e HTTP Polling?
+          <span class="faq-chevron">▼</span>
+        </div>
+        <div class="faq-a">WebSocket mantém uma conexão persistente e bidirecional — o ESP32 envia dados automaticamente
+          a cada 2 segundos, com latência mínima. HTTP Polling faz requisições GET periódicas; é mais simples de
+          configurar e funciona em redes com restrições de portas, mas tem latência levemente maior.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Posso usar outro sensor além do PZEM-004T?
+          <span class="faq-chevron">▼</span>
+        </div>
+        <div class="faq-a">Sim. O painel aceita qualquer fonte de dados que envie o JSON no formato esperado
+          (<code>volts</code>, <code>amps</code>, <code>watts</code> são os campos obrigatórios). O sensor ACS712 é uma
+          alternativa comum, assim como sensores DIY com qualquer microcontrolador que suporte Wi-Fi.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          O Serial/USB funciona em qualquer navegador?
+          <span class="faq-chevron">▼</span>
+        </div>
+        <div class="faq-a">Não. A Web Serial API é suportada apenas no <strong>Google Chrome 89+</strong> e
+          <strong>Microsoft Edge 89+</strong>. Firefox e Safari não implementam esta API. Para os outros protocolos
+          (WebSocket, HTTP, MQTT), qualquer navegador moderno funciona.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Como descobrir o IP do ESP32 na minha rede?
+          <span class="faq-chevron">▼</span>
+        </div>
+        <div class="faq-a">Após gravar o firmware e conectar o ESP32 à rede Wi-Fi, abra o <strong>Serial
+            Monitor</strong> do Arduino IDE (115200 baud) e aguarde o boot. O IP local será impresso na saída serial
+          assim que a conexão for estabelecida.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="simple-footer">
+    <div class="simple-footer-inner">
+      <span class="sf-copy">© 2026 MONITECH Dev Team</span>
+      <div class="sf-links">
+        <a class="sf-link" href="../index.html">Início</a>
+        <a class="sf-link" href="./docs.html">Docs</a>
+        <a class="sf-link" href="./changelog.html">Changelog</a>
+        <a class="sf-link" href="#">GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* NAV SCROLL */
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 10);
+    });
+
+    /* FAQ TOGGLE */
+    function toggleFaq(el) {
+      const item = el.parentElement;
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => {
+        i.classList.remove('open');
+        i.querySelector('.faq-q').classList.remove('open');
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        el.classList.add('open');
+      }
+    }
+
+    /* FORM SUBMIT */
+    function submitForm() {
+      const name = document.getElementById('f-name').value.trim();
+      const email = document.getElementById('f-email').value.trim();
+      const subject = document.getElementById('f-subject').value;
+      const msg = document.getElementById('f-msg').value.trim();
+
+      if (!name || !email || !subject || !msg) {
+        // Highlight empty fields
+        ['f-name', 'f-email', 'f-subject', 'f-msg'].forEach(id => {
+          const el = document.getElementById(id);
+          if (!el.value.trim()) { el.style.borderColor = 'var(--danger)'; el.style.boxShadow = '0 0 0 3px rgba(220,38,38,0.1)'; }
+          else { el.style.borderColor = ''; el.style.boxShadow = ''; }
+        });
+        return;
+      }
+
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<span>Enviando...</span>';
+
+      setTimeout(() => {
+        document.getElementById('contact-form').style.display = 'none';
+        document.getElementById('success-state').classList.add('visible');
+      }, 1200);
+    }
+
+    /* Remove error styling on input */
+    document.querySelectorAll('.form-input,.form-select,.form-textarea').forEach(el => {
+      el.addEventListener('input', () => { el.style.borderColor = ''; el.style.boxShadow = ''; });
+    });
+  </script>
+</body>
+
+</html>
+
+
