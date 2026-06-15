@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planos — MONITECH</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <script src="../assets/js/shared/theme-loader.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/shared/navbar.css">
+  <link rel="stylesheet" href="../assets/css/shared/userMenu.css">
+  <link rel="stylesheet" href="../assets/css/shared/profile-photo-styles.css">
+  <link rel="stylesheet" href="../assets/css/shared/auth-modal.css">
+  <link rel="stylesheet" href="../assets/css/shared/theme-toggle.css">
+  <link rel="stylesheet" href="../assets/css/shared/icons.css">
+  <link rel="stylesheet" href="../website/css/theme-colors.css">
+  <link rel="stylesheet" href="../website/css/planos.css"> 
+  <script src="../assets/js/vendor/lucide.min.js" defer></script>
+  <script src="../assets/js/shared/navbar.js" defer></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="../assets/js/shared/auth-modal.js" defer></script>
+  <script src="../assets/js/shared/profile-photo-manager.js" defer></script>
+  <script src="../assets/js/shared/magnific-icons-loader.js" defer></script>
+  <script src="../assets/js/shared/theme-toggle.js" defer></script>
+  <script src="../assets/js/shared/user-info-panel.js" defer></script>
+</head>
+<body>
+
+  <!-- NAV (igual às outras páginas) -->
+  <nav id="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="../index.html">
+        <img src="/assets/images/logo.svg" alt="MONITECH" style="height:32px;width:auto;">
+        <span class="nav-brand">MONITECH</span>
+      </a>
+      <button type="button" class="mobile-menu-btn" id="mobile-menu-btn" onclick="alternarMenuMobile()">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-menu-mobile" id="nav-menu-mobile">
+        <div class="nav-links">
+          <a class="nav-link" href="../index.html"><span class="mmenu-icon"><i data-lucide="home"></i></span><span class="mmenu-text">Início</span><i data-lucide="chevron-right" class="mmenu-arrow"></i></a>
+          <a class="nav-link" href="../pages-documents/docs.html"><span class="mmenu-icon"><i data-lucide="book-open"></i></span><span class="mmenu-text">Documentação</span><i data-lucide="chevron-right" class="mmenu-arrow"></i></a>
+          <a class="nav-link" href="../pages-documents/changelog.html"><span class="mmenu-icon"><i data-lucide="clock"></i></span><span class="mmenu-text">Changelog</span><i data-lucide="chevron-right" class="mmenu-arrow"></i></a>
+          <a class="nav-link" href="../pages-documents/contato.html"><span class="mmenu-icon"><i data-lucide="mail"></i></span><span class="mmenu-text">Contato</span><i data-lucide="chevron-right" class="mmenu-arrow"></i></a>
+          <a class="nav-link" href="./compra.html"><span class="mmenu-icon"><i data-lucide="shopping-cart"></i></span><span class="mmenu-text">Comprar Dispositivo</span><i data-lucide="chevron-right" class="mmenu-arrow"></i></a>
+          <a class="nav-link active" href="./planos.html"><span class="mmenu-icon"><i data-lucide="zap"></i></span><span class="mmenu-text">Planos</span><i data-lucide="chevron-right" class="mmenu-arrow"></i></a>
+        </div>
+        <div class="nav-menu-footer">
+          <a class="btn-nav-solid-mobile" href="../system/system.html"><i data-lucide="layout-dashboard"></i> Acessar Painel</a>
+        </div>
+      </div>
+      <div class="nav-links nav-links-desktop">
+        <a class="nav-link" href="../index.html">Início</a>
+        <a class="nav-link" href="../pages-documents/docs.html">Documentação</a>
+        <a class="nav-link" href="../pages-documents/changelog.html">Changelog</a>
+        <a class="nav-link" href="../pages-documents/contato.html">Contato</a>
+        <a class="nav-link" href="./compra.html">Comprar Dispositivo</a>
+        <a class="nav-link active" href="./planos.html">Planos</a>
+      </div>
+      <div class="nav-actions">
+        <div class="nav-end"><a class="btn-nav-solid" href="../system/system.html">Acessar Painel →</a></div>
+        <button class="theme-toggle-btn" id="theme-toggle-btn" title="Alternar tema"><span class="theme-toggle-icon"></span></button>
+        <div class="user-menu-wrapper">
+          <button class="user-menu-btn" id="user-menu-btn" onclick="toggleUserMenu()"><div class="user-avatar">U</div></button>
+          <div class="user-dropdown" id="user-dropdown">
+            <div class="user-dropdown-header" id="user-dropdown-header" style="display:none !important;">
+              <div class="user-dropdown-avatar-lg" id="user-dropdown-avatar-lg">U</div>
+              <div class="user-dropdown-info">
+                <div class="user-dropdown-nome" id="user-dropdown-nome">Usuário</div>
+                <div class="user-dropdown-email" id="user-dropdown-email">email@example.com</div>
+              </div>
+            </div>
+            <div class="user-dropdown-divider" id="user-dropdown-divider" style="display:none !important;"></div>
+            <div class="dropdown-auth-section">
+              <a href="#" id="dropdown-login" onclick="openAuthModal(); event.preventDefault();" class="user-dropdown-item">Entrar</a>
+              <a href="#" id="dropdown-cadastro" onclick="openAuthModal(); switchAuthTab('signup'); event.preventDefault();" class="user-dropdown-item">Criar conta</a>
+            </div>
+            <a href="./settings.html" id="dropdown-config" class="user-dropdown-item" style="display:none !important;">Configurações</a>
+            <a href="../pages-documents/docs.html" id="dropdown-sobre" class="user-dropdown-item" style="display:none !important;">Sobre</a>
+            <button id="dropdown-logout" class="user-dropdown-item user-dropdown-logout" onclick="logout()" style="display:none !important;">Sair</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="nav-backdrop" id="nav-backdrop" onclick="alternarMenuMobile()"></div>
+
+  <!-- AUTH MODAL -->
+  <div class="auth-backdrop" id="auth-backdrop">
+    <div class="auth-modal">
+      <button class="auth-close-btn" onclick="closeAuthModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <div class="auth-header"><h2>Bem-vindo</h2><p>Acesse sua conta MONITECH</p></div>
+      <div class="auth-tabs">
+        <button class="auth-tab" data-tab="login" onclick="switchAuthTab('login')">Login</button>
+        <button class="auth-tab" data-tab="signup" onclick="switchAuthTab('signup')">Cadastro</button>
+      </div>
+      <div class="auth-content" id="auth-login">
+        <form class="auth-form" id="login-form" onsubmit="loginWithEmail(event)">
+          <div class="form-group"><label>Email</label><input type="email" id="login-email" required></div>
+          <div class="form-group"><label>Senha</label><input type="password" id="login-password" required></div>
+          <button type="submit" class="auth-submit-btn">Entrar</button>
+        </form>
+      </div>
+      <div class="auth-content" id="auth-signup">
+        <form class="auth-form" id="signup-form" onsubmit="signupWithEmail(event)">
+          <div class="form-group"><label>Nome</label><input type="text" id="signup-name" required></div>
+          <div class="form-group"><label>Email</label><input type="email" id="signup-email" required></div>
+          <div class="form-group"><label>Senha</label><input type="password" id="signup-password" required></div>
+          <button type="submit" class="auth-submit-btn">Criar Conta</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section class="planos-hero">
+    <div class="planos-eyebrow">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 230" width="14" height="14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M100,18 C72,18 50,40 50,66 C50,86 60,100 74,110 C80,114 82,120 82,126 L118,126 C118,120 120,114 126,110 C140,100 150,86 150,66 C150,40 128,18 100,18Z" stroke-width="10"/>
+        <path d="M83,130 C91,127 109,127 117,130" stroke-width="9"/><path d="M84,138 C92,134 108,134 116,138" stroke-width="8"/>
+        <path d="M78,116 C76,100 80,82 86,72 C90,64 96,66 98,76 C100,84 99,98 99,110" stroke-width="9"/>
+        <path d="M99,110 C99,96 100,82 103,72 C106,62 114,64 116,74 C118,84 116,104 113,118" stroke-width="9"/>
+      </svg>
+      Escolha seu plano
+    </div>
+    <h1>Simples, <span>transparente</span><br>e sem surpresas.</h1>
+    <p>Comece de graça com um dispositivo. Escale quando precisar de mais.</p>
+  </section>
+
+  <!-- CARDS DE PLANO -->
+  <div class="planos-grid">
+
+    <!-- Gratuito -->
+    <div class="plano-card">
+      <div class="plano-nome">Gratuito</div>
+      <div class="plano-preco">R$ 0<span>/mês</span></div>
+      <p class="plano-desc">Para quem está começando e quer monitorar uma residência.</p>
+      <div class="plano-sep"></div>
+      <ul class="plano-features">
+        <li><span class="feat-icon feat-ok"><i data-lucide="check" style="width:15px;height:15px"></i></span>Cadadastro de apenas 1 residência</li>
+        <li><span class="feat-icon feat-ok"><i data-lucide="check" style="width:15px;height:15px"></i></span>Cadastro de apenas 1 Dispositivo Monitech</li>
+        <li><span class="feat-icon feat-ok"><i data-lucide="check" style="width:15px;height:15px"></i></span> Dashboard em tempo real</li>
+        <li><span class="feat-icon feat-ok"><i data-lucide="check" style="width:15px;height:15px"></i></span> Histórico (60 dias)</li>
+        <li><span class="feat-icon feat-ok"><i data-lucide="check" style="width:15px;height:15px"></i></span> Análise NILM</li>
+        <li><span class="feat-icon feat-ok"><i data-lucide="check" style="width:15px;height:15px"></i></span> Alertas no painel</li>
+        <li><span class="feat-icon feat-no"><i data-lucide="x" style="width:15px;height:15px"></i></span> <span>Relatórios em PDF</span></li>
+        <li><span class="feat-icon feat-no"><i data-lucide="x" style="width:15px;height:15px"></i></span> <span>Alertas por e-mail</span></li>
+      </ul>
+      <a href="../system/system.html" class="plano-btn plano-btn--outline">Usar grátis</a>
+    </div>
+
+    <!-- Mensal -->
+    <div class="plano-card plano-card--destaque">
+      <div class="plano-badge">MAIS POPULAR</div>
+      <div class="plano-nome">Mensal</div>
+      <div class="plano-preco">R$ 19<span>/mês</span></div>
+      <p class="plano-desc">Para quem quer monitorar mais de uma residência ou sensor.</p>
+      <div class="plano-sep"></div>
+      <ul class="plano-features">
+        <li><span class="feat-icon feat-ok"><i data-lucide="check" style="width:15px;height:15px"></i></span> <strong>Cadastro de Residências ilimitadas</strong></li>
+        <li><span class="feat-icon feat-ok"><i data-lucide="check" style="width:15px;height:15px"></i></span> <strong>Cadastro de Dispositivos ilimitados</strong></li>
+        <li><span class="feat-icon feat-ok"><i data-lucide="check" style="width:15px;height:15px"></i></span> Dashboard em tempo real</li>
+        <li><span class="feat-icon feat-ok"><i data-lucide="check" style="width:15px;height:15px"></i></span> <strong>Histórico completo (365 dias)</strong></li>
+        <li><span class="feat-icon feat-ok"><i data-lucide="check" style="width:15px;height:15px"></i></span> Análise NILM</li>
+        <li><span class="feat-icon feat-ok"><i data-lucide="check" style="width:15px;height:15px"></i></span> Alertas no painel + avançados</li>
+        <li><span class="feat-icon feat-ok"><i data-lucide="check" style="width:15px;height:15px"></i></span> <strong>Relatórios em PDF</strong></li>
+        <li><span class="feat-icon feat-ok"><i data-lucide="check" style="width:15px;height:15px"></i></span> <strong>Alertas por e-mail</strong></li>
+      </ul>
+      <button class="plano-btn plano-btn--primary" onclick="assinarPlano()">Assinar agora</button>
+    </div>
+
+  </div>
+
+  <!-- TABELA COMPARATIVA -->
+  <div class="comparativo-wrap">
+    <h2 class="comparativo-titulo">Comparativo completo</h2>
+    <table class="comparativo-table">
+      <thead>
+        <tr>
+          <th>Recurso</th>
+          <th>Gratuito</th>
+          <th>Mensal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Cadadastro de Residências</td><td class="td-no">1</td><td class="td-hl">Ilimitadas</td></tr>
+        <tr><td>Cadastro de Dispositivos Monitech</td><td class="td-no">1</td><td class="td-hl">Ilimitados</td></tr>
+        <tr><td>Histórico de dados</td><td class="td-ok">60 dias</td><td class="td-hl">365 dias</td></tr>
+        <tr><td>Dashboard em tempo real</td><td class="td-ok">✓</td><td class="td-ok">✓</td></tr>
+        <tr><td>Análise NILM</td><td class="td-ok">✓</td><td class="td-ok">✓</td></tr>
+        <tr><td>Alertas no painel</td><td class="td-ok">✓</td><td class="td-ok">✓</td></tr>
+        <tr><td>Alertas por e-mail</td><td class="td-no">—</td><td class="td-ok">✓</td></tr>
+        <tr><td>Relatórios em PDF</td><td class="td-no">—</td><td class="td-ok">✓</td></tr>
+        <tr><td>Comparativo entre residências</td><td class="td-no">—</td><td class="td-ok">✓</td></tr>
+        <tr><td>Suporte por e-mail</td><td class="td-no">—</td><td class="td-ok">✓</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-wrap">
+    <h2 class="faq-titulo">Perguntas frequentes</h2>
+
+    <div class="faq-item">
+      <div class="faq-pergunta" onclick="toggleFaq(this)">
+        Preciso comprar o Dispositivo Monitech para usar?
+        <i data-lucide="chevron-down" style="width:16px;height:16px;flex-shrink:0"></i>
+      </div>
+      <div class="faq-resposta" style="display:none">
+        Sim. O plano controla o acesso ao software, mas você precisa do hardware (Dispositivo Monitech) para fazer as leituras.
+        <a href="./compra.html" style="color:var(--cyan)">Compre o dispositivo aqui.</a>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-pergunta" onclick="toggleFaq(this)">
+        Posso cancelar quando quiser?
+        <i data-lucide="chevron-down" style="width:16px;height:16px;flex-shrink:0"></i>
+      </div>
+      <div class="faq-resposta" style="display:none">
+        Sim. Sem fidelidade, sem multa. Cancele a qualquer momento e seu plano continua até o fim do período pago.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-pergunta" onclick="toggleFaq(this)">
+        O que acontece com meus dados se eu cancelar?
+        <i data-lucide="chevron-down" style="width:16px;height:16px;flex-shrink:0"></i>
+      </div>
+      <div class="faq-resposta" style="display:none">
+        Sua conta volta para o plano gratuito automaticamente. Você continua com acesso ao último dispositivo cadastrado e aos últimos 7 dias de histórico.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-pergunta" onclick="toggleFaq(this)">
+        Posso usar um único dispositivo em mais de uma residência?
+        <i data-lucide="chevron-down" style="width:16px;height:16px;flex-shrink:0"></i>
+      </div>
+      <div class="faq-resposta" style="display:none">
+        Não. Cada Dispositivo Monitech é vinculado a uma residência específica. Para monitorar duas casas, você precisa de dois dispositivos.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function assinarPlano() {
+      window.location.href = './pagamento.html';
+    }
+
+    function toggleFaq(el) {
+      const resposta = el.nextElementSibling;
+      const icone    = el.querySelector('[data-lucide]');
+      const aberto   = resposta.style.display !== 'none';
+      resposta.style.display = aberto ? 'none' : 'block';
+      if (icone) icone.style.transform = aberto ? '' : 'rotate(180deg)';
+    }
+  </script>
+
+</body>
+</html>

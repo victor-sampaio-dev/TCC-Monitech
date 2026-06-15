@@ -1,0 +1,331 @@
+
+
+body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg-void);
+    color: var(--ink);
+    min-height: 100vh;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ── Hero ── */
+.planos-hero {
+    padding: 100px 24px 60px;
+    text-align: center;
+    border-bottom: 1px solid var(--line);
+}
+
+.planos-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 4px 14px;
+    border-radius: 40px;
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+}
+
+.planos-hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 800;
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 16px;
+}
+
+.planos-hero h1 span {
+    color: var(--cyan);
+}
+
+.planos-hero p {
+    font-size: 17px;
+    color: var(--ink-3);
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
+
+/* ── Grid de planos ── */
+.planos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    max-width: 800px;
+    margin: 60px auto;
+    padding: 0 24px;
+}
+
+.plano-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px 32px;
+    position: relative;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+.plano-card:hover {
+    border-color: var(--border-bright);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, .15);
+}
+
+.plano-card--destaque {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 1px var(--cyan), 0 8px 40px rgba(72, 197, 217, .15);
+}
+
+.plano-badge {
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    padding: 4px 16px;
+    border-radius: 40px;
+    white-space: nowrap;
+    font-family: 'IBM Plex Mono', monospace;
+}
+
+.plano-nome {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+}
+
+.plano-preco {
+    font-family: 'Syne', sans-serif;
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+.plano-preco span {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--muted);
+}
+
+.plano-desc {
+    font-size: 13px;
+    color: var(--ink-3);
+    margin-bottom: 28px;
+    line-height: 1.6;
+}
+
+.plano-sep {
+    height: 1px;
+    background: var(--line);
+    margin-bottom: 24px;
+}
+
+.plano-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 32px;
+}
+
+.plano-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--ink-3);
+    line-height: 1.5;
+}
+
+.plano-features li .feat-icon {
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.feat-ok {
+    color: var(--success);
+}
+
+.feat-no {
+    color: var(--muted);
+}
+
+.feat-no~* {
+    color: var(--muted);
+    opacity: .6;
+}
+
+.plano-btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    text-align: center;
+    transition: opacity .2s, transform .15s;
+    letter-spacing: .5px;
+}
+
+.plano-btn:hover {
+    opacity: .9;
+    transform: translateY(-1px);
+}
+
+.plano-btn--outline {
+    background: transparent;
+    border: 1.5px solid var(--border-bright);
+    color: var(--ink-3);
+}
+
+.plano-btn--primary {
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    color: #fff;
+}
+
+/* ── Comparativo ── */
+.comparativo-wrap {
+    max-width: 800px;
+    margin: 0 auto 80px;
+    padding: 0 24px;
+}
+
+.comparativo-titulo {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.comparativo-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.comparativo-table th {
+    background: var(--off);
+    padding: 14px 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+}
+
+.comparativo-table th:not(:first-child) {
+    text-align: center;
+}
+
+.comparativo-table td {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-3);
+}
+
+.comparativo-table td:not(:first-child) {
+    text-align: center;
+    font-weight: 600;
+}
+
+.comparativo-table tr:last-child td {
+    border-bottom: none;
+}
+
+.comparativo-table tr:hover td {
+    background: var(--off);
+}
+
+.td-ok {
+    color: var(--success) !important;
+}
+
+.td-no {
+    color: var(--muted) !important;
+    opacity: .5;
+}
+
+.td-hl {
+    color: var(--cyan) !important;
+}
+
+/* ── FAQ ── */
+.faq-wrap {
+    max-width: 640px;
+    margin: 0 auto 80px;
+    padding: 0 24px;
+}
+
+.faq-titulo {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.faq-item {
+    border-bottom: 1px solid var(--line);
+    padding: 18px 0;
+}
+
+.faq-item:last-child {
+    border-bottom: none;
+}
+
+.faq-pergunta {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.faq-resposta {
+    font-size: 14px;
+    color: var(--ink-3);
+    line-height: 1.7;
+    margin-top: 10px;
+}
+
+@media (max-width: 600px) {
+    .planos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .plano-preco {
+        font-size: 40px;
+    }
+}

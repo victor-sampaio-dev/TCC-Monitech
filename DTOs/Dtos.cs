@@ -45,7 +45,10 @@ public record UsuarioDto(
     string Email,
     string? FotoUrl = null,
     DateTime? DataCriacao = null,
-    string Role = "user"
+    string Role = "user",
+    string Tema = "dark",
+    string Plano = "gratuito",
+    DateTime? PlanoExpiraEm = null
 );
 
 // ── RESIDENCIAS ──────────────────────────────────────────────
@@ -106,11 +109,11 @@ public record CriarDispositivoRequest(
 
 /// POST /api/sensores/registrar
 public record RegistrarSensorRequest(
-    string IdResidencia,
-    string IdIot,
-    string? Apelido        = null,
-    string Protocolo       = "http",
-    int    IntervaloMs     = 2000
+    string  IdResidencia,
+    string? IdIot      = null,   // gerado automaticamente se omitido
+    string? Apelido    = null,
+    string  Protocolo  = "http",
+    int     IntervaloMs = 2000
 );
 
 public record RegistrarSensorResponse(
@@ -192,7 +195,8 @@ public record UsuarioCompletoResponse(
     string?   FotoUrl,
     DateTime  DataCriacao,
     string    Role     = "user",
-    bool      TotpAtivo = false
+    bool      TotpAtivo = false,
+    string    Tema     = "dark"
 );
 
 /// PATCH /api/usuario/perfil — atualizar perfil do usuário
@@ -201,7 +205,8 @@ public record AtualizarPerfilRequest(
     string? Sobrenome = null,
     string? Telefone = null,
     string? DataNascimento = null,
-    string? Genero = null
+    string? Genero = null,
+    string? Tema = null
 );
 
 public record AtualizarPerfilResponse(
@@ -370,6 +375,11 @@ public record DistribuidoraDto(string Codigo, string Nome, decimal TarifaB1);
 
 /// GET /api/tarifas/bandeira
 public record BandeiraDto(string Cor, string Nome, decimal AdicionalPor100Kwh);
+
+// ── PAGAMENTO ─────────────────────────────────────────────────
+
+/// POST /api/pagamento/verificar
+public record VerificarPagamentoRequest(string PaymentId);
 
 /// GET /api/tarifas/info?distribuidora=CEMIG
 public record TarifaInfoResponse(

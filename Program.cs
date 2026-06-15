@@ -53,6 +53,16 @@ builder.Services.AddHttpClient("aneel", c =>
     c.Timeout     = TimeSpan.FromSeconds(10);
 });
 
+// HttpClient para MercadoPago (pagamentos)
+builder.Services.AddHttpClient("mercadopago", c =>
+{
+    c.BaseAddress = new Uri("https://api.mercadopago.com/");
+    c.DefaultRequestHeaders.Authorization =
+        new System.Net.Http.Headers.AuthenticationHeaderValue(
+            "Bearer", builder.Configuration["MercadoPago:AccessToken"]);
+    c.Timeout = TimeSpan.FromSeconds(30);
+});
+
 // ── CORS — origens permitidas ─────────────────────────────────
 builder.Services.AddCors(opt =>
     opt.AddPolicy("front", p =>

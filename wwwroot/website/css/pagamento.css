@@ -1,0 +1,225 @@
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg-void);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+a { text-decoration: none; color: inherit; }
+
+/* ── Wrapper central ── */
+.pag-wrap {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 24px 60px;
+}
+
+/* ── Estados (só um visível por vez) ── */
+.pag-state {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 18px;
+  max-width: 480px;
+  width: 100%;
+}
+
+.pag-state.ativo {
+  display: flex;
+}
+
+/* ── Spinner ── */
+.pag-spinner {
+  width: 46px;
+  height: 46px;
+  border: 3px solid var(--border);
+  border-top-color: var(--cyan);
+  border-radius: 50%;
+  animation: pag-spin .8s linear infinite;
+}
+
+@keyframes pag-spin { to { transform: rotate(360deg); } }
+
+.pag-spinner-label {
+  font-size: 14px;
+  color: var(--ink-3);
+}
+
+/* ── Ícone (sucesso / erro / aviso) ── */
+.pag-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pag-icon--ok  { background: rgba(72, 199, 142, .15); color: var(--success); }
+.pag-icon--err { background: rgba(247, 92, 92, .12);  color: var(--danger);  }
+.pag-icon--warn{ background: rgba(255, 185, 56, .15); color: #F5A623;        }
+
+/* ── Título e texto ── */
+.pag-state h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.pag-state p {
+  font-size: 15px;
+  color: var(--ink-3);
+  line-height: 1.7;
+  margin: 0;
+  max-width: 360px;
+}
+
+/* ── Card de resumo do plano ── */
+.pag-card {
+  background: var(--white);
+  border: 1px solid var(--cyan);
+  box-shadow: 0 0 0 1px var(--cyan), 0 8px 40px rgba(72, 197, 217, .12);
+  border-radius: 16px;
+  padding: 36px 32px;
+  width: 100%;
+  text-align: left;
+  position: relative;
+}
+
+.pag-plan-eyebrow {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 12px;
+}
+
+.pag-plan-price {
+  font-family: 'Syne', sans-serif;
+  font-size: 52px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.pag-plan-price span {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.pag-plan-desc {
+  font-size: 13px;
+  color: var(--ink-3);
+  margin-bottom: 24px;
+}
+
+.pag-sep {
+  height: 1px;
+  background: var(--line);
+  margin-bottom: 20px;
+}
+
+.pag-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.pag-features li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 14px;
+  color: var(--ink-3);
+}
+
+.pag-feat-ok {
+  flex-shrink: 0;
+  color: var(--success);
+}
+
+/* ── Botão principal ── */
+.pag-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  transition: opacity .2s, transform .15s;
+  letter-spacing: .3px;
+  width: 100%;
+}
+
+.pag-btn:hover { opacity: .9; transform: translateY(-1px); }
+
+.pag-btn--primary {
+  background: linear-gradient(135deg, var(--blue), var(--cyan));
+  color: #fff;
+}
+
+.pag-btn--mp {
+  background: #009EE3;
+  color: #fff;
+}
+
+.pag-btn--outline {
+  background: transparent;
+  border: 1.5px solid var(--border-bright);
+  color: var(--ink-3);
+}
+
+/* ── Link secundário ── */
+.pag-link {
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color .2s;
+}
+
+.pag-link:hover { color: var(--cyan); }
+
+/* ── Nota de segurança ── */
+.pag-security {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 12px;
+}
+
+/* ── Expira em ── */
+.pag-expira {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  color: var(--cyan);
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  border-radius: 8px;
+  padding: 10px 20px;
+}
+
+@media (max-width: 520px) {
+  .pag-card { padding: 28px 20px; }
+  .pag-plan-price { font-size: 42px; }
+}

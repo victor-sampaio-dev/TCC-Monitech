@@ -453,6 +453,20 @@
           <div id="topbar-live-badge" class="live-badge live-badge--disconnected">
             <span class="status-dot"></span> AO VIVO
           </div>
+          <!-- Seletor de Residência -->
+          <div class="residencia-selector" id="residencia-selector" onclick="toggleResidenciaDropdown(event)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span id="residencia-nome-topbar">Minha Casa</span>
+            <svg class="res-chevron" xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            <div class="residencia-dropdown" id="residencia-dropdown">
+              <div id="residencia-lista"></div>
+              <div class="res-drop-divider"></div>
+              <button class="res-drop-add" onclick="event.stopPropagation(); abrirModalNovaResidencia()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Nova Residência
+              </button>
+            </div>
+          </div>
         </div>
 
         <div class="nav-tabs" id="nav-tabs-mobile">
@@ -651,6 +665,32 @@
                 <div class="gauge-label">Carga Atual</div>
               </div>
 
+              <div class="gauge-item">
+                <div class="gauge-ring">
+                  <svg class="gauge-svg" viewBox="0 0 90 90">
+                    <circle class="gauge-bg" cx="45" cy="45" r="36" />
+                    <circle class="gauge-fill" id="g-aparente" cx="45" cy="45" r="36" stroke="#c084fc"
+                      stroke-dasharray="226" stroke-dashoffset="226" />
+                  </svg>
+                  <div class="gauge-val" id="gv-aparente">---</div>
+                </div>
+                <div class="gauge-unit">VA</div>
+                <div class="gauge-label">Pot. Aparente</div>
+              </div>
+
+              <div class="gauge-item">
+                <div class="gauge-ring">
+                  <svg class="gauge-svg" viewBox="0 0 90 90">
+                    <circle class="gauge-bg" cx="45" cy="45" r="36" />
+                    <circle class="gauge-fill" id="g-reativa" cx="45" cy="45" r="36" stroke="#fb923c"
+                      stroke-dasharray="226" stroke-dashoffset="226" />
+                  </svg>
+                  <div class="gauge-val" id="gv-reativa">---</div>
+                </div>
+                <div class="gauge-unit">VAr</div>
+                <div class="gauge-label">Pot. Reativa</div>
+              </div>
+
             </div>
           </div>
 
@@ -782,7 +822,7 @@
               <span class="section-title-icon"><i data-lucide="layout-dashboard" style="width:20px;height:20px;"></i></span>
               Planta <span>Interativa</span>
             </div>
-            <div class="live-badge"><span class="status-dot"></span> TEMPO REAL</div>
+            <div id="floor-live-badge" class="live-badge live-badge--disconnected"><span class="status-dot"></span> TEMPO REAL</div>
           </div>
 
           <div class="floor-plan-wrap">
@@ -1063,20 +1103,8 @@
                   <!-- Sub-estado 1: Formulário inicial -->
                   <div id="device-form-state">
                     <p style="font-size:13px;color:var(--text-secondary);margin-bottom:20px;line-height:1.6">
-                      Registre o código impresso na caixa do dispositivo para gerar o token de autenticação. Em seguida, siga o guia ao lado para configurá-lo.
+                      Gere o token de autenticação do seu Dispositivo Monitech. Em seguida, siga o guia ao lado para configurá-lo.
                     </p>
-
-                    <div class="form-group">
-                      <label class="form-label">Código do dispositivo</label>
-                      <div style="display:flex;gap:8px;">
-                        <input class="form-input" id="painel-codigo-iot"
-                          placeholder="Ex: MONITECH-001  (impresso na caixa)"
-                          style="flex:1;font-family:'Orbitron',monospace;letter-spacing:1px;">
-                        <button class="btn btn-secondary btn-sm" style="white-space:nowrap;" onclick="abrirQRScanner()" title="Escanear QR Code da caixa">
-                          <i data-lucide="camera"></i> QR
-                        </button>
-                      </div>
-                    </div>
 
                     <div class="form-group">
                       <label class="form-label">Apelido do sensor (opcional)</label>
@@ -1086,13 +1114,6 @@
                     <button class="btn btn-primary" id="btn-vincular-sensor" onclick="registrarSensorPainel()" style="width:100%;">
                       <i data-lucide="link"></i> Gerar Token de Acesso
                     </button>
-
-                    <!-- QR Scanner -->
-                    <div id="qr-scanner-container" style="display:none;margin-top:14px;">
-                      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">Aponte a câmera para o QR Code da caixa do dispositivo:</div>
-                      <video id="qr-video" style="width:100%;border-radius:8px;border:1px solid var(--border);max-height:220px;object-fit:cover;"></video>
-                      <button onclick="fecharQRScanner()" class="btn btn-secondary btn-sm" style="margin-top:8px;width:100%;">✕ Cancelar</button>
-                    </div>
                   </div>
 
                   <!-- Sub-estado 2: Aguardando conexão do dispositivo -->
@@ -1123,6 +1144,20 @@
                       <div id="token-aviso-copiar" style="font-size:11px;color:var(--text-dim);margin-top:6px;">Cole no portal do dispositivo em <strong style="color:#e0eaff;">http://192.168.4.1</strong></div>
                     </div>
 
+                    <!-- ID do dispositivo -->
+                    <div style="margin-bottom:16px;">
+                      <div style="font-size:11px;color:var(--text-secondary);font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;">
+                        <i data-lucide="cpu" style="width:12px;height:12px;vertical-align:-2px;margin-right:4px;"></i> ID do dispositivo
+                      </div>
+                      <div style="display:flex;gap:8px;align-items:stretch;">
+                        <div id="painel-idiot-valor" style="flex:1;font-family:'Orbitron',monospace;font-size:13px;color:#7df9ff;background:rgba(0,0,0,.35);padding:10px 12px;border-radius:8px;border:1px solid rgba(125,249,255,.2);user-select:all;"></div>
+                        <button class="btn btn-secondary btn-sm" onclick="_copiarIdIot()" style="flex-shrink:0;padding:0 14px;" title="Copiar ID">
+                          <i data-lucide="copy" style="width:15px;height:15px;"></i>
+                        </button>
+                      </div>
+                      <div style="font-size:11px;color:var(--text-dim);margin-top:6px;">Cole no campo "ID do dispositivo" no portal <strong style="color:#e0eaff;">http://192.168.4.1</strong></div>
+                    </div>
+
                     <!-- URL do servidor -->
                     <div style="margin-bottom:20px;">
                       <div style="font-size:11px;color:var(--text-secondary);font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;">
@@ -1150,7 +1185,7 @@
                     </button>
 
                     <div style="text-align:center;margin-top:14px;">
-                      <button onclick="mostrarVincularDispositivo()" style="background:none;border:none;color:var(--text-dim);font-size:12px;cursor:pointer;text-decoration:underline;padding:0;line-height:1.5;">
+                      <button onclick="desvincularDispositivo()" style="background:none;border:none;color:var(--text-dim);font-size:12px;cursor:pointer;text-decoration:underline;padding:0;line-height:1.5;">
                         Refazer vinculação com o dispositivo
                       </button>
                     </div>
@@ -1256,8 +1291,8 @@
                     </div>
                   </div>
                   <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
-                    <button class="btn btn-secondary btn-sm" onclick="mostrarVincularDispositivo()" style="font-size:12px;">
-                      <i data-lucide="refresh-cw" style="width:13px;height:13px"></i> Trocar dispositivo
+                    <button class="btn btn-danger btn-sm" onclick="desvincularDispositivo()" style="font-size:12px;">
+                      <i data-lucide="unlink" style="width:13px;height:13px"></i> Desvincular dispositivo
                     </button>
                   </div>
                 </div>
@@ -1510,91 +1545,10 @@
             </div>
 
             <div class="code-tab-selector">
-              <button class="proto-btn" id="code-tab-ws" onclick="exibirAbaCodigo('ws')">WebSocket</button>
               <button class="proto-btn active" id="code-tab-http" onclick="exibirAbaCodigo('http')">HTTP POST</button>
-              <button class="proto-btn" id="code-tab-mqtt" onclick="exibirAbaCodigo('mqtt')">MQTT</button>
             </div>
 
             <!-- Código WebSocket -->
-            <div id="codetab-ws">
-              <div class="code-header">
-                <span class="code-meta">Arduino IDE — Dispositivo Monitech com Leitor Monitech e Sensor Monitech</span>
-                <div style="display:flex;gap:8px;">
-                  <button class="btn btn-secondary btn-sm" onclick="copiarCodigo('code-ws')"><i data-lucide="clipboard"></i> Copiar</button>
-                  <button class="btn btn-secondary btn-sm" onclick="baixarFirmware('ws')"><i data-lucide="download"></i> .ino</button>
-                </div>
-              </div>
-              <pre id="code-ws" class="code-block">#include &lt;WiFi.h&gt;
-#include &lt;WebSocketsServer.h&gt;
-#include &lt;ArduinoJson.h&gt;
-// Para PZEM-004T: #include &lt;PZEM004Tv30.h&gt;
-
-const char* SSID      = "SUA_REDE_WIFI";
-const char* PASSWORD  = "SUA_SENHA_WIFI";
-const char* DEVICE_ID = "MONITECH-001";
-const char* FW_VER    = "1.0.0";
-
-WebSocketsServer ws(81);
-// PZEM004Tv30 pzem(Serial2, 16, 17); // RX=16, TX=17
-
-unsigned long ultimoEnvio = 0;
-const int INTERVALO_ENVIO = 2000; // ms
-
-float lerVolts()  { return 0; }
-float lerAmps()   { return 0; }
-float lerWatts()  { return 0; }
-float lerFP()     { return 0; }
-float lerHz()     { return 0; }
-float lerKwh()    { return 0; }
-
-// Com PZEM-004T real (descomente):
-// float lerVolts()  { return pzem.voltage(); }
-// float lerAmps()   { return pzem.current(); }
-// float lerWatts()  { return pzem.power(); }
-// float lerFP()     { return pzem.pf(); }
-// float lerHz()     { return pzem.frequency(); }
-// float lerKwh()    { return pzem.energy(); }
-
-void enviarDados() {
-  StaticJsonDocument&lt;256&gt; doc;
-  doc["id"]     = DEVICE_ID;
-  doc["fw"]     = FW_VER;
-  doc["chip"]   = ESP.getEfuseMac();
-  doc["ip"]     = WiFi.localIP().toString();
-  doc["ssid"]   = WiFi.SSID();
-  doc["rssi"]   = WiFi.RSSI();
-  doc["heap"]   = ESP.getFreeHeap();
-  doc["sensor"] = "Leitor Monitech";
-  doc["volts"]  = lerVolts();
-  doc["amps"]   = lerAmps();
-  doc["watts"]  = lerWatts();
-  doc["pf"]     = lerFP();
-  doc["hz"]     = lerHz();
-  doc["kwh"]    = lerKwh();
-  doc["ts"]     = millis();
-  String payload;
-  serializeJson(doc, payload);
-  ws.broadcastTXT(payload);
-}
-
-void eventoWS(uint8_t num, WStype_t tipo, uint8_t* payload, size_t tamanho) {
-  if (tipo == WStype_CONNECTED) enviarDados();
-}
-
-void setup() {
-  Serial.begin(115200);
-  WiFi.begin(SSID, PASSWORD);
-  while (WiFi.status() != WL_CONNECTED) { delay(500); }
-  ws.begin();
-  ws.onEvent(eventoWS);
-}
-
-void loop() {
-  ws.loop();
-  if (millis() - ultimoEnvio >= INTERVALO_ENVIO) { enviarDados(); ultimoEnvio = millis(); }
-}</pre>
-            </div>
-
             <!-- Código HTTP POST -->
             <div id="codetab-http">
               <div class="code-header">
@@ -1607,74 +1561,11 @@ void loop() {
               <pre id="code-http" class="code-block"></pre>
             </div>
 
-            <!-- Código MQTT -->
-            <div id="codetab-mqtt">
-              <div class="code-header">
-                <span class="code-meta">Arduino IDE — Dispositivo Monitech como Publisher MQTT</span>
-                <div style="display:flex;gap:8px;">
-                  <button class="btn btn-secondary btn-sm" onclick="copiarCodigo('code-mqtt')"><i data-lucide="clipboard"></i> Copiar</button>
-                  <button class="btn btn-secondary btn-sm" onclick="baixarFirmware('mqtt')"><i data-lucide="download"></i> .ino</button>
-                </div>
-              </div>
-              <pre id="code-mqtt" class="code-block">#include &lt;WiFi.h&gt;
-#include &lt;PubSubClient.h&gt;
-#include &lt;ArduinoJson.h&gt;
-
-const char* SSID        = "SUA_REDE_WIFI";
-const char* PASSWORD    = "SUA_SENHA_WIFI";
-const char* MQTT_SERVER = "broker.hivemq.com";
-const int   MQTT_PORT   = 1883;
-const char* TOPICO      = "MONITECH/home/energy";
-const char* DEVICE_ID   = "MONITECH-001";
-
-WiFiClient   espClient;
-PubSubClient mqtt(espClient);
-unsigned long ultimaMensagem = 0;
-
-float lerVolts() { return 220.0 + random(-10, 10) * 0.1; }
-float lerAmps()  { return 5.0  + random(-5, 5)  * 0.1; }
-
-void reconectar() {
-  while (!mqtt.connected()) {
-    if (mqtt.connect(DEVICE_ID)) mqtt.publish(TOPICO "/status", "online");
-    else delay(3000);
-  }
-}
-
-void publicarDados() {
-  StaticJsonDocument&lt;256&gt; doc;
-  float v = lerVolts(), a = lerAmps();
-  doc["id"]    = DEVICE_ID;
-  doc["volts"] = v; doc["amps"] = a;
-  doc["watts"] = v * a * 0.85;
-  doc["pf"]    = 0.85; doc["hz"] = 60.0;
-  doc["kwh"]   = 12.4 + millis() / 3600000.0;
-  doc["rssi"]  = WiFi.RSSI(); doc["ts"] = millis();
-  char buf[256];
-  serializeJson(doc, buf);
-  mqtt.publish(TOPICO, buf);
-}
-
-void setup() {
-  Serial.begin(115200);
-  WiFi.begin(SSID, PASSWORD);
-  while (WiFi.status() != WL_CONNECTED) { delay(500); }
-  mqtt.setServer(MQTT_SERVER, MQTT_PORT);
-}
-
-void loop() {
-  if (!mqtt.connected()) reconectar();
-  mqtt.loop();
-  if (millis() - ultimaMensagem > 2000) { publicarDados(); ultimaMensagem = millis(); }
-}</pre>
-            </div>
-
             <div class="libs-box">
               <div class="libs-title">BIBLIOTECAS NECESSÁRIAS (Arduino Library Manager)</div>
               <div class="libs-list" id="libs-needed">
                 <span class="tag tag-blue">ArduinoJson (Benoit Blanchon)</span>
                 <span class="tag tag-cyan">PZEM-004T-v30</span>
-                <span class="tag tag-cyan">PubSubClient (MQTT)</span>
               </div>
             </div>
 
@@ -1703,9 +1594,10 @@ void loop() {
               </div>
             </div>
 
-            <button class="ota-btn-main" id="btn-ota-auto" onclick="atualizarDispositivo()">
-              Instalar Atualização
+            <button class="ota-btn-main" id="btn-ota-auto" onclick="verificarAtualizacaoFirmware()">
+              <i data-lucide="refresh-cw"></i> Verificar Atualização
             </button>
+            <div id="ota-check-result" style="display:none;margin-top:12px;padding:10px 14px;border-radius:8px;font-size:13px;line-height:1.5;"></div>
 
             <!-- Barra de progresso -->
             <div id="ota-progress-wrap" class="ota-progress-wrap" style="display:none;">
@@ -2073,7 +1965,7 @@ void loop() {
                     <div>
                       <div class="billing-plan-label">Plano Atual</div>
                       <div class="billing-plan-name">Gratuito</div>
-                      <div class="billing-plan-desc">Funcionalidades básicas de monitoramento</div>
+                      <div class="billing-plan-desc">1 residência · 1 sensor · Histórico 60 dias · NILM básico</div>
                     </div>
                     <div class="billing-plan-action">
                       <button class="btn btn-primary btn-sm" onclick="atualizarPlano()">Fazer Upgrade de Plano</button>
@@ -2378,10 +2270,12 @@ void loop() {
                 <div class="data-control-item">
                   <div>
                     <div class="data-control-title">Exportar Meus Dados</div>
-                    <div class="data-control-desc">Baixe uma cópia de todos os seus dados em formato JSON. Inclui
-                      perfil, residência, dispositivos e histórico.</div>
+                    <div class="data-control-desc">Baixe uma cópia completa dos seus dados. <strong>JSON</strong> inclui perfil, dispositivos, alertas e histórico. <strong>CSV</strong> exporta só as leituras — pronto para abrir no Excel ou Google Sheets.</div>
                   </div>
-                  <button class="btn btn-secondary btn-sm" onclick="exportarMeusDados()"><i data-lucide="download"></i> Exportar</button>
+                  <div style="display:flex;gap:8px;flex-shrink:0;">
+                    <button class="btn btn-secondary btn-sm" id="btn-export-json" onclick="exportarMeusDados()"><i data-lucide="file-json"></i> JSON</button>
+                    <button class="btn btn-secondary btn-sm" id="btn-export-csv" onclick="exportarHistoricoCSV()"><i data-lucide="table-2"></i> CSV</button>
+                  </div>
                 </div>
 
                 <div class="data-control-item">
@@ -2569,6 +2463,41 @@ void loop() {
     </div>
   </div>
 
+  <!-- MODAL: Nova Residência -->
+  <div class="modal-overlay" id="modal-nova-residencia">
+    <div class="modal">
+      <div class="modal-title">NOVA RESIDÊNCIA</div>
+      <form id="form-nova-residencia" onsubmit="event.preventDefault(); salvarNovaResidencia()">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nome da Residência *</label>
+            <input class="form-input" type="text" id="nova-res-nome" placeholder="Ex: Casa Principal, Apartamento..." maxlength="80" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tipo</label>
+            <select class="form-input" id="nova-res-tipo">
+              <option value="house">Casa</option>
+              <option value="apartment">Apartamento</option>
+              <option value="commercial">Comercial</option>
+              <option value="farm">Sítio / Fazenda</option>
+              <option value="other">Outro</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">CEP (opcional)</label>
+          <input class="form-input" type="text" id="nova-res-cep" placeholder="00000-000" maxlength="9"
+                 oninput="this.value=this.value.replace(/\D/g,'').replace(/(\d{5})(\d)/,'$1-$2').substring(0,9)">
+        </div>
+        <p id="nova-res-erro" class="form-error" style="display:none;margin-top:8px;color:var(--danger);font-size:13px;"></p>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" onclick="fecharModal('modal-nova-residencia')">CANCELAR</button>
+          <button type="submit" class="btn btn-primary" id="btn-salvar-nova-res">+ ADICIONAR</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- MODAL: Aviso sobre Dispositivo de Medição -->
   <div class="modal-overlay" id="modal-alert">
     <div class="modal">
@@ -2584,7 +2513,7 @@ void loop() {
           <li>Monte um Dispositivo Monitech com o Leitor Monitech e o Sensor Monitech</li>
           <li>Conecte o dispositivo à sua rede Wi-Fi doméstica</li>
           <li>Acesse a aba <strong>"Dispositivo MONITECH"</strong> no painel</li>
-          <li>Escolha o protocolo de comunicação: WebSocket, HTTP ou MQTT</li>
+          <li>O dispositivo comunica via HTTP automaticamente após a configuração</li>
           <li>Insira o IP do Dispositivo Monitech e clique em <strong>CONECTAR</strong></li>
         </ul>
       </div>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pagamento — MONITECH</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <script src="../assets/js/shared/theme-loader.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/shared/navbar.css">
+  <link rel="stylesheet" href="../assets/css/shared/userMenu.css">
+  <link rel="stylesheet" href="../assets/css/shared/profile-photo-styles.css">
+  <link rel="stylesheet" href="../assets/css/shared/auth-modal.css">
+  <link rel="stylesheet" href="../assets/css/shared/theme-toggle.css">
+  <link rel="stylesheet" href="../assets/css/shared/icons.css">
+  <link rel="stylesheet" href="../website/css/theme-colors.css">
+  <link rel="stylesheet" href="../website/css/pagamento.css">
+  <script src="../assets/js/vendor/lucide.min.js" defer></script>
+  <script src="../assets/js/shared/navbar.js" defer></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="../assets/js/shared/auth-modal.js" defer></script>
+  <script src="../assets/js/shared/profile-photo-manager.js" defer></script>
+  <script src="../assets/js/shared/magnific-icons-loader.js" defer></script>
+  <script src="../assets/js/shared/theme-toggle.js" defer></script>
+  <script src="../assets/js/shared/user-info-panel.js" defer></script>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="../index.html">
+        <img src="/assets/images/logo.svg" alt="MONITECH" style="height:32px;width:auto;">
+        <span class="nav-brand">MONITECH</span>
+      </a>
+      <button type="button" class="mobile-menu-btn" id="mobile-menu-btn" onclick="alternarMenuMobile()">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-menu-mobile" id="nav-menu-mobile">
+        <div class="nav-links">
+          <a class="nav-link" href="../index.html"><span class="mmenu-icon"><i data-lucide="home"></i></span><span class="mmenu-text">Início</span><i data-lucide="chevron-right" class="mmenu-arrow"></i></a>
+          <a class="nav-link" href="../pages-documents/docs.html"><span class="mmenu-icon"><i data-lucide="book-open"></i></span><span class="mmenu-text">Documentação</span><i data-lucide="chevron-right" class="mmenu-arrow"></i></a>
+          <a class="nav-link" href="./compra.html"><span class="mmenu-icon"><i data-lucide="shopping-cart"></i></span><span class="mmenu-text">Comprar Dispositivo</span><i data-lucide="chevron-right" class="mmenu-arrow"></i></a>
+          <a class="nav-link" href="./planos.html"><span class="mmenu-icon"><i data-lucide="zap"></i></span><span class="mmenu-text">Planos</span><i data-lucide="chevron-right" class="mmenu-arrow"></i></a>
+        </div>
+        <div class="nav-menu-footer">
+          <a class="btn-nav-solid-mobile" href="../system/system.html"><i data-lucide="layout-dashboard"></i> Acessar Painel</a>
+        </div>
+      </div>
+      <div class="nav-links nav-links-desktop">
+        <a class="nav-link" href="../index.html">Início</a>
+        <a class="nav-link" href="../pages-documents/docs.html">Documentação</a>
+        <a class="nav-link" href="./compra.html">Comprar Dispositivo</a>
+        <a class="nav-link" href="./planos.html">Planos</a>
+      </div>
+      <div class="nav-actions">
+        <div class="nav-end"><a class="btn-nav-solid" href="../system/system.html">Acessar Painel →</a></div>
+        <button class="theme-toggle-btn" id="theme-toggle-btn" title="Alternar tema"><span class="theme-toggle-icon"></span></button>
+        <div class="user-menu-wrapper">
+          <button class="user-menu-btn" id="user-menu-btn" onclick="toggleUserMenu()"><div class="user-avatar">U</div></button>
+          <div class="user-dropdown" id="user-dropdown">
+            <div class="user-dropdown-header" id="user-dropdown-header" style="display:none !important;">
+              <div class="user-dropdown-avatar-lg" id="user-dropdown-avatar-lg">U</div>
+              <div class="user-dropdown-info">
+                <div class="user-dropdown-nome" id="user-dropdown-nome">Usuário</div>
+                <div class="user-dropdown-email" id="user-dropdown-email">email@example.com</div>
+              </div>
+            </div>
+            <div class="user-dropdown-divider" id="user-dropdown-divider" style="display:none !important;"></div>
+            <div class="dropdown-auth-section">
+              <a href="#" id="dropdown-login" onclick="openAuthModal(); event.preventDefault();" class="user-dropdown-item">Entrar</a>
+              <a href="#" id="dropdown-cadastro" onclick="openAuthModal(); switchAuthTab('signup'); event.preventDefault();" class="user-dropdown-item">Criar conta</a>
+            </div>
+            <a href="./settings.html" id="dropdown-config" class="user-dropdown-item" style="display:none !important;">Configurações</a>
+            <button id="dropdown-logout" class="user-dropdown-item user-dropdown-logout" onclick="logout()" style="display:none !important;">Sair</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="nav-backdrop" id="nav-backdrop" onclick="alternarMenuMobile()"></div>
+
+  <!-- AUTH MODAL -->
+  <div class="auth-backdrop" id="auth-backdrop">
+    <div class="auth-modal">
+      <button class="auth-close-btn" onclick="closeAuthModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <div class="auth-header"><h2>Bem-vindo</h2><p>Acesse sua conta MONITECH</p></div>
+      <div class="auth-tabs">
+        <button class="auth-tab" data-tab="login" onclick="switchAuthTab('login')">Login</button>
+        <button class="auth-tab" data-tab="signup" onclick="switchAuthTab('signup')">Cadastro</button>
+      </div>
+      <div class="auth-content" id="auth-login">
+        <form class="auth-form" id="login-form" onsubmit="loginWithEmail(event)">
+          <div class="form-group"><label>Email</label><input type="email" id="login-email" required></div>
+          <div class="form-group"><label>Senha</label><input type="password" id="login-password" required></div>
+          <button type="submit" class="auth-submit-btn">Entrar</button>
+        </form>
+      </div>
+      <div class="auth-content" id="auth-signup">
+        <form class="auth-form" id="signup-form" onsubmit="signupWithEmail(event)">
+          <div class="form-group"><label>Nome</label><input type="text" id="signup-name" required></div>
+          <div class="form-group"><label>Email</label><input type="email" id="signup-email" required></div>
+          <div class="form-group"><label>Senha</label><input type="password" id="signup-password" required></div>
+          <button type="submit" class="auth-submit-btn">Criar Conta</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN — estados de checkout -->
+  <main class="pag-wrap">
+
+    <!-- Estado: não logado -->
+    <div class="pag-state" id="pag-not-logged">
+      <div class="pag-icon pag-icon--warn">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <h1>Login necessário</h1>
+      <p>Você precisa estar conectado para assinar o plano Mensal.</p>
+      <button onclick="openAuthModal(); pagAfterLogin = true;" class="pag-btn pag-btn--primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        Fazer login
+      </button>
+      <a href="./planos.html" class="pag-link">← Voltar aos planos</a>
+    </div>
+
+    <!-- Estado: carregando preferência -->
+    <div class="pag-state" id="pag-loading">
+      <div class="pag-spinner"></div>
+      <p class="pag-spinner-label">Preparando seu checkout…</p>
+    </div>
+
+    <!-- Estado: pronto para pagar -->
+    <div class="pag-state" id="pag-ready">
+      <div class="pag-card">
+        <span class="pag-plan-eyebrow">Resumo do pedido</span>
+        <div class="pag-plan-price">R$ 19<span>/mês</span></div>
+        <p class="pag-plan-desc">Plano Mensal MONITECH — renovado a cada 30 dias</p>
+        <div class="pag-sep"></div>
+        <ul class="pag-features">
+          <li>
+            <svg class="pag-feat-ok" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Residências e dispositivos ilimitados
+          </li>
+          <li>
+            <svg class="pag-feat-ok" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Histórico completo (365 dias)
+          </li>
+          <li>
+            <svg class="pag-feat-ok" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Análise NILM avançada
+          </li>
+          <li>
+            <svg class="pag-feat-ok" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Alertas por e-mail
+          </li>
+          <li>
+            <svg class="pag-feat-ok" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Relatórios em PDF
+          </li>
+        </ul>
+        <a id="pag-checkout-btn" href="#" class="pag-btn pag-btn--mp">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          Pagar com MercadoPago
+        </a>
+        <p class="pag-security">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Pagamento seguro processado pelo MercadoPago
+        </p>
+      </div>
+      <a href="./planos.html" class="pag-link">← Voltar aos planos</a>
+    </div>
+
+    <!-- Estado: verificando pagamento -->
+    <div class="pag-state" id="pag-verifying">
+      <div class="pag-spinner"></div>
+      <p class="pag-spinner-label">Verificando pagamento…</p>
+    </div>
+
+    <!-- Estado: sucesso -->
+    <div class="pag-state" id="pag-success">
+      <div class="pag-icon pag-icon--ok">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h1>Plano ativado!</h1>
+      <p>Seu plano <strong>Mensal</strong> foi ativado com sucesso.</p>
+      <p id="pag-expira-em" class="pag-expira"></p>
+      <a href="../system/system.html" class="pag-btn pag-btn--primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Ir para o Painel
+      </a>
+    </div>
+
+    <!-- Estado: pendente -->
+    <div class="pag-state" id="pag-pending">
+      <div class="pag-icon pag-icon--warn">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <h1>Pagamento em análise</h1>
+      <p>Estamos aguardando a confirmação. Você receberá um e-mail assim que o pagamento for confirmado e o plano for ativado.</p>
+      <a href="../system/system.html" class="pag-btn pag-btn--outline" style="max-width:260px">Ir para o Painel</a>
+      <a href="./planos.html" class="pag-link">Voltar aos planos</a>
+    </div>
+
+    <!-- Estado: falhou -->
+    <div class="pag-state" id="pag-failure">
+      <div class="pag-icon pag-icon--err">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      </div>
+      <h1>Pagamento não concluído</h1>
+      <p>Houve um problema com seu pagamento. Tente novamente ou escolha outro método de pagamento.</p>
+      <button onclick="tentarNovamente()" class="pag-btn pag-btn--primary" style="max-width:260px">Tentar novamente</button>
+      <a href="./planos.html" class="pag-link">Voltar aos planos</a>
+    </div>
+
+    <!-- Estado: erro de sistema -->
+    <div class="pag-state" id="pag-error">
+      <div class="pag-icon pag-icon--err">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <h1>Ocorreu um erro</h1>
+      <p id="pag-error-msg">Não foi possível processar sua solicitação. Tente novamente.</p>
+      <button onclick="tentarNovamente()" class="pag-btn pag-btn--primary" style="max-width:260px">Tentar novamente</button>
+      <a href="./planos.html" class="pag-link">Voltar aos planos</a>
+    </div>
+
+  </main>
+
+  <script>
+    const _API = window.location.origin;
+    let pagAfterLogin = false;
+
+    function _token() {
+      return localStorage.getItem('monitech_token_landing');
+    }
+
+    function _usuario() {
+      try { return JSON.parse(localStorage.getItem('monitech_usuario_landing')); }
+      catch { return null; }
+    }
+
+    function _mostrar(id) {
+      document.querySelectorAll('.pag-state').forEach(el => el.classList.remove('ativo'));
+      const el = document.getElementById(id);
+      if (el) el.classList.add('ativo');
+    }
+
+    async function init() {
+      const params   = new URLSearchParams(location.search);
+      const status   = params.get('status');
+
+      if (status === 'aprovado') {
+        const paymentId = params.get('payment_id') || params.get('collection_id');
+        _mostrar('pag-verifying');
+        await verificarPagamento(paymentId);
+        return;
+      }
+
+      if (status === 'falhou')   { _mostrar('pag-failure'); return; }
+      if (status === 'pendente') { _mostrar('pag-pending'); return; }
+
+      const token = _token();
+      if (!token) { _mostrar('pag-not-logged'); return; }
+
+      await criarPreferencia();
+    }
+
+    async function criarPreferencia() {
+      _mostrar('pag-loading');
+      const token = _token();
+      if (!token) { _mostrar('pag-not-logged'); return; }
+
+      try {
+        const resp = await fetch(`${_API}/api/pagamento/preferencia`, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
+        });
+        const data = await resp.json();
+
+        if (!data.sucesso) {
+          _mostrarErro(data.erro || 'Erro ao criar checkout. Tente novamente.');
+          return;
+        }
+
+        document.getElementById('pag-checkout-btn').href = data.initPoint;
+        _mostrar('pag-ready');
+      } catch {
+        _mostrarErro('Sem conexão com o servidor. Verifique sua internet e tente novamente.');
+      }
+    }
+
+    async function verificarPagamento(paymentId) {
+      const token = _token();
+      if (!token) { _mostrar('pag-not-logged'); return; }
+      if (!paymentId) { _mostrar('pag-failure'); return; }
+
+      try {
+        const resp = await fetch(`${_API}/api/pagamento/verificar`, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body:    JSON.stringify({ paymentId })
+        });
+        const data = await resp.json();
+
+        if (data.sucesso) {
+          const u = _usuario();
+          if (u) {
+            u.plano = 'mensal';
+            localStorage.setItem('monitech_usuario_landing', JSON.stringify(u));
+          }
+          if (data.expiraEm) {
+            const expira   = new Date(data.expiraEm);
+            const opcoes   = { day: '2-digit', month: 'long', year: 'numeric' };
+            const formatado = expira.toLocaleDateString('pt-BR', opcoes);
+            document.getElementById('pag-expira-em').textContent = `Válido até ${formatado}`;
+          }
+          history.replaceState({}, '', location.pathname);
+          _mostrar('pag-success');
+        } else {
+          _mostrar('pag-failure');
+        }
+      } catch {
+        _mostrarErro('Erro ao verificar pagamento. Se o problema persistir, entre em contato.');
+      }
+    }
+
+    function _mostrarErro(msg) {
+      document.getElementById('pag-error-msg').textContent = msg;
+      _mostrar('pag-error');
+    }
+
+    function tentarNovamente() {
+      history.replaceState({}, '', location.pathname);
+      criarPreferencia();
+    }
+
+    // Detecta login feito dentro do auth-modal e continua o fluxo
+    document.addEventListener('DOMContentLoaded', () => {
+      init();
+
+      // Observa fechamento do modal de auth (quando o usuário fez login)
+      const backdrop = document.getElementById('auth-backdrop');
+      if (backdrop) {
+        new MutationObserver(() => {
+          if (pagAfterLogin && !backdrop.classList.contains('active') && _token()) {
+            pagAfterLogin = false;
+            criarPreferencia();
+          }
+        }).observe(backdrop, { attributes: true, attributeFilter: ['class'] });
+      }
+    });
+  </script>
+
+</body>
+</html>

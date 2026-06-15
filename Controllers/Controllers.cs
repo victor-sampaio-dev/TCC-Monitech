@@ -21,6 +21,35 @@ using Monitech.API.Services;
 namespace Monitech.API.Controllers;
 
 // ════════════════════════════════════════════════════════════
+//  INFO  /api/info  — informações do servidor (público)
+// ════════════════════════════════════════════════════════════
+[ApiController, Route("api/info")]
+public class InfoController : ControllerBase
+{
+    /// GET /api/info/ip — retorna os IPs locais do servidor para exibir no painel
+    [HttpGet("ip")]
+    public IActionResult IpLocal()
+    {
+        var ips = System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces()
+            .Where(ni => ni.OperationalStatus == System.Net.NetworkInformation.OperationalStatus.Up &&
+                         ni.NetworkInterfaceType != System.Net.NetworkInformation.NetworkInterfaceType.Loopback)
+            .SelectMany(ni => ni.GetIPProperties().UnicastAddresses)
+            .Where(a => a.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+            .Select(a => a.Address.ToString())
+            .Where(ip => ip.StartsWith("10.") || ip.StartsWith("192.168.") || ip.StartsWith("172."))
+            .ToList();
+
+        var porta = HttpContext.Request.Host.Port ?? 5000;
+        return Ok(new
+        {
+            ips,
+            porta,
+            urls = ips.Select(ip => $"http://{ip}:{porta}").ToList()
+        });
+    }
+}
+
+// ════════════════════════════════════════════════════════════
 //  AUTH  /api/auth
 // ════════════════════════════════════════════════════════════
 [ApiController, Route("api/auth")]
@@ -175,7 +204,7 @@ public class AuthController(AuthService auth, AppDbContext db, IConfiguration co
             return Ok(new LoginResponse(
                 Sucesso:  true,
                 Token:    token,
-                Usuario:  new UsuarioDto(usuario.Id, $"{usuario.Nome} {usuario.Sobrenome}".Trim(), usuario.Email, usuario.FotoUrl, usuario.DataCriacao, usuario.Role),
+                Usuario:  new UsuarioDto(usuario.Id, $"{usuario.Nome} {usuario.Sobrenome}".Trim(), usuario.Email, usuario.FotoUrl, usuario.DataCriacao, usuario.Role, usuario.Tema, usuario.Plano, usuario.PlanoExpiraEm),
                 ExpiraEm: expira
             ));
         }
@@ -229,6 +258,21 @@ public class ResidenciaController(AppDbContext db) : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Criar([FromBody] CriarResidenciaRequest req)
     {
+        // Plano gratuito: limite de 1 residência
+        var usuario = await db.Usuarios.FindAsync(UsuarioId);
+        if (usuario is not null && _PlanoGratuito(usuario))
+        {
+            var total = await db.Residencias.CountAsync(r => r.IdUsuario == UsuarioId && r.Ativo);
+            if (total >= 1)
+                return StatusCode(403, new
+                {
+                    sucesso      = false,
+                    erro         = "Limite do plano gratuito atingido.",
+                    detalhe      = "Para adicionar mais de uma residência, assine o plano mensal.",
+                    upgradePath  = "/website/planos.html"
+                });
+        }
+
         var r = new Residencia
         {
             Id            = Guid.NewGuid().ToString(),
@@ -247,6 +291,9 @@ public class ResidenciaController(AppDbContext db) : ControllerBase
         await db.SaveChangesAsync();
         return Ok(new { sucesso = true, residencia = r });
     }
+
+    private static bool _PlanoGratuito(Monitech.API.Models.Usuario u) =>
+        u.Plano == "gratuito" || (u.PlanoExpiraEm.HasValue && u.PlanoExpiraEm.Value < DateTime.UtcNow);
 
     /// GET /api/residencia
     [HttpGet]
@@ -450,8 +497,32 @@ public class SensoresController(AppDbContext db) : ControllerBase
             .AnyAsync(r => r.Id == req.IdResidencia && r.IdUsuario == UsuarioId);
         if (!temAcesso) return Forbid();
 
-        if (await db.Sensores.AnyAsync(s => s.IdIot == req.IdIot.ToUpper()))
-            return Conflict(new { sucesso = false, erro = "Código IoT já registrado." });
+        // Plano gratuito: limite de 1 sensor no total
+        var usuario = await db.Usuarios.FindAsync(UsuarioId);
+        if (usuario is not null && _PlanoGratuito(usuario))
+        {
+            var totalSensores = await db.Sensores
+                .CountAsync(s => db.Residencias
+                    .Where(r => r.IdUsuario == UsuarioId)
+                    .Select(r => r.Id)
+                    .Contains(s.IdResidencia));
+            if (totalSensores >= 1)
+                return StatusCode(403, new
+                {
+                    sucesso     = false,
+                    erro        = "Limite do plano gratuito atingido.",
+                    detalhe     = "Para adicionar mais de um Dispositivo Monitech, assine o plano mensal.",
+                    upgradePath = "/website/planos.html"
+                });
+        }
+
+        // Gera IdIot automaticamente se não fornecido
+        var idIot = string.IsNullOrWhiteSpace(req.IdIot)
+            ? "MON-" + Convert.ToHexString(RandomNumberGenerator.GetBytes(4)).ToUpper()
+            : req.IdIot.ToUpper().Trim();
+
+        if (await db.Sensores.AnyAsync(s => s.IdIot == idIot))
+            idIot = "MON-" + Convert.ToHexString(RandomNumberGenerator.GetBytes(4)).ToUpper();
 
         // Gera token secreto — o ESP32 vai usar isso para autenticar
         var tokenCru   = Convert.ToHexString(RandomNumberGenerator.GetBytes(32));
@@ -461,7 +532,7 @@ public class SensoresController(AppDbContext db) : ControllerBase
         {
             Id               = Guid.NewGuid().ToString(),
             IdResidencia     = req.IdResidencia,
-            IdIot            = req.IdIot.ToUpper().Trim(),
+            IdIot            = idIot,
             Apelido          = req.Apelido,
             Protocolo        = req.Protocolo,
             IntervaloPollingMs = req.IntervaloMs,
@@ -495,6 +566,22 @@ public class SensoresController(AppDbContext db) : ControllerBase
             .ToListAsync();
         return Ok(new { sucesso = true, sensores });
     }
+
+    /// DELETE /api/sensores/{id}
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Remover(string id)
+    {
+        var sensor = await db.Sensores
+            .Include(s => s.Residencia)
+            .FirstOrDefaultAsync(s => s.Id == id && s.Residencia!.IdUsuario == UsuarioId);
+        if (sensor is null) return NotFound(new { sucesso = false, erro = "Sensor não encontrado." });
+        db.Sensores.Remove(sensor);
+        await db.SaveChangesAsync();
+        return Ok(new { sucesso = true });
+    }
+
+    private static bool _PlanoGratuito(Monitech.API.Models.Usuario u) =>
+        u.Plano == "gratuito" || (u.PlanoExpiraEm.HasValue && u.PlanoExpiraEm.Value < DateTime.UtcNow);
 }
 
 // ════════════════════════════════════════════════════════════
@@ -580,6 +667,9 @@ internal sealed class _AlertaHelper(AppDbContext db, EmailService email)
             var prefs   = await db.NotificacoesUsuarios.FindAsync(residencia.IdUsuario);
             var usuario = await db.Usuarios.FindAsync(residencia.IdUsuario);
 
+            // Plano gratuito não recebe e-mails; zerar aqui bloqueia todos os sub-métodos sem alterar suas assinaturas
+            if (usuario is not null && _PlanoGratuito(usuario)) usuario = null;
+
             await DetectarEventoDispositivoAsync(sensor, leitura.Potencia);
             await ChecarDiscrepanciaAsync(sensor, leitura.Potencia, residencia, prefs, usuario);
             await ChecarTensaoAsync(sensor, leitura.Tensao, residencia, prefs, usuario);
@@ -588,6 +678,9 @@ internal sealed class _AlertaHelper(AppDbContext db, EmailService email)
         }
         catch { }
     }
+
+    private static bool _PlanoGratuito(Monitech.API.Models.Usuario u) =>
+        u.Plano == "gratuito" || (u.PlanoExpiraEm.HasValue && u.PlanoExpiraEm.Value < DateTime.UtcNow);
 
     private async Task DetectarEventoDispositivoAsync(Sensor sensor, decimal potenciaAtual)
     {
@@ -953,6 +1046,14 @@ public class DashboardController(AppDbContext db, TarifaService tarifas) : Contr
             _       => DateTime.UtcNow.AddHours(-24)
         };
 
+        // Plano gratuito: limitar histórico a 60 dias
+        var usuario = await db.Usuarios.FindAsync(UsuarioId);
+        if (usuario is not null && _PlanoGratuito(usuario))
+        {
+            var limite60 = DateTime.UtcNow.AddDays(-60);
+            if (desde < limite60) desde = limite60;
+        }
+
         var leituras = await db.Leituras
             .Where(l => l.IdResidencia == idResidencia && l.Timestamp >= desde)
             .OrderBy(l => l.Timestamp)
@@ -1091,6 +1192,9 @@ public class DashboardController(AppDbContext db, TarifaService tarifas) : Contr
             return StatusCode(500, new { sucesso = false, erro = "Erro ao salvar configurações." });
         }
     }
+
+    private static bool _PlanoGratuito(Monitech.API.Models.Usuario u) =>
+        u.Plano == "gratuito" || (u.PlanoExpiraEm.HasValue && u.PlanoExpiraEm.Value < DateTime.UtcNow);
 }
 
 // ════════════════════════════════════════════════════════════
@@ -1162,7 +1266,8 @@ public class UsuarioController(AppDbContext db, IWebHostEnvironment env) : Contr
                 FotoUrl:        usuario.FotoUrl,
                 DataCriacao:    usuario.DataCriacao,
                 Role:           usuario.Role,
-                TotpAtivo:      usuario.TotpAtivo
+                TotpAtivo:      usuario.TotpAtivo,
+                Tema:           usuario.Tema
             ));
         }
         catch (Exception ex)
@@ -1201,13 +1306,17 @@ public class UsuarioController(AppDbContext db, IWebHostEnvironment env) : Contr
             if (req.Genero is not null)
                 usuario.Genero = string.IsNullOrWhiteSpace(req.Genero) ? null : req.Genero;
 
+            // Tema: "dark" ou "light"
+            if (req.Tema is "dark" or "light")
+                usuario.Tema = req.Tema;
+
             usuario.DataAtualizacao = DateTime.UtcNow;
             await db.SaveChangesAsync();
 
             return Ok(new AtualizarPerfilResponse(
                 Sucesso:   true,
                 Mensagem:  "Perfil atualizado com sucesso.",
-                Usuario:   new UsuarioDto(usuario.Id, usuario.Nome, usuario.Email, usuario.FotoUrl, usuario.DataCriacao, usuario.Role)
+                Usuario:   new UsuarioDto(usuario.Id, usuario.Nome, usuario.Email, usuario.FotoUrl, usuario.DataCriacao, usuario.Role, usuario.Tema, usuario.Plano, usuario.PlanoExpiraEm)
             ));
         }
         catch (Exception ex)
@@ -1873,5 +1982,128 @@ public class AdminController(AppDbContext db) : ControllerBase
         usuario.DataAtualizacao = DateTime.UtcNow;
         await db.SaveChangesAsync();
         return Ok(new { sucesso = true });
+    }
+}
+
+// ════════════════════════════════════════════════════════════
+//  PAGAMENTO  /api/pagamento  — MercadoPago Checkout Pro
+// ════════════════════════════════════════════════════════════
+[ApiController, Route("api/pagamento")]
+[Authorize]
+public class PagamentoController(AppDbContext db, IHttpClientFactory http) : ControllerBase
+{
+    private string UsuarioId => User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
+    /// POST /api/pagamento/preferencia — cria preferência de checkout
+    [HttpPost("preferencia")]
+    public async Task<IActionResult> CriarPreferencia()
+    {
+        var usuario = await db.Usuarios.FindAsync(UsuarioId);
+        if (usuario is null) return Unauthorized(new { sucesso = false });
+
+        var baseUrl = $"{Request.Scheme}://{Request.Host}";
+
+        var preferencia = new
+        {
+            items = new[]
+            {
+                new {
+                    id          = "plano-mensal",
+                    title       = "MONITECH — Plano Mensal",
+                    quantity    = 1,
+                    unit_price  = 19.00,
+                    currency_id = "BRL"
+                }
+            },
+            payer              = new { name = usuario.Nome, email = usuario.Email },
+            back_urls          = new
+            {
+                success = $"{baseUrl}/website/pagamento.html?status=aprovado",
+                failure = $"{baseUrl}/website/pagamento.html?status=falhou",
+                pending = $"{baseUrl}/website/pagamento.html?status=pendente"
+            },
+            external_reference   = UsuarioId,
+            statement_descriptor = "MONITECH"
+        };
+
+        var client = http.CreateClient("mercadopago");
+        var resp   = await client.PostAsJsonAsync("checkout/preferences", preferencia);
+
+        if (!resp.IsSuccessStatusCode)
+        {
+            var err = await resp.Content.ReadAsStringAsync();
+            Console.WriteLine($"[MP] Erro ao criar preferência: {resp.StatusCode} — {err}");
+            return StatusCode(500, new { sucesso = false, erro = "Erro ao criar preferência de pagamento. Tente novamente." });
+        }
+
+        var json      = await resp.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
+        var prefId    = json.GetProperty("id").GetString();
+        // Para produção, trocar "sandbox_init_point" por "init_point"
+        var initPoint = json.GetProperty("init_point").GetString();
+
+        return Ok(new { sucesso = true,  preferenceId = prefId, initPoint });
+    }
+
+    /// POST /api/pagamento/verificar — confirma pagamento e ativa plano
+    [HttpPost("verificar")]
+    public async Task<IActionResult> Verificar([FromBody] VerificarPagamentoRequest req)
+    {
+        if (string.IsNullOrEmpty(req.PaymentId))
+            return BadRequest(new { sucesso = false, erro = "payment_id não informado." });
+
+        var client = http.CreateClient("mercadopago");
+        var resp   = await client.GetAsync($"v1/payments/{req.PaymentId}");
+
+        if (!resp.IsSuccessStatusCode)
+            return BadRequest(new { sucesso = false, erro = "Pagamento não encontrado." });
+
+        var json   = await resp.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
+        var status = json.GetProperty("status").GetString();
+        var extRef = json.GetProperty("external_reference").GetString();
+
+        if (status != "approved")
+            return BadRequest(new { sucesso = false, erro = "Pagamento não aprovado.", status });
+
+        if (extRef != UsuarioId)
+            return Forbid();
+
+        var usuario = await db.Usuarios.FindAsync(UsuarioId);
+        if (usuario is null) return Unauthorized(new { sucesso = false });
+
+        usuario.Plano           = "mensal";
+        usuario.PlanoExpiraEm   = DateTime.UtcNow.AddDays(30);
+        usuario.DataAtualizacao = DateTime.UtcNow;
+        await db.SaveChangesAsync();
+
+        return Ok(new { sucesso = true, plano = "mensal", expiraEm = usuario.PlanoExpiraEm });
+    }
+
+    /// POST /api/pagamento/webhook — MercadoPago notifica pagamentos (público)
+    [HttpPost("webhook"), AllowAnonymous]
+    public async Task<IActionResult> Webhook([FromQuery] string? type, [FromQuery] string? data_id)
+    {
+        if (type != "payment" || string.IsNullOrEmpty(data_id)) return Ok();
+
+        var client = http.CreateClient("mercadopago");
+        var resp   = await client.GetAsync($"v1/payments/{data_id}");
+        if (!resp.IsSuccessStatusCode) return Ok();
+
+        var json   = await resp.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
+        var status = json.GetProperty("status").GetString();
+        var extRef = json.GetProperty("external_reference").GetString();
+
+        if (status == "approved" && !string.IsNullOrEmpty(extRef))
+        {
+            var usuario = await db.Usuarios.FindAsync(extRef);
+            if (usuario is not null)
+            {
+                usuario.Plano           = "mensal";
+                usuario.PlanoExpiraEm   = DateTime.UtcNow.AddDays(30);
+                usuario.DataAtualizacao = DateTime.UtcNow;
+                await db.SaveChangesAsync();
+            }
+        }
+
+        return Ok();
     }
 }

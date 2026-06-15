@@ -7,6 +7,7 @@ let appState = {
   usuario:      null,
   role:         'user',  // 'admin' | 'user'
   residencia:   null,
+  residencias:  [],      // todas as residências do usuário
   sensor:       null,
   comodos:      [],
   dispositivos: [],
@@ -559,34 +560,38 @@ function gerarHistoricoSimulado(periodo = 'day') {
   return [];
 }
 
-/** Retorna mapa de ícones por tipo de cômodo */
+/** Retorna mapa de ícones SVG por tipo de cômodo */
 function obterIconesComodos() {
+  const s = (p) => `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
   return {
-    sala: '🛋️',
-    quarto: '🛏️',
-    cozinha: '🍳',
-    banheiro: '🚿',
-    garagem: '🚗',
-    escritorio: '💻',
-    lavanderia: '👕',
-    varanda: '🌿',
-    outro: '📦'
+    sala:       s('<path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"/><path d="M2 11v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v2H6v-2a2 2 0 0 0-4 0Z"/><path d="M4 18v2"/><path d="M20 18v2"/><path d="M12 4v9"/>'),
+    quarto:     s('<path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/>'),
+    cozinha:    s('<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3v7"/>'),
+    banheiro:   s('<path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-1-.5C4.683 3 4 3.683 4 4.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/><line x1="2" y1="12" x2="22" y2="12"/>'),
+    garagem:    s('<path d="M19 17H5"/><path d="M2 17 8.5 5h7L22 17"/><path d="M9 17V9"/><path d="M15 17V9"/>'),
+    escritorio: s('<rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/>'),
+    lavanderia: s('<rect x="2" y="2" width="20" height="20" rx="2"/><path d="M2 7h20"/><circle cx="12" cy="14" r="4"/>'),
+    varanda:    s('<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>'),
+    outro:      s('<path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>'),
   };
 }
 
-/** Retorna mapa de ícones por tipo de dispositivo */
+/** Retorna mapa de ícones SVG por tipo de dispositivo */
 function obterIconesDispositivos() {
+  const s = (p) => `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
   return {
-    ar: '❄️',
-    geladeira: '🧊',
-    tv: '📺',
-    maquina: '👕',
-    chuveiro: '🚿',
-    computador: '💻',
-    microondas: '📡',
-    iluminacao: '💡',
-    bomba: '💧',
-    outro: '🔌'
+    ar:          s('<path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/>'),
+    geladeira:   s('<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M4 10h16"/><path d="M9 7v6"/>'),
+    tv:          s('<rect width="20" height="15" x="2" y="7" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/>'),
+    maquina:     s('<rect x="2" y="2" width="20" height="20" rx="2"/><path d="M2 7h20"/><circle cx="12" cy="14" r="4"/>'),
+    chuveiro:    s('<path d="m4 4 2.5 2.5"/><path d="M13.5 6.5a4.95 4.95 0 0 0-7 7"/><path d="M15 5 5 15"/><path d="m14 10 6 6"/><path d="M10 16c.5 1.5 2 3 5 2.5"/>'),
+    computador:  s('<rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/>'),
+    microondas:  s('<rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="7" cy="12" r="1.5"/><path d="M11 9v6"/><path d="M15 9v6"/>'),
+    iluminacao:  s('<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>'),
+    bomba:       s('<path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/>'),
+    forno:       s('<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h12"/><path d="M6 16h12"/><path d="M9 8v8"/>'),
+    aquecedor:   s('<path d="M11 6c0 4-8 4.5-8 9a5 5 0 0 0 10 0c0-1.1-.35-2.12-.95-2.95"/><path d="M18 12c0 3.31-2.69 6-6 6"/><path d="M18 2c0 4-8 4.5-8 9"/>'),
+    outro:       s('<path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8H2"/><rect x="2" y="8" width="20" height="9" rx="1"/>'),
   };
 }
 
@@ -657,7 +662,7 @@ function exibirAba(nomeAba) {
   // Inicializa os componentes específicos de cada aba
   switch (nomeAba) {
     case 'dashboard':
-      inicializarGraficos();
+      _sincronizarDispositivos().then(() => inicializarGraficos());
       _carregarHistoricoGraficos();
       break;
     case 'planta':
@@ -747,7 +752,15 @@ async function _carregarHistoricoGraficos() {
 
 /** Carrega histórico real (ou simulado) para os gráficos de relatório */
 async function _carregarHistoricoRelatorio() {
-  const periodo = document.getElementById('report-period')?.value || 'week';
+  const selRep = document.getElementById('report-period');
+  const periodo = selRep?.value || 'week';
+
+  if (periodo === 'year' && _isPlanoGratuito()) {
+    if (selRep) selRep.value = 'month';
+    atualizarPlano();
+    return;
+  }
+
   const tarifa  = appState.residencia?.tarifaKwh || 0.74;
 
   let dados;
@@ -836,9 +849,10 @@ function _nilmRenderTabela(container, estimados, reais, horas, modo, resp) {
 
   // Aviso de estado
   const avisoMap = {
-    offline:  `<div class="nilm-aviso nilm-aviso--warn">Serviço de análise offline — exibindo somente estimativas cadastradas.</div>`,
-    semDados: `<div class="nilm-aviso nilm-aviso--info">Dados insuficientes no período — exibindo somente estimativas. Aumente o intervalo ou aguarde mais leituras.</div>`,
-    ok:       '',
+    offline:       `<div class="nilm-aviso nilm-aviso--warn">Serviço de análise offline — exibindo somente estimativas cadastradas.</div>`,
+    semDados:      `<div class="nilm-aviso nilm-aviso--info">Dados insuficientes no período — exibindo somente estimativas. Aumente o intervalo ou aguarde mais leituras.</div>`,
+    planoGratuito: `<div class="nilm-aviso nilm-aviso--info">🔒 A comparação com medição real (NILM avançado) está disponível no <strong>Plano Mensal</strong>. <a href="#" onclick="atualizarPlano();return false;" style="color:var(--blue-core)">Fazer upgrade →</a></div>`,
+    ok:            '',
   };
   const avisoHtml = avisoMap[modo] || '';
 
@@ -879,7 +893,7 @@ function _nilmRenderTabela(container, estimados, reais, horas, modo, resp) {
 
   // Dispositivos detectados pelo sensor mas não cadastrados
   const extras = reais.filter(r => !estimados.some(e => e.nome?.toLowerCase() === r.nome?.toLowerCase()));
-  const extrasHtml = extras.map((r, i) => `
+  const extrasHtml = extras.map((r) => `
     <div class="nc-row nc-row--novo">
       <span class="nc-nome">
         <span class="nc-dot" style="background:#facc15;"></span>
@@ -985,6 +999,11 @@ async function fazerLogin() {
     appState.usuario = resposta.usuario;
     // Salva também no localStorage para persistência
     localStorage.setItem('monitech_usuario_system', JSON.stringify(resposta.usuario));
+
+    // Cookie do usuário tem prioridade; fallback para o valor do servidor
+    const _temaLogin = window._getTemaUsuario?.(resposta.usuario.id) || resposta.usuario.tema || 'dark';
+    window._salvarTemaUsuario?.(resposta.usuario.id, _temaLogin);
+    aplicarTema(_temaLogin, true, true);
     console.log('[Login] Usuário logado:', appState.usuario);
     console.log('[Login] Nome recebido:', resposta.usuario?.nome);
     console.log('[Login] Email recebido:', resposta.usuario?.email);
@@ -1000,7 +1019,8 @@ async function fazerLogin() {
     if (temResidencias) {
       // Se tem residências, carrega a primeira e entra no app
       console.log('[Login] Carregando primeira residência...');
-      appState.residencia = respResidencias.residencias[0];
+      appState.residencias = respResidencias.residencias;
+      appState.residencia  = respResidencias.residencias[0];
 
       // Atualiza tarifaKwh com valor vivo da ANEEL (se distribuidora cadastrada)
       if (appState.residencia.distribuidora) {
@@ -1011,14 +1031,10 @@ async function fazerLogin() {
         } catch (_) { /* mantém tarifaKwh do banco */ }
       }
 
-      const [respComodos, respDispositivos] = await Promise.all([
-        API.obterComodos(appState.residencia.id),
-        API.obterDispositivos(appState.residencia.id)
-      ]);
+      const respComodos = await API.obterComodos(appState.residencia.id);
+      if (respComodos.sucesso) appState.comodos = respComodos.comodos || [];
+      await _sincronizarDispositivos();
 
-      if (respComodos.sucesso)     appState.comodos      = respComodos.comodos      || [];
-      if (respDispositivos.sucesso) appState.dispositivos = respDispositivos.dispositivos || [];
-      
       console.log('[Login] Entrando no app...');
       entrarNoApp();
     } else {
@@ -1057,10 +1073,14 @@ async function verificar2FaLogin() {
   if (resposta.sucesso) {
     appState.usuario = resposta.usuario;
     localStorage.setItem('monitech_usuario_system', JSON.stringify(resposta.usuario));
+    const _tema2fa = window._getTemaUsuario?.(resposta.usuario.id) || resposta.usuario?.tema || 'dark';
+    window._salvarTemaUsuario?.(resposta.usuario.id, _tema2fa);
+    aplicarTema(_tema2fa, true, true);
     cancelar2FaLogin();
     const respResidencias = await API.listarResidencias();
     if (respResidencias?.residencias?.length > 0) {
-      appState.residencia = respResidencias.residencias[0];
+      appState.residencias = respResidencias.residencias;
+      appState.residencia  = respResidencias.residencias[0];
       entrarNoApp();
     } else {
       mostrarPagina('page-onboard');
@@ -1177,19 +1197,20 @@ async function _handleGoogleSystemCredential(response) {
       localStorage.setItem('monitech_expira_system',  data.expiraEm);
 
       appState.usuario = data.usuario;
+      const _temaGgl = window._getTemaUsuario?.(data.usuario?.id) || data.usuario?.tema || 'dark';
+      window._salvarTemaUsuario?.(data.usuario?.id, _temaGgl);
+      aplicarTema(_temaGgl, true, true);
       atualizarIndicadorUsuarioDOM(); // exibe foto do Google imediatamente, sem esperar sync da API
 
       const respResidencias = await API.listarResidencias();
       const temResidencias  = respResidencias?.sucesso && respResidencias?.residencias?.length > 0;
 
       if (temResidencias) {
-        appState.residencia = respResidencias.residencias[0];
-        const [respComodos, respDispositivos] = await Promise.all([
-          API.obterComodos(appState.residencia.id),
-          API.obterDispositivos(appState.residencia.id)
-        ]);
-        if (respComodos.sucesso)      appState.comodos      = respComodos.comodos      || [];
-        if (respDispositivos.sucesso) appState.dispositivos = respDispositivos.dispositivos || [];
+        appState.residencias = respResidencias.residencias;
+        appState.residencia  = respResidencias.residencias[0];
+        const respComodos2 = await API.obterComodos(appState.residencia.id);
+        if (respComodos2.sucesso) appState.comodos = respComodos2.comodos || [];
+        await _sincronizarDispositivos();
         entrarNoApp();
       } else {
         mostrarPagina('page-onboard');
@@ -1241,8 +1262,6 @@ function ajustarPosicaoDropdown() {
   
   if (!menu || !userBtn) return;
   
-  const btnRect = userBtn.getBoundingClientRect();
-  const menuWidth = menu.offsetWidth;
   const viewportWidth = window.innerWidth;
   
   // Se a tela é muito estreita, ajustar para modal
@@ -1495,25 +1514,95 @@ async function salvarNotificacoesConta() {
 function ativar2FA() { habilitarAutenticacao2FA(); }
 
 /** Exporta os dados da conta do usuário */
-function exportarMeusDados() {
-  const dados = {
-    usuario:        appState.usuario,
-    residencia:     appState.residencia,
-    comodos:        appState.comodos,
-    dispositivos:   appState.dispositivos,
-    dataExportacao: new Date().toISOString()
-  };
+async function exportarMeusDados() {
+  if (_isPlanoGratuito()) { atualizarPlano(); return; }
+  const btn = document.getElementById('btn-export-json');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Exportando...'; lucide.createIcons(); }
 
-  const json = JSON.stringify(dados, null, 2);
-  const blob = new Blob([json], { type: 'application/json' });
+  try {
+    const [respHistorico, respAlertas] = await Promise.all([
+      API.obterHistorico('month'),
+      API.obterAlertas(false),
+    ]);
+
+    const dados = {
+      exportadoEm:  new Date().toISOString(),
+      versao:       '2.0',
+      usuario:      appState.usuario,
+      residencia:   appState.residencia,
+      comodos:      appState.comodos,
+      dispositivos: appState.dispositivos,
+      alertas:      respAlertas?.alertas  ?? [],
+      historico:    respHistorico?.dados   ?? [],
+    };
+
+    _dispararDownload(
+      JSON.stringify(dados, null, 2),
+      'application/json',
+      `monitech-backup-${new Date().toISOString().slice(0, 10)}.json`
+    );
+
+    alertaSucesso('Backup exportado', 'JSON com perfil, dispositivos, alertas e histórico do mês.');
+  } catch {
+    mostrarToast('Erro ao exportar. Tente novamente.', 'erro');
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = '<i data-lucide="file-json"></i> JSON'; lucide.createIcons(); }
+  }
+}
+
+async function exportarHistoricoCSV() {
+  if (_isPlanoGratuito()) { atualizarPlano(); return; }
+  const btn = document.getElementById('btn-export-csv');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Exportando...'; lucide.createIcons(); }
+
+  try {
+    const resp = await API.obterHistorico('month');
+    const leituras = resp?.dados ?? [];
+
+    if (leituras.length === 0) {
+      mostrarToast('Nenhuma leitura encontrada para o período.', 'aviso');
+      return;
+    }
+
+    const cabecalho = ['Data', 'Hora', 'kWh', 'Watts', 'Tensão (V)', 'Corrente (A)', 'Fator de Potência'];
+    const linhas = leituras.map(l => {
+      const dt = new Date(l.timestamp ?? l.data ?? l.label);
+      const data = isNaN(dt) ? (l.label ?? '') : dt.toLocaleDateString('pt-BR');
+      const hora = isNaN(dt) ? '' : dt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      return [
+        data,
+        hora,
+        (l.kwh   ?? l.kWh   ?? '').toString().replace('.', ','),
+        (l.watts  ?? l.w     ?? '').toString().replace('.', ','),
+        (l.tensao ?? l.v     ?? '').toString().replace('.', ','),
+        (l.amps   ?? l.a     ?? '').toString().replace('.', ','),
+        (l.fp     ?? l.fatorPotencia ?? '').toString().replace('.', ','),
+      ].join(';');
+    });
+
+    const csv = [cabecalho.join(';'), ...linhas].join('\n');
+    _dispararDownload(
+      '﻿' + csv, // BOM para Excel reconhecer UTF-8
+      'text/csv;charset=utf-8',
+      `monitech-historico-${new Date().toISOString().slice(0, 10)}.csv`
+    );
+
+    alertaSucesso('Histórico exportado', `${leituras.length} leituras salvas em CSV.`);
+  } catch {
+    mostrarToast('Erro ao exportar CSV. Tente novamente.', 'erro');
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = '<i data-lucide="table-2"></i> CSV'; lucide.createIcons(); }
+  }
+}
+
+function _dispararDownload(conteudo, tipo, nomeArquivo) {
+  const blob = new Blob([conteudo], { type: tipo });
   const url  = URL.createObjectURL(blob);
   const link = document.createElement('a');
-  link.href     = url;
-  link.download = `monitech-dados-${new Date().toISOString().slice(0,10)}.json`;
+  link.href = url;
+  link.download = nomeArquivo;
   link.click();
   URL.revokeObjectURL(url);
-
-  alertaSucesso('Dados exportados', 'O arquivo JSON foi salvo na sua pasta de downloads.');
 }
 
 /** Abre o modal estilizado de exclusão de conta */
@@ -1682,8 +1771,12 @@ async function sincronizarUsuarioDoLocalStorage() {
           fotoUrl:        data.fotoUrl,
           dataCriacao:    data.dataCriacao,
           role:           data.role || 'user',
-          totpAtivo:      data.totpAtivo ?? false
+          totpAtivo:      data.totpAtivo ?? false,
+          tema:           data.tema || 'dark'
         };
+
+        // Tema gerenciado por cookie (mt_t_{uid}) — não sobrescreve com valor do DB
+        // O valor do DB só é usado como fallback durante o login (fazerLogin/Google/2FA)
 
         console.log('[SYNC] ✓ Dados obtidos da API:', usuarioAPI.nome);
 
@@ -1875,9 +1968,6 @@ function sair() {
   localStorage.removeItem('monitech_usuario_system');
   localStorage.removeItem('monitech_expira_system');
   localStorage.removeItem('monitech_last_tab');
-
-  // Limpa dados do painel que são específicos do system
-  localStorage.removeItem('tema-site');
   
   // Para todos os intervalos de polling
   clearInterval(intervaloAoVivo);
@@ -1894,6 +1984,10 @@ function sair() {
     alertas:      [],
     dadosAoVivo:  { volts: 0, amps: 0, watts: 0, pf: 0, freq: 0, kwh: 0 }
   };
+
+  // Reseta só o tema anônimo — o cookie por usuário (mt_t_{id}) é preservado para o próximo login
+  window._resetarTemaAnonimo?.();
+  aplicarTema('dark', true, true);
 
   // Fecha seções admin que possam ter ficado abertas
   const otaPanel = document.getElementById('ota-avancado');
@@ -1941,19 +2035,33 @@ function atualizarControlesTema(tema) {
   if (indicadorTema) indicadorTema.textContent = tema === 'light' ? 'Claro' : 'Escuro';
 }
 
-/** Aplica o tema escolhido em toda a interface */
-function aplicarTema(tema, persistir = true) {
+/**
+ * Aplica o tema na interface e persiste em cookie + localStorage.
+ * @param {string}  tema          'light' | 'dark'
+ * @param {boolean} persistir     salva em cookie/localStorage (padrão: true)
+ * @param {boolean} skipSalvar    só aplica visualmente, não persiste (use em init/login)
+ */
+function aplicarTema(tema, persistir = true, skipSalvar = false) {
   const temaNormalizado = tema === 'light' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', temaNormalizado);
+  document.documentElement.setAttribute('data-theme-mode', temaNormalizado);
+  document.body?.setAttribute('data-theme', temaNormalizado);
+  document.body?.classList.toggle('dark-theme', temaNormalizado === 'dark');
 
   if (persistir) {
     localStorage.setItem(CHAVE_TEMA_SITE, temaNormalizado);
+    if (!skipSalvar) {
+      // Persiste em cookie por usuário (se logado) e cookie global
+      const userId = appState?.usuario?.id
+        ?? JSON.parse(localStorage.getItem('monitech_usuario_system') || 'null')?.id;
+      window._salvarTemaUsuario?.(userId, temaNormalizado);
+    }
   }
 
   atualizarControlesTema(temaNormalizado);
 }
 
-/** Salva a personalização do tema */
+/** Salva a personalização do tema — o próprio aplicarTema já persiste no servidor */
 function salvarPersonalizacao() {
   const temaSelecionado = document.querySelector('input[name="theme-preference"]:checked')?.value || 'dark';
   aplicarTema(temaSelecionado, true);
@@ -2111,6 +2219,9 @@ async function salvarNotificacoes() {
     frequencia:      get('not-frequency')?.value ?? '15'
   };
   localStorage.setItem('monitech_notif_browser', JSON.stringify(browserCfg));
+
+  // Solicita permissão do browser se toggle ativado
+  if (browserCfg.browser_alertas) await _solicitarPermissaoNotificacao();
 
   try {
     const resp = await apiFetch('/api/usuario/notificacoes', { method: 'PUT', headers: headersAuth(), body: JSON.stringify(payload) });
@@ -2372,9 +2483,107 @@ async function visualizarAvatar() {
   }
 }
 
-/** Exibe mensagem de upgrade de plano */
-function atualizarPlano() {
-  mostrarToast('Nenhum plano premium disponível no momento. Obrigado pelo seu interesse — fique de olho nas novidades!', 'info');
+/** Exibe modal de upgrade de plano */
+function atualizarPlano(mensagem = null) {
+  const msg = mensagem || 'Desbloqueie recursos avançados do MONITECH.';
+
+  const _logo = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 230" width="36" height="36" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M100,18 C72,18 50,40 50,66 C50,86 60,100 74,110 C80,114 82,120 82,126 L118,126 C118,120 120,114 126,110 C140,100 150,86 150,66 C150,40 128,18 100,18Z" stroke-width="4"/>
+    <path d="M83,130 C91,127 109,127 117,130" stroke-width="3.5"/>
+    <path d="M84,138 C92,134 108,134 116,138" stroke-width="3.2"/>
+    <path d="M86,146 C93,142 107,142 114,146" stroke-width="3"/>
+    <path d="M90,162 C94,158 106,158 110,162" stroke-width="2.5"/>
+    <path d="M78,116 C76,100 80,82 86,72 C90,64 96,66 98,76 C100,84 99,98 99,110" stroke-width="3.5"/>
+    <path d="M99,110 C99,96 100,82 103,72 C106,62 114,64 116,74 C118,84 116,104 113,118" stroke-width="3.5"/>
+  </svg>`;
+
+  const _check = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+
+  const beneficios = [
+    'Residências ilimitadas',
+    'Dispositivos Monitech ilimitados',
+    'Histórico completo (365 dias vs 60 dias)',
+    'Relatórios em PDF e CSV',
+    'Relatórios em PDF',
+    'Alertas por e-mail',
+  ];
+
+  const overlay = document.createElement('div');
+  overlay.id = 'plano-upgrade-overlay';
+  overlay.style.cssText = `
+    position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;
+    display:flex;align-items:center;justify-content:center;padding:16px;
+    animation:fadeIn .2s ease;
+  `;
+
+  overlay.innerHTML = `
+    <div style="
+      background:var(--bg-card);border:1px solid var(--border-bright);
+      border-radius:16px;padding:36px 32px;max-width:460px;width:100%;
+      box-shadow:0 24px 60px rgba(0,0,0,.5);text-align:center;
+    ">
+      <div style="display:flex;justify-content:center;margin-bottom:14px;color:var(--cyan)">
+        ${_logo}
+      </div>
+      <h2 style="font-family:var(--display);font-size:20px;color:var(--ink);margin-bottom:8px">
+        Limite do Plano Gratuito
+      </h2>
+      <p style="color:var(--ink-3);font-size:14px;line-height:1.7;margin-bottom:24px">${msg}</p>
+
+      <div style="
+        background:var(--bg-deep);border:1px solid var(--border);
+        border-radius:10px;padding:20px;margin-bottom:24px;text-align:left;
+      ">
+        <div style="font-size:11px;letter-spacing:2px;color:var(--cyan);font-family:var(--mono);margin-bottom:12px">
+          PLANO MENSAL — O QUE VOCÊ GANHA
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:13.5px;color:var(--ink-3)">
+          ${beneficios.map(b => `
+            <span style="display:flex;align-items:center;gap:8px">
+              <span style="color:var(--success);flex-shrink:0">${_check}</span>
+              ${b}
+            </span>
+          `).join('')}
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px">
+        <button onclick="document.getElementById('plano-upgrade-overlay').remove()"
+          style="
+            flex:1;padding:12px;border-radius:8px;
+            border:1px solid var(--border-bright);
+            background:transparent;color:var(--text-secondary);
+            font-size:14px;cursor:pointer;font-family:inherit;
+            transition:background .2s;
+          "
+          onmouseover="this.style.background='var(--topbar-hover)'"
+          onmouseout="this.style.background='transparent'">
+          Agora não
+        </button>
+        <a href="/website/pagamento.html"
+          style="
+            flex:2;padding:12px;border-radius:8px;border:none;
+            background:linear-gradient(135deg,var(--blue-core),var(--blue-bright));
+            color:#fff;font-size:14px;font-weight:700;cursor:pointer;
+            display:flex;align-items:center;justify-content:center;
+            text-decoration:none;letter-spacing:.5px;
+            box-shadow:0 4px 16px var(--glow-blue);
+            transition:opacity .2s,transform .15s;
+          "
+          onmouseover="this.style.opacity='.9';this.style.transform='translateY(-1px)'"
+          onmouseout="this.style.opacity='1';this.style.transform=''">
+          Ver Planos →
+        </a>
+      </div>
+    </div>
+  `;
+
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) overlay.remove();
+  });
+
+  document.body.appendChild(overlay);
 }
 
 /** Verifica se há atualizações disponíveis para o sistema */
@@ -2717,7 +2926,7 @@ function voltarOnboarding(etapaAtual) {
 function adicionarComodoConfiguracao() {
   const tipo = document.getElementById('new-room-type').value;
   const nome = document.getElementById('new-room-name').value.trim()
-    || (obterIconesComodos()[tipo] + ' ' + tipo.charAt(0).toUpperCase() + tipo.slice(1));
+    || tipo.charAt(0).toUpperCase() + tipo.slice(1);
 
   const novoComodo = {
     id: 'c' + Date.now(),
@@ -2737,7 +2946,7 @@ function renderizarComodosConfiguracao() {
 
   container.innerHTML = comodosConfigurados.map((comodo, indice) => `
     <div style="display:flex; align-items:center; gap:12px; background:var(--bg-card2); border:1px solid var(--border); border-radius:8px; padding:10px 14px;">
-      <span>${obterIconesComodos()[comodo.tipo] || '📦'}</span>
+      <span>${obterIconesComodos()[comodo.tipo] || obterIconesComodos()['outro']}</span>
       <span style="flex:1; font-weight:600;">${comodo.nome}</span>
       <span class="tag tag-cyan">${comodo.tipo}</span>
       <button onclick="removerComodoConfiguracao(${indice})" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:18px;">×</button>
@@ -2760,7 +2969,7 @@ function removerComodoConfiguracao(indice) {
 function adicionarDispositivoConfiguracao() {
   const tipo = document.getElementById('dev-type').value;
   const nome = document.getElementById('dev-name').value.trim()
-    || (obterIconesDispositivos()[tipo] + ' ' + tipo);
+    || tipo.charAt(0).toUpperCase() + tipo.slice(1);
   const idComodo = document.getElementById('dev-room').value;
   const nomeComodo = document.getElementById('dev-room').selectedOptions[0]?.text || '—';
   const potencia = parseInt(document.getElementById('dev-watts').value) || 300;
@@ -2786,7 +2995,7 @@ function renderizarDispositivosConfiguracao() {
 
   container.innerHTML = dispositivosConfigurados.map((disp, indice) => `
     <div style="display:flex; align-items:center; gap:12px; background:var(--bg-card2); border:1px solid var(--border); border-radius:8px; padding:10px 14px;">
-      <span>${obterIconesDispositivos()[disp.tipo] || '🔌'}</span>
+      <span>${obterIconesDispositivos()[disp.categoria || disp.tipo] || obterIconesDispositivos()['outro']}</span>
       <span style="flex:1; font-weight:600;">${disp.nome}</span>
       <span class="tag tag-blue">${disp.nomeComodo}</span>
       <span style="font-family:'Orbitron',monospace; font-size:12px; color:var(--cyan);">${disp.watts}W</span>
@@ -2942,7 +3151,13 @@ async function finalizarOnboarding() {
       };
       if (!dadosResidencia.nome) throw new Error('Informe o nome da residência (passo 1).');
       const respResidencia = await API.salvarResidencia(dadosResidencia);
-      if (!respResidencia.sucesso) throw new Error(respResidencia.erro || 'Erro ao salvar residência.');
+      if (!respResidencia.sucesso) {
+        if (respResidencia.upgradePath) {
+          atualizarPlano(respResidencia.detalhe);
+          return;
+        }
+        throw new Error(respResidencia.erro || 'Erro ao salvar residência.');
+      }
       appState.residencia = respResidencia.residencia;
     }
 
@@ -3014,6 +3229,9 @@ function entrarNoApp() {
     document.getElementById('house-label').textContent = appState.residencia.nome || 'Minha Casa';
   }
 
+  // Renderiza o seletor de residência na topbar
+  renderizarResidenciaSelector();
+
   // Restaura a última aba visitada; padrão = dashboard
   const ultimaAba = localStorage.getItem('monitech_last_tab') || 'dashboard';
   exibirAba(ultimaAba);
@@ -3022,15 +3240,22 @@ function entrarNoApp() {
   iniciarSimulacaoAoVivo();
   iniciarGraficoAoVivo();
 
-  // Fecha o dropdown do usuário ao clicar fora dele
+  // Fecha dropdowns ao clicar fora
   document.addEventListener('click', function fecharDropdown(evento) {
     const menu = document.getElementById('user-dropdown');
     const botao = document.querySelector('.user-menu-btn');
-
     if (menu && botao && !menu.contains(evento.target) && !botao.contains(evento.target)) {
       fecharMenuUsuario();
     }
+
+    const resSelector = document.getElementById('residencia-selector');
+    const resDropdown = document.getElementById('residencia-dropdown');
+    if (resSelector && resDropdown && !resSelector.contains(evento.target)) {
+      resDropdown.classList.remove('open');
+    }
   });
+
+  _aplicarBloqueioHistorico();
 }
 
 /** Limpa dados de demo - usada só como fallback quando não há residência cadastrada */
@@ -3041,11 +3266,127 @@ function carregarDadosDemo() {
   comodosConfigurados  = [];
 }
 
+// ===================================================
+// SELETOR DE RESIDÊNCIA
+// ===================================================
+
+/** Atualiza o selector da topbar com a lista de residências */
+function renderizarResidenciaSelector() {
+  const nomeEl = document.getElementById('residencia-nome-topbar');
+  const lista  = document.getElementById('residencia-lista');
+  if (!nomeEl || !lista) return;
+
+  const nome = appState.residencia?.nome || 'Minha Casa';
+  nomeEl.textContent = nome;
+
+  const todas = appState.residencias || [];
+  lista.innerHTML = todas.map(r => {
+    const ativo = r.id === appState.residencia?.id;
+    return `
+      <button class="res-drop-item${ativo ? ' res-drop-item--ativo' : ''}"
+              onclick="trocarResidencia('${r.id}')">
+        <span class="res-drop-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </span>
+        <span class="res-drop-nome">${r.nome}</span>
+        ${ativo ? '<span class="res-drop-check">✓</span>' : ''}
+      </button>`;
+  }).join('');
+}
+
+/** Abre/fecha o dropdown do seletor */
+function toggleResidenciaDropdown(e) {
+  e?.stopPropagation();
+  document.getElementById('residencia-dropdown')?.classList.toggle('open');
+}
+
+/** Troca a residência ativa e recarrega todos os dados */
+async function trocarResidencia(id) {
+  if (id === appState.residencia?.id) {
+    document.getElementById('residencia-dropdown')?.classList.remove('open');
+    return;
+  }
+  const res = appState.residencias.find(r => r.id === id);
+  if (!res) return;
+
+  appState.residencia = res;
+  document.getElementById('residencia-dropdown')?.classList.remove('open');
+  renderizarResidenciaSelector();
+
+  if (res.nome) document.getElementById('house-label').textContent = res.nome;
+
+  const [respComodos] = await Promise.all([
+    API.obterComodos(id),
+    _sincronizarDispositivos()
+  ]);
+  if (respComodos.sucesso) appState.comodos = respComodos.comodos || [];
+
+  exibirAba(localStorage.getItem('monitech_last_tab') || 'dashboard');
+  mostrarToast(`Residência "${res.nome}" carregada.`, 'sucesso');
+}
+
+/** Abre o modal de nova residência */
+function abrirModalNovaResidencia() {
+  document.getElementById('residencia-dropdown')?.classList.remove('open');
+  const form = document.getElementById('form-nova-residencia');
+  if (form) form.reset();
+  const err = document.getElementById('nova-res-erro');
+  if (err) err.style.display = 'none';
+  abrirModal('modal-nova-residencia');
+}
+
+/** Salva nova residência via API */
+async function salvarNovaResidencia() {
+  const nome = document.getElementById('nova-res-nome')?.value.trim();
+  const tipo = document.getElementById('nova-res-tipo')?.value || 'house';
+  const cep  = document.getElementById('nova-res-cep')?.value.trim();
+  const err  = document.getElementById('nova-res-erro');
+
+  if (!nome) {
+    if (err) { err.textContent = 'Nome da residência é obrigatório.'; err.style.display = 'block'; }
+    return;
+  }
+
+  const btnSalvar = document.getElementById('btn-salvar-nova-res');
+  if (btnSalvar) { btnSalvar.textContent = 'Salvando...'; btnSalvar.disabled = true; }
+
+  const resp = await API.salvarResidencia({ nome, tipo, cep: cep || null });
+
+  if (btnSalvar) { btnSalvar.textContent = '+ ADICIONAR'; btnSalvar.disabled = false; }
+
+  if (resp?.sucesso) {
+    fecharModal('modal-nova-residencia');
+    const nova = resp.residencia;
+    appState.residencias.push(nova);
+    appState.residencia = nova;
+    appState.comodos    = [];
+    appState.dispositivos = [];
+    renderizarResidenciaSelector();
+    if (nova.nome) document.getElementById('house-label').textContent = nova.nome;
+    mostrarToast(`Residência "${nova.nome}" criada com sucesso!`, 'sucesso');
+  } else if (resp?.upgradePath || resp?.detalhe?.includes('plano')) {
+    fecharModal('modal-nova-residencia');
+    atualizarPlano(resp.detalhe || 'Para ter mais de uma residência, assine o plano mensal.');
+  } else {
+    if (err) {
+      err.textContent = resp?.erro || resp?.detalhe || 'Erro ao salvar. Tente novamente.';
+      err.style.display = 'block';
+    }
+  }
+}
+
 /** Carrega alertas reais do servidor */
 async function adicionarAlertasAmostra() {
   if (!appState.residencia?.id) { appState.alertas = []; return; }
   const resp = await API.obterAlertas(false);
-  if (resp?.sucesso) appState.alertas = resp.alertas || [];
+  if (resp?.sucesso) {
+    appState.alertas = resp.alertas || [];
+    _verificarNotificacoesBrowser(appState.alertas);
+  }
 }
 
 
@@ -3238,15 +3579,13 @@ function iniciarSimulacaoAoVivo() {
 
     const resp = await API.obterLeituraAoVivo(sensor.id);
 
-    // Atualiza badge de conexão do topbar
-    const liveBadge = document.getElementById('topbar-live-badge');
-    if (liveBadge) {
-      if (resp?.sucesso) {
-        liveBadge.classList.remove('live-badge--disconnected');
-      } else {
-        liveBadge.classList.add('live-badge--disconnected');
-      }
-    }
+    // Atualiza badges de conexão (topbar + planta interativa)
+    const online = resp?.sucesso === true;
+    ['topbar-live-badge', 'floor-live-badge'].forEach(id => {
+      const badge = document.getElementById(id);
+      if (!badge) return;
+      badge.classList.toggle('live-badge--disconnected', !online);
+    });
 
     // Sincroniza o card de status do dispositivo com o mesmo resultado
     _atualizarStatusCardComResposta(resp);
@@ -3255,12 +3594,14 @@ function iniciarSimulacaoAoVivo() {
 
     // Atualiza o estado com dados reais
     appState.dadosAoVivo = {
-      volts: Number(resp.tensao       || 0),
-      amps:  Number(resp.corrente     || 0),
-      watts: Number(resp.potencia     || 0),
-      pf:    Number(resp.fatorPotencia || 0),
-      freq:  Number(resp.frequenciaHz  || 0),
-      kwh:   Number(resp.kwh          || 0)
+      volts:    Number(resp.tensao            || 0),
+      amps:     Number(resp.corrente          || 0),
+      watts:    Number(resp.potencia          || 0),
+      aparente: Number(resp.potenciaAparente  || 0),
+      reativa:  Number(resp.potenciaReativa   || 0),
+      pf:       Number(resp.fatorPotencia     || 0),
+      freq:     Number(resp.frequenciaHz      || 0),
+      kwh:      Number(resp.kwh               || 0)
     };
 
     const dados = appState.dadosAoVivo;
@@ -3337,16 +3678,24 @@ async function _atualizarResumoCards() {
  * @param {Object} dados - Objeto com os valores de volts, amps, watts, pf, freq e kwh
  */
 function atualizarMarcadores(dados) {
-  definirMarcador('g-volts', 'gv-volts', dados.volts, 250, dados.volts.toFixed(0));
-  definirMarcador('g-amps', 'gv-amps', dados.amps, 30, dados.amps.toFixed(1));
-  definirMarcador('g-watts', 'gv-watts', dados.watts, 6000, dados.watts.toFixed(0));
-  definirMarcador('g-pf', 'gv-pf', dados.pf, 1, dados.pf.toFixed(2));
-  const freqPct = dados.freq > 0 ? Math.max(0, (dados.freq - 58) / 4) : 0;
+  definirMarcador('g-volts',    'gv-volts',    dados.volts,    250,  dados.volts.toFixed(0));
+  definirMarcador('g-amps',     'gv-amps',     dados.amps,     30,   dados.amps.toFixed(1));
+  definirMarcador('g-watts',    'gv-watts',    dados.watts,    6000, dados.watts.toFixed(0));
+  definirMarcador('g-pf',       'gv-pf',       dados.pf,       1,    dados.pf.toFixed(2));
+
+  const freqPct   = dados.freq > 0 ? Math.max(0, (dados.freq - 58) / 4) : 0;
   const freqLabel = dados.freq > 0 ? dados.freq.toFixed(1) : '---';
   definirMarcador('g-freq', 'gv-freq', freqPct, 1, freqLabel);
-  const maxWatts = Math.max(_somaWattsCadastrados(), 3000);
-  const cargaPct = Math.min(1, dados.watts / maxWatts);
+
+  const maxWatts  = Math.max(_somaWattsCadastrados(), 3000);
+  const cargaPct  = Math.min(1, dados.watts / maxWatts);
   definirMarcador('g-kwh', 'gv-kwh', cargaPct, 1, Math.round(cargaPct * 100) + '%');
+
+  // Potência Aparente (VA) e Reativa (VAr) — só mostra se disponível
+  if (dados.aparente > 0)
+    definirMarcador('g-aparente', 'gv-aparente', dados.aparente, 6000, dados.aparente.toFixed(0));
+  if (dados.reativa > 0)
+    definirMarcador('g-reativa',  'gv-reativa',  dados.reativa,  3000, dados.reativa.toFixed(0));
 }
 
 /**
@@ -3736,12 +4085,12 @@ function selecionarComodoPlanta(idComodo) {
   document.getElementById('detail-devices-list').innerHTML = dispositivos.length
     ? dispositivos.map(d => `
         <div style="display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border);">
-          <span>${obterIconesDispositivos()[d.tipo] || '🔌'}</span>
+          <span>${obterIconesDispositivos()[d.categoria || d.tipo] || obterIconesDispositivos()['outro']}</span>
           <span style="flex:1; font-size:13px;">${d.nome}</span>
           <span class="device-status ${d.status}">
             <span class="device-status-dot"></span>${d.status === 'on' ? 'Ligado' : 'Desligado'}
           </span>
-          <span style="font-family:'Orbitron',monospace; font-size:12px; color:var(--cyan);">${d.watts}W</span>
+          <span style="font-family:'Orbitron',monospace; font-size:12px; color:var(--cyan);">${d.potenciaNominal ?? d.watts ?? 0}W</span>
         </div>
       `).join('')
     : '<div style="color:var(--text-dim); font-size:13px;">Nenhum dispositivo cadastrado neste cômodo</div>';
@@ -3790,7 +4139,7 @@ function renderizarDispositivos() {
     const kwh       = Number(disp.kwh ?? 0);
     const kwhMes    = (watts * 8 / 1000 * 30).toFixed(1);
     const nomeComodo = disp.comodo?.nome ?? disp.nomeComodo ?? '—';
-    const icone     = icones[disp.tipo ?? disp.categoria] || '🔌';
+    const icone     = icones[disp.tipo ?? disp.categoria] || icones['outro'];
     return `
     <tr class="${ativo ? '' : 'device-row--inativo'}">
       <td><span style="margin-right:8px;">${icone}</span>${disp.nome || 'Sem nome'}</td>
@@ -3876,7 +4225,7 @@ async function adicionarComodoDoModal() {
 
   const tipo = document.getElementById('modal-room-type').value;
   const nome = document.getElementById('modal-room-name').value.trim()
-    || (obterIconesComodos()[tipo] + ' ' + tipo);
+    || tipo.charAt(0).toUpperCase() + tipo.slice(1);
 
   const btn = document.querySelector('#modal-room .btn-primary');
   if (btn) { btn.textContent = 'Salvando...'; btn.disabled = true; }
@@ -3908,7 +4257,7 @@ async function adicionarDispositivoDoModal() {
 
   const tipo    = document.getElementById('modal-dev-type').value;
   const nome    = document.getElementById('modal-dev-name').value.trim()
-    || (obterIconesDispositivos()[tipo] + ' ' + tipo);
+    || tipo.charAt(0).toUpperCase() + tipo.slice(1);
   const seletor = document.getElementById('modal-dev-room');
   const idComodo  = seletor.value;
   const nomeComodo = seletor.selectedOptions[0]?.text || '—';
@@ -4041,63 +4390,92 @@ function fecharExportMenu() {
 
 document.addEventListener('click', fecharExportMenu);
 
-/** Exporta a tabela de relatório como CSV */
-function exportarCSV() {
-  const periodo  = document.getElementById('report-period')?.value || 'week';
-  const labelMap = { week: 'Última Semana', month: 'Último Mês', year: 'Último Ano' };
-  const fileMap  = { week: 'ultima-semana', month: 'ultimo-mes', year: 'ultimo-ano' };
-  const agora    = new Date();
-  const dataStr  = agora.toLocaleDateString('pt-BR');
-  const horaStr  = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-  const residencia = appState.residencia?.nome || 'Residência';
-  const tarifa     = appState.residencia?.tarifaKwh || '---';
-
-  const linhas = [];
-  document.querySelectorAll('#report-tbody tr').forEach(tr => {
-    const celulas = [...tr.querySelectorAll('td')].map(td => td.textContent.trim().replace(/\s+/g, ' '));
-    if (celulas.length) linhas.push(celulas);
-  });
-
-  if (!linhas.length) {
-    alertaAviso('Sem dados', 'Aguarde o carregamento dos relatórios.');
-    fecharExportMenu();
-    return;
-  }
-
-  const totalKwh   = linhas.reduce((s, r) => s + parseFloat(r[1]) || 0, 0);
-  const totalCusto = linhas.reduce((s, r) => s + parseFloat(r[2]?.replace('R$','').trim()) || 0, 0);
-  const picoW      = Math.max(...linhas.map(r => parseFloat(r[3]) || 0));
-
-  const q = v => `"${String(v).replace(/"/g, '""')}"`;
-
-  const csvLinhas = [
-    [q('MONITECH — Relatório de Consumo de Energia'), '', '', '', '', ''],
-    [q('Residência:'), q(residencia), '', q('Período:'), q(labelMap[periodo] || periodo), ''],
-    [q('Tarifa (R$/kWh):'), q(tarifa), '', q('Gerado em:'), q(`${dataStr} às ${horaStr}`), ''],
-    ['', '', '', '', '', ''],
-    [q('Período'), q('Consumo (kWh)'), q('Custo (R$)'), q('Pico (W)'), q('Tensão Média (V)'), q('Corrente Média (A)')],
-    ...linhas.map(r => r.map(q)),
-    ['', '', '', '', '', ''],
-    [q('TOTAIS'), q(totalKwh.toFixed(3)), q(`R$ ${totalCusto.toFixed(2)}`), q(`${picoW.toFixed(1)} W`), q('---'), q('---')],
-  ];
-
-  const csv = csvLinhas.map(r => r.join(',')).join('\r\n');
-  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href     = url;
-  a.download = `monitech-${residencia.replace(/\s+/g,'-').toLowerCase()}-${fileMap[periodo]}-${agora.toISOString().slice(0,10)}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+/** Exporta o relatório como CSV com dados brutos da API */
+async function exportarCSV() {
   fecharExportMenu();
-  alertaSucesso('CSV exportado', 'Arquivo salvo na pasta de downloads.');
+  if (_isPlanoGratuito()) { atualizarPlano(); return; }
+
+  const btnEl    = document.querySelector('[onclick="exportarCSV()"]');
+  const original = btnEl?.innerHTML;
+  if (btnEl) { btnEl.disabled = true; btnEl.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Exportando...'; lucide.createIcons(); }
+
+  try {
+    const periodo    = document.getElementById('report-period')?.value || 'week';
+    const labelMap   = { day: 'Hoje', week: 'Última Semana', month: 'Último Mês', year: 'Último Ano' };
+    const fileMap    = { day: 'hoje', week: 'ultima-semana', month: 'ultimo-mes', year: 'ultimo-ano' };
+    const agora      = new Date();
+    const residencia = appState.residencia?.nome || 'Residência';
+    const tarifa     = appState.residencia?.tarifaKwh ?? '---';
+
+    const resp = await API.obterHistorico(periodo);
+    const dados = resp?.dados ?? [];
+
+    if (!dados.length) {
+      alertaAviso('Sem dados', 'Nenhuma leitura encontrada para o período selecionado.');
+      return;
+    }
+
+    const num = (v, dec = 3) => {
+      const n = parseFloat(v);
+      return isNaN(n) ? '' : n.toFixed(dec).replace('.', ',');
+    };
+    const q = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+    const SEP = ';';
+
+    const totalKwh   = dados.reduce((s, d) => s + (parseFloat(d.kwh)   || 0), 0);
+    const totalCusto = dados.reduce((s, d) => s + (parseFloat(d.custo) || 0), 0);
+    const picoW      = Math.max(...dados.map(d => parseFloat(d.watts) || 0));
+
+    const cabecalho = [
+      q('MONITECH — Relatório de Consumo de Energia'), '', '', '', '', '', ''
+    ].join(SEP);
+
+    const meta = [
+      [q('Residência:'), q(residencia), '', q('Período:'), q(labelMap[periodo] || periodo), '', ''],
+      [q('Tarifa (R$/kWh):'), q(tarifa), '', q('Gerado em:'), q(`${agora.toLocaleDateString('pt-BR')} às ${agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`), '', ''],
+      ['', '', '', '', '', '', ''],
+    ].map(r => r.join(SEP));
+
+    const colunas = [
+      'Período', 'Consumo (kWh)', 'Custo (R$)', 'Potência Média (W)',
+      'Tensão Média (V)', 'Corrente Média (A)', 'Fator de Potência',
+    ].map(q).join(SEP);
+
+    const linhas = dados.map(d => [
+      q(d.label ?? ''),
+      num(d.kwh,   3),
+      num(d.custo, 2),
+      num(d.watts, 1),
+      num(d.volts, 1),
+      num(d.amps,  2),
+      num(d.fp,    2),
+    ].join(SEP));
+
+    const rodape = [
+      ['', '', '', '', '', '', ''],
+      [q('TOTAIS'), num(totalKwh, 3), num(totalCusto, 2), num(picoW, 1), q('---'), q('---'), q('---')],
+    ].map(r => r.join(SEP));
+
+    const csv = ['﻿' + cabecalho, ...meta, colunas, ...linhas, ...rodape].join('\r\n');
+
+    _dispararDownload(
+      csv,
+      'text/csv;charset=utf-8',
+      `monitech-${residencia.replace(/\s+/g, '-').toLowerCase()}-${fileMap[periodo]}-${agora.toISOString().slice(0, 10)}.csv`
+    );
+
+    alertaSucesso('CSV exportado', `${dados.length} registros salvos na pasta de downloads.`);
+  } catch {
+    mostrarToast('Erro ao exportar CSV. Tente novamente.', 'erro');
+  } finally {
+    if (btnEl) { btnEl.disabled = false; btnEl.innerHTML = original; lucide.createIcons(); }
+  }
 }
 
 /** Exporta o relatório como PDF em nova aba com layout profissional */
 function exportarPDF() {
   fecharExportMenu();
+  if (_isPlanoGratuito()) { atualizarPlano(); return; }
 
   const periodo    = document.getElementById('report-period')?.value || 'week';
   const labelMap   = { week: 'Última Semana', month: 'Último Mês', year: 'Último Ano' };
@@ -4244,15 +4622,113 @@ function exportarPDF() {
 </body>
 </html>`;
 
-  const janela = window.open('', '_blank');
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const janela = window.open(url, '_blank');
   if (!janela) { alertaErro('Pop-up bloqueado', 'Permita pop-ups para este site e tente novamente.'); return; }
-  janela.document.write(html);
-  janela.document.close();
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+}
+
+/** Retorna true se o usuário logado está no plano gratuito (ou com plano expirado) */
+function _isPlanoGratuito() {
+  const u = appState.usuario;
+  if (!u) return true;
+  if (u.plano === 'gratuito') return true;
+  if (u.planoExpiraEm && new Date(u.planoExpiraEm) < new Date()) return true;
+  return false;
+}
+
+/** Aplica indicadores visuais de bloqueio para funcionalidades do plano pago */
+function _aplicarBloqueioHistorico() {
+  const gratuito = _isPlanoGratuito();
+
+  // Opção "Último Ano" nos selects de período
+  ['period-select', 'report-period'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    const optYear = sel.querySelector('option[value="year"]');
+    if (!optYear) return;
+    if (gratuito) {
+      optYear.textContent = 'Último Ano 🔒';
+      optYear.dataset.locked = '1';
+    } else {
+      optYear.textContent = id === 'period-select' ? 'Este Ano' : 'Último Ano';
+      delete optYear.dataset.locked;
+    }
+  });
+
+  // Botões de exportação
+  const exportBtn = document.querySelector('[onclick="toggleExportMenu(event)"]');
+  if (exportBtn) {
+    if (gratuito) {
+      exportBtn.title = 'Disponível no plano mensal';
+      exportBtn.style.opacity = '0.6';
+    } else {
+      exportBtn.title = '';
+      exportBtn.style.opacity = '';
+    }
+  }
+  ['btn-export-json', 'btn-export-csv'].forEach(id => {
+    const btn = document.getElementById(id);
+    if (!btn) return;
+    if (gratuito) {
+      btn.title = 'Disponível no plano mensal';
+      btn.style.opacity = '0.6';
+    } else {
+      btn.title = '';
+      btn.style.opacity = '';
+    }
+  });
+
+  // Checkboxes de e-mail nas duas seções de notificações
+  const emailCheckIds = [
+    'not-email-alerts', 'not-email-cost', 'not-email-anomaly', 'not-email-device',
+    'notify-email-alerts', 'notify-sensor-alerts', 'notify-email-summary'
+  ];
+  const BANNER_ID = 'banner-plano-email';
+  emailCheckIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.disabled = gratuito;
+    if (gratuito) el.checked = false;
+    const label = el.closest('label, .toggle-label, .notification-item');
+    if (label) label.style.opacity = gratuito ? '0.45' : '';
+  });
+
+  // Banners de upgrade nas seções de e-mail
+  ['notification-section', 'account-section'].forEach(cls => {
+    document.querySelectorAll(`.${cls}`).forEach(sec => {
+      const title = sec.querySelector('.notification-title, .account-section-title');
+      if (!title) return;
+      const txt = title.textContent || '';
+      if (!txt.includes('E-mail') && !txt.includes('Notificações')) return;
+      // Só na seção que tem checkboxes de e-mail
+      const hasEmailCheck = emailCheckIds.some(id => sec.querySelector(`#${id}`));
+      if (!hasEmailCheck) return;
+      let banner = sec.querySelector(`#${BANNER_ID}`);
+      if (gratuito && !banner) {
+        banner = document.createElement('div');
+        banner.id = BANNER_ID;
+        banner.style.cssText = 'margin-top:10px;padding:10px 14px;border-radius:8px;background:var(--topbar-hover);border:1px solid var(--border-bright);font-size:13px;color:var(--text-secondary);display:flex;align-items:center;gap:10px;';
+        banner.innerHTML = '🔒 <span>Alertas por e-mail estão disponíveis no <strong style="color:var(--blue-core)">Plano Mensal</strong>. <a href="#" onclick="atualizarPlano();return false;" style="color:var(--blue-core)">Fazer upgrade →</a></span>';
+        sec.appendChild(banner);
+      } else if (!gratuito && banner) {
+        banner.remove();
+      }
+    });
+  });
 }
 
 /** Atualiza gráficos, títulos e cards ao alterar o período selecionado */
 function atualizarGraficos() {
-  const periodo = document.getElementById('period-select')?.value || 'day';
+  const sel    = document.getElementById('period-select');
+  const periodo = sel?.value || 'day';
+
+  if (periodo === 'year' && _isPlanoGratuito()) {
+    if (sel) sel.value = 'month';
+    atualizarPlano();
+    return;
+  }
 
   const cfg = {
     day: {
@@ -4381,10 +4857,23 @@ function renderizarAlertas() {
   corrigirTextosCorrompidosNaPagina(lista);
 }
 
-/** Mapeia tipo de alerta para ícone */
+/** Mapeia tipo de alerta para ícone SVG Lucide */
 function _iconePorTipo(tipo) {
-  const mapa = { danger:'⚡', perigo:'⚡', error:'⚡', critical:'🚨', warn:'⚠️', warning:'⚠️', aviso:'⚠️', info:'ℹ️', informacao:'ℹ️', success:'✅', sucesso:'✅' };
-  return mapa[tipo] || 'ℹ️';
+  const _svg = (path, color) => `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${path}</svg>`;
+  const mapa = {
+    danger:    _svg('<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>', 'var(--danger)'),
+    perigo:    _svg('<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>', 'var(--danger)'),
+    error:     _svg('<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>', 'var(--danger)'),
+    critical:  _svg('<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>', 'var(--danger)'),
+    warn:      _svg('<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>', 'var(--warn)'),
+    warning:   _svg('<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>', 'var(--warn)'),
+    aviso:     _svg('<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>', 'var(--warn)'),
+    info:      _svg('<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>', 'var(--cyan)'),
+    informacao:_svg('<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>', 'var(--cyan)'),
+    success:   _svg('<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>', 'var(--success)'),
+    sucesso:   _svg('<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>', 'var(--success)'),
+  };
+  return mapa[tipo] || _svg('<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>', 'var(--cyan)');
 }
 
 /** Marca um alerta como lido */
@@ -4671,23 +5160,21 @@ function copiarCodigo(idElemento) {
 
 /** Gera e injeta os códigos de firmware com os dados reais do formulário */
 function preencherCodigo() {
-  const ssid      = document.getElementById('fw-ssid')?.value.trim()     || 'SUA_REDE_WIFI';
-  const pass      = document.getElementById('fw-pass')?.value.trim()     || 'SUA_SENHA_WIFI';
+  const ssid      = document.getElementById('fw-ssid')?.value.trim()       || 'SUA_REDE_WIFI';
+  const pass      = document.getElementById('fw-pass')?.value.trim()       || 'SUA_SENHA_WIFI';
   const deviceId  = document.getElementById('esp-device-id')?.value.trim() || 'MONITECH-001';
-  const token     = document.getElementById('esp-token-display')?.textContent.trim() || 'SEU_TOKEN_SECRETO';
   const intervalo = parseInt(document.getElementById('esp-poll-interval')?.value) || 2000;
-  const serverUrl = window.location.origin;
 
   const elWS   = document.getElementById('code-ws');
   const elHTTP = document.getElementById('code-http');
   const elMQTT = document.getElementById('code-mqtt');
 
   if (elWS)   elWS.textContent   = _fwWS(ssid, pass, deviceId);
-  if (elHTTP) elHTTP.textContent = _fwHTTP(ssid, pass, deviceId, token, serverUrl, intervalo);
+  if (elHTTP) elHTTP.textContent = _fwHTTP(intervalo);
   if (elMQTT) elMQTT.textContent = _fwMQTT(ssid, pass, deviceId, intervalo);
 }
 
-function _fwHTTP(ssid, pass, deviceId, token, serverUrl, intervalo) {
+function _fwHTTP(intervalo) {
   return `#include <WiFi.h>
 #include <HTTPClient.h>
 #include <HTTPUpdate.h>
@@ -5153,6 +5640,50 @@ async function carregarInfoFirmware() {
     if (btnUpdate) btnUpdate.disabled = !info.disponivel;
   } catch {
     if (elServer) elServer.textContent = 'Erro';
+  }
+}
+
+/** Verifica se o firmware do dispositivo está atualizado */
+async function verificarAtualizacaoFirmware() {
+  const btn    = document.getElementById('btn-ota-auto');
+  const result = document.getElementById('ota-check-result');
+
+  if (btn) { btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Verificando...'; lucide.createIcons(); }
+  if (result) result.style.display = 'none';
+
+  try {
+    const resp = await fetch('/api/firmware/info');
+    const info = await resp.json();
+
+    const fwDispositivo = appState.sensor?.versaoFirmware ?? document.getElementById('esp-fw')?.textContent?.trim();
+    const fwServidor    = info.versao;
+
+    // Atualiza os dois cards de versão
+    const elAtual  = document.getElementById('ota-fw-atual');
+    const elServer = document.getElementById('ota-fw-server');
+    if (elAtual)  elAtual.textContent  = fwDispositivo ? `v${fwDispositivo}` : 'Desconhecido';
+    if (elServer) elServer.textContent = info.disponivel ? `v${fwServidor}` : 'Nenhuma publicada';
+
+    if (!fwDispositivo || fwDispositivo === '---') {
+      result.style.cssText = 'display:block;background:rgba(255,180,0,.1);border:1px solid rgba(255,180,0,.3);color:#f5a623;margin-top:12px;padding:10px 14px;border-radius:8px;font-size:13px;line-height:1.5;';
+      result.innerHTML = '<strong>⚠ Dispositivo offline ou sem versão registrada.</strong><br>Conecte o Dispositivo Monitech à sua rede e tente novamente.';
+    } else if (!info.disponivel) {
+      result.style.cssText = 'display:block;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.25);color:var(--text-secondary);margin-top:12px;padding:10px 14px;border-radius:8px;font-size:13px;line-height:1.5;';
+      result.innerHTML = `<strong>ℹ Nenhuma atualização publicada.</strong><br>Versão instalada: <strong>v${fwDispositivo}</strong>.`;
+    } else if (fwDispositivo === fwServidor) {
+      result.style.cssText = 'display:block;background:rgba(0,180,122,.1);border:1px solid rgba(0,180,122,.3);color:#00b47a;margin-top:12px;padding:10px 14px;border-radius:8px;font-size:13px;line-height:1.5;';
+      result.innerHTML = `<strong>✓ Dispositivo atualizado.</strong><br>Versão instalada: <strong>v${fwDispositivo}</strong> — a mais recente disponível.`;
+    } else {
+      result.style.cssText = 'display:block;background:rgba(255,100,0,.1);border:1px solid rgba(255,100,0,.3);color:#ff7043;margin-top:12px;padding:10px 14px;border-radius:8px;font-size:13px;line-height:1.5;';
+      result.innerHTML = `<strong>⬆ Atualização disponível: v${fwServidor}</strong><br>Versão instalada: v${fwDispositivo}. Use a <strong>Instalação manual</strong> abaixo para atualizar.`;
+    }
+  } catch {
+    if (result) {
+      result.style.cssText = 'display:block;background:rgba(220,0,0,.1);border:1px solid rgba(220,0,0,.3);color:#f44;margin-top:12px;padding:10px 14px;border-radius:8px;font-size:13px;';
+      result.innerHTML = 'Erro ao verificar. Tente novamente em instantes.';
+    }
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = '<i data-lucide="refresh-cw"></i> Verificar Atualização'; lucide.createIcons(); }
   }
 }
 
@@ -5963,7 +6494,7 @@ let esp32TabAberta = false;
 
 /** Inicializa a aba de conexão ESP32 na primeira abertura */
 async function _carregarStatusDispositivoUsuario() {
-  if (isAdmin() || !appState.residencia?.id) return;
+  if (isAdmin() || !appState.residencia?.id || _modoTrocarDispositivo) return;
 
   const set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val ?? '—'; };
 
@@ -6010,6 +6541,11 @@ async function _carregarStatusDispositivoUsuario() {
       const tokenSalvo = appState.residencia?.id
         ? localStorage.getItem(`monitech_token_${appState.residencia.id}`)
         : null;
+      const idIotSalvo = appState.residencia?.id
+        ? localStorage.getItem(`monitech_idiot_${appState.residencia.id}`)
+        : sensor.idIot;
+      const idIotValor = document.getElementById('painel-idiot-valor');
+      if (idIotValor) idIotValor.textContent = idIotSalvo ?? sensor.idIot ?? '—';
       const tokenValor   = document.getElementById('painel-token-valor');
       const avisoVazio   = document.getElementById('token-aviso-vazio');
       const avisoCopiar  = document.getElementById('token-aviso-copiar');
@@ -6054,8 +6590,12 @@ function _mostrarEstadoVinculacao(estado) {
   if (estado === 'aguardando') atualizarUrlServidorPainel();
 }
 
+let _modoTrocarDispositivo = false;
+
 function mostrarVincularDispositivo() {
+  _modoTrocarDispositivo = true;
   _pararPollingConexao();
+  _pararStatusPolling();
   if (appState.residencia?.id) localStorage.removeItem(`monitech_token_${appState.residencia.id}`);
   _mostrarEstadoDispositivo('sem-sensor');
   _mostrarEstadoVinculacao('form');
@@ -6065,26 +6605,50 @@ function mostrarVincularDispositivo() {
   if (ape) ape.value = '';
 }
 
+async function desvincularDispositivo() {
+  if (!appState.sensor?.id) {
+    mostrarVincularDispositivo();
+    return;
+  }
+
+  const confirmar = await mostrarConfirm({
+    icone:    'unlink',
+    titulo:   'Desvincular dispositivo',
+    mensagem: 'O Dispositivo Monitech será removido desta residência. Você poderá vincular outro a qualquer momento.',
+    okLabel:  'Desvincular',
+    okDanger: true
+  });
+  if (!confirmar) return;
+
+  const btn = document.querySelector('[onclick="desvincularDispositivo()"]');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<i data-lucide="loader" style="width:13px;height:13px"></i> Removendo…'; if (typeof lucide !== 'undefined') lucide.createIcons({ nodes: [btn] }); }
+
+  const resp = await apiFetch(`/api/sensores/${appState.sensor.id}`, { method: 'DELETE', headers: headersAuth() });
+
+  if (btn) { btn.disabled = false; btn.innerHTML = '<i data-lucide="unlink" style="width:13px;height:13px"></i> Desvincular dispositivo'; if (typeof lucide !== 'undefined') lucide.createIcons({ nodes: [btn] }); }
+
+  if (resp?.sucesso === true) {
+    appState.sensor = null;
+    mostrarAlerta('Dispositivo desvinculado.', 'success');
+    mostrarVincularDispositivo();
+  } else {
+    mostrarAlerta('Erro ao desvincular: ' + (resp?.erro || 'Tente novamente.'), 'error');
+  }
+}
+
 async function registrarSensorPainel() {
   if (!appState.residencia?.id) {
     mostrarAlerta('Nenhuma residência encontrada.', 'error');
     return;
   }
 
-  const codigoIot = document.getElementById('painel-codigo-iot').value.trim().toUpperCase();
-  const apelido   = document.getElementById('painel-apelido-iot').value.trim() || 'Medidor Principal';
-
-  if (!codigoIot) {
-    mostrarAlerta('Informe o código impresso na caixa do dispositivo. Ex: MONITECH-001', 'warning');
-    return;
-  }
+  const apelido = document.getElementById('painel-apelido-iot').value.trim() || 'Medidor Principal';
 
   const btn = document.getElementById('btn-vincular-sensor');
   if (btn) { btn.textContent = 'Registrando...'; btn.disabled = true; }
 
   const resp = await API.registrarSensor({
     idResidencia: appState.residencia.id,
-    idIot:        codigoIot,
     apelido,
     protocolo:    'http',
     intervaloMs:  2000
@@ -6095,9 +6659,10 @@ async function registrarSensorPainel() {
   if (resp?.sucesso) {
     appState.sensor = { id: resp.idSensor, idIot: resp.idIot };
 
-    // Persiste o token no localStorage para sobreviver a recargas enquanto o dispositivo não conectar
+    // Persiste token e IdIot no localStorage para sobreviver a recargas
     if (appState.residencia?.id) {
       localStorage.setItem(`monitech_token_${appState.residencia.id}`, resp.tokenSecreto);
+      localStorage.setItem(`monitech_idiot_${appState.residencia.id}`, resp.idIot);
     }
 
     const tokenValor   = document.getElementById('painel-token-valor');
@@ -6109,10 +6674,17 @@ async function registrarSensorPainel() {
     if (avisoCopiar)  avisoCopiar.style.display  = '';
     if (btnCopiarTok) btnCopiarTok.style.display = '';
 
+    const idIotValor = document.getElementById('painel-idiot-valor');
+    if (idIotValor) idIotValor.textContent = resp.idIot;
+
+    _modoTrocarDispositivo = false;
     _mostrarEstadoVinculacao('aguardando');
     if (typeof lucide !== 'undefined') lucide.createIcons({ nodes: [document.getElementById('device-waiting-state')] });
     _iniciarPollingConexao();
+    _iniciarStatusPolling();
     mostrarAlerta('Dispositivo registrado! Configure-o com o token gerado.', 'success');
+  } else if (resp?.upgradePath) {
+    atualizarPlano(resp.detalhe);
   } else if (resp?.erro?.toLowerCase().includes('já registrado')) {
     mostrarAlerta('Este código já está registrado. Se for seu dispositivo, o token já foi gerado anteriormente.', 'warning');
   } else {
@@ -6120,9 +6692,18 @@ async function registrarSensorPainel() {
   }
 }
 
-function atualizarUrlServidorPainel() {
-  const url = document.getElementById('painel-servidor-url');
-  if (url) url.textContent = window.location.origin;
+async function atualizarUrlServidorPainel() {
+  const el = document.getElementById('painel-servidor-url');
+  if (!el) return;
+
+  try {
+    const resp = await fetch('/api/info/ip');
+    const info = await resp.json();
+    // Usa a primeira URL de rede local; se não houver, cai no origin
+    el.textContent = info.urls?.[0] ?? window.location.origin;
+  } catch {
+    el.textContent = window.location.origin;
+  }
 }
 
 function copiarUrlServidorPainel() {
@@ -6134,6 +6715,12 @@ function _copiarToken() {
   const val = document.getElementById('painel-token-valor')?.textContent?.trim();
   if (!val) return;
   navigator.clipboard.writeText(val).then(() => mostrarAlerta('Token copiado!', 'success'));
+}
+
+function _copiarIdIot() {
+  const val = document.getElementById('painel-idiot-valor')?.textContent?.trim();
+  if (!val) return;
+  navigator.clipboard.writeText(val).then(() => mostrarAlerta('ID copiado!', 'success'));
 }
 
 let _pollingConexaoTimer = null;
@@ -6343,6 +6930,9 @@ async function restaurarSessao() {
     // Sincroniza dados do localStorage
     if (sincronizarUsuarioDoLocalStorage()) {
       console.log('[RESTAURAR-SESSÃO] ✓ Usuário sincronizado:', appState.usuario);
+
+      // Aplica o tema da conta (lido do servidor — não precisa re-salvar)
+      if (appState.usuario?.tema) aplicarTema(appState.usuario.tema, true, true);
       
       // Se não tem residências, carrega da API
       if (!appState.residencia) {
@@ -6352,7 +6942,7 @@ async function restaurarSessao() {
           if (respResidencias?.sucesso && respResidencias?.residencias?.length > 0) {
             appState.residencia = respResidencias.residencias[0];
             appState.comodos = (await API.obterComodos(appState.residencia.id))?.comodos || [];
-            appState.dispositivos = (await API.obterDispositivos(appState.residencia.id))?.dispositivos || [];
+            await _sincronizarDispositivos();
             console.log('[RESTAURAR-SESSÃO] ✓ Residência carregada');
           }
         } catch (err) {
@@ -6504,6 +7094,80 @@ async function carregarAdminUsuarios(pagina = 1, search = '') {
 function adminBuscarUsuarios(valor) {
   clearTimeout(_adminBuscaTimer);
   _adminBuscaTimer = setTimeout(() => carregarAdminUsuarios(1, valor), 400);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  NOTIFICAÇÕES NO NAVEGADOR
+// ══════════════════════════════════════════════════════════════
+
+const _NOTIF_VISTOS_KEY = 'monitech_notif_vistos';
+const _NOTIF_TIPO_TS_KEY = 'monitech_notif_tipo_ts';
+
+function _notifBrowserCfg() {
+  try { return JSON.parse(localStorage.getItem('monitech_notif_browser') || '{}'); } catch { return {}; }
+}
+
+async function _solicitarPermissaoNotificacao() {
+  if (!('Notification' in window)) return 'unsupported';
+  if (Notification.permission === 'granted') return 'granted';
+  if (Notification.permission === 'denied') return 'denied';
+  return await Notification.requestPermission();
+}
+
+function _tocarSomAlerta() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc  = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.value = 880;
+    gain.gain.setValueAtTime(0.25, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.6);
+  } catch { /* browser sem suporte a AudioContext */ }
+}
+
+function _verificarNotificacoesBrowser(alertas) {
+  const cfg = _notifBrowserCfg();
+  if (!cfg.browser_alertas) return;
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  if (!alertas?.length) return;
+
+  const vistos  = new Set(JSON.parse(localStorage.getItem(_NOTIF_VISTOS_KEY) || '[]'));
+  const tipoTs  = JSON.parse(localStorage.getItem(_NOTIF_TIPO_TS_KEY) || '{}');
+  const freqMs  = (Number(cfg.frequencia) || 15) * 60 * 1000;
+  const agora   = Date.now();
+  let   tocouSom = false;
+  const novosVistos = [...vistos];
+
+  for (const a of alertas) {
+    const id   = String(a.id   ?? a.Id   ?? '');
+    const lido = a.lido ?? a.Lido ?? false;
+    if (!id || vistos.has(id) || lido) continue;
+
+    const tipo       = a.tipo ?? a.Tipo ?? 'geral';
+    const ultimaVez  = tipoTs[tipo] ?? 0;
+    if (agora - ultimaVez < freqMs) continue;
+
+    const titulo  = a.titulo   ?? a.Titulo   ?? 'MONITECH — Alerta';
+    const mensagem = a.mensagem ?? a.Mensagem ?? '';
+
+    new Notification(titulo, {
+      body: mensagem,
+      icon: '/favicon.svg',
+      tag:  `monitech-${tipo}`
+    });
+
+    tipoTs[tipo] = agora;
+    novosVistos.push(id);
+    if (!tocouSom && cfg.browser_som) { _tocarSomAlerta(); tocouSom = true; }
+  }
+
+  localStorage.setItem(_NOTIF_VISTOS_KEY, JSON.stringify(novosVistos.slice(-500)));
+  localStorage.setItem(_NOTIF_TIPO_TS_KEY, JSON.stringify(tipoTs));
 }
 
 async function adminAlterarStatus(id, novoStatus) {
