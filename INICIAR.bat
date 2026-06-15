@@ -44,6 +44,6 @@ echo  NAO FECHE esta janela enquanto usar o sistema.
 echo  Pressione Ctrl+C para parar o servidor.
 echo.
 
-dotnet run --project Monitech.API.csproj --urls "http://localhost:5000"
+dotnet run --project Monitech.API.csproj --urls "http://0.0.0.0:5000"
 
 pause

@@ -204,7 +204,7 @@ public class AuthController(AuthService auth, AppDbContext db, IConfiguration co
             return Ok(new LoginResponse(
                 Sucesso:  true,
                 Token:    token,
-                Usuario:  new UsuarioDto(usuario.Id, $"{usuario.Nome} {usuario.Sobrenome}".Trim(), usuario.Email, usuario.FotoUrl, usuario.DataCriacao, usuario.Role, usuario.Tema, usuario.Plano, usuario.PlanoExpiraEm),
+                Usuario:  new UsuarioDto(usuario.Id, $"{usuario.Nome} {usuario.Sobrenome}".Trim(), usuario.Email, usuario.FotoUrl, usuario.DataCriacao, usuario.Role ?? "user", usuario.Tema ?? "dark", usuario.Plano ?? "gratuito", usuario.PlanoExpiraEm),
                 ExpiraEm: expira
             ));
         }
@@ -389,6 +389,21 @@ public class ComodosController(AppDbContext db) : ControllerBase
         db.Comodos.Add(c);
         await db.SaveChangesAsync();
         return Ok(new { sucesso = true, comodo = c });
+    }
+
+    /// PATCH /api/comodos/{id}/posicao
+    [HttpPatch("{id}/posicao")]
+    public async Task<IActionResult> AtualizarPosicao(string id, [FromBody] AtualizarPosicaoComodoRequest req)
+    {
+        var c = await db.Comodos
+            .Include(c => c.Residencia)
+            .FirstOrDefaultAsync(c => c.Id == id && c.Residencia!.IdUsuario == UsuarioId);
+        if (c is null) return NotFound(new { sucesso = false });
+        c.PosicaoX        = req.PosicaoX;
+        c.PosicaoY        = req.PosicaoY;
+        c.DataAtualizacao = DateTime.UtcNow;
+        await db.SaveChangesAsync();
+        return Ok(new { sucesso = true });
     }
 
     /// DELETE /api/comodos/{id}
@@ -1060,14 +1075,16 @@ public class DashboardController(AppDbContext db, TarifaService tarifas) : Contr
             .ToListAsync();
 
         // Agrupa por hora (day), dia (week/month) ou mês (year)
-        var agrupado = periodo switch
+        Func<DateTime, string> keyFn = periodo switch
         {
-            "day"  => leituras.GroupBy(l => l.Timestamp.ToString("HH:mm")),
-            "year" => leituras.GroupBy(l => l.Timestamp.ToString("MM/yyyy")),
-            _      => leituras.GroupBy(l => l.Timestamp.ToString("dd/MM"))
+            "day"  => dt => dt.ToString("HH:mm"),
+            "year" => dt => dt.ToString("MM/yyyy"),
+            _      => dt => dt.ToString("dd/MM")
         };
 
-        var resultado = agrupado.Select(g => new LeituraHistoricoItem(
+        var agrupado = leituras.GroupBy(l => keyFn(l.Timestamp));
+
+        var leiturasMap = agrupado.ToDictionary(g => g.Key, g => new LeituraHistoricoItem(
             Label:            g.Key,
             Kwh:              Math.Round(g.Max(l => l.Kwh) - g.Min(l => l.Kwh), 3),
             Potencia:         (decimal)Math.Round(g.Average(l => (double)l.Potencia), 1),
@@ -1082,8 +1099,35 @@ public class DashboardController(AppDbContext db, TarifaService tarifas) : Contr
             FatorPotencia:    g.Any(l => l.FatorPotencia.HasValue)
                 ? (decimal?)Math.Round(g.Where(l => l.FatorPotencia.HasValue).Average(l => (double)l.FatorPotencia!.Value), 3)
                 : null,
-            Custo:            0  // calculado no frontend com a tarifa
-        )).ToList();
+            Custo: 0
+        ));
+
+        // Grid completo do período — preenche zeros nos slots sem leituras
+        LeituraHistoricoItem Vazio(string label) =>
+            new(label, 0, 0, null, null, 0, 0, null, 0);
+
+        var agora = DateTime.UtcNow;
+        var resultado = periodo switch
+        {
+            "day" => leiturasMap.Values.OrderBy(x => x.Label).ToList(),
+
+            "week" => Enumerable.Range(0, 7)
+                .Select(i => agora.Date.AddDays(-6 + i).ToString("dd/MM"))
+                .Select(lbl => leiturasMap.TryGetValue(lbl, out var v) ? v : Vazio(lbl))
+                .ToList(),
+
+            "month" => Enumerable.Range(0, 30)
+                .Select(i => agora.Date.AddDays(-29 + i).ToString("dd/MM"))
+                .Select(lbl => leiturasMap.TryGetValue(lbl, out var v) ? v : Vazio(lbl))
+                .ToList(),
+
+            "year" => Enumerable.Range(0, 12)
+                .Select(i => agora.Date.AddMonths(-11 + i).ToString("MM/yyyy"))
+                .Select(lbl => leiturasMap.TryGetValue(lbl, out var v) ? v : Vazio(lbl))
+                .ToList(),
+
+            _ => leiturasMap.Values.OrderBy(x => x.Label).ToList()
+        };
 
         return Ok(new { sucesso = true, dados = resultado });
     }
@@ -1142,7 +1186,7 @@ public class DashboardController(AppDbContext db, TarifaService tarifas) : Contr
         var temAcesso = await db.Residencias.AnyAsync(r => r.Id == idResidencia && r.IdUsuario == UsuarioId);
         if (!temAcesso) return Forbid();
         var alertas = await db.Alertas
-            .Where(a => a.IdResidencia == idResidencia && a.Lido)
+            .Where(a => a.IdResidencia == idResidencia)
             .ToListAsync();
         db.Alertas.RemoveRange(alertas);
         await db.SaveChangesAsync();
@@ -1265,9 +1309,11 @@ public class UsuarioController(AppDbContext db, IWebHostEnvironment env) : Contr
                 Genero:         usuario.Genero,
                 FotoUrl:        usuario.FotoUrl,
                 DataCriacao:    usuario.DataCriacao,
-                Role:           usuario.Role,
+                Role:           usuario.Role ?? "user",
                 TotpAtivo:      usuario.TotpAtivo,
-                Tema:           usuario.Tema
+                Tema:           usuario.Tema ?? "dark",
+                Plano:          usuario.Plano ?? "gratuito",
+                PlanoExpiraEm:  usuario.PlanoExpiraEm
             ));
         }
         catch (Exception ex)
@@ -1293,8 +1339,9 @@ public class UsuarioController(AppDbContext db, IWebHostEnvironment env) : Contr
             if (!string.IsNullOrWhiteSpace(req.Sobrenome))
                 usuario.Sobrenome = req.Sobrenome;
 
-            // Telefone: permite apagar (string vazia = null)
-            usuario.Telefone = string.IsNullOrWhiteSpace(req.Telefone) ? null : req.Telefone;
+            // Telefone: só altera se explicitamente enviado (string vazia = apagar)
+            if (req.Telefone is not null)
+                usuario.Telefone = string.IsNullOrWhiteSpace(req.Telefone) ? null : req.Telefone;
 
             // DataNascimento: aceita "yyyy-MM-dd" ou vazio para limpar
             if (req.DataNascimento is not null)
@@ -1316,7 +1363,7 @@ public class UsuarioController(AppDbContext db, IWebHostEnvironment env) : Contr
             return Ok(new AtualizarPerfilResponse(
                 Sucesso:   true,
                 Mensagem:  "Perfil atualizado com sucesso.",
-                Usuario:   new UsuarioDto(usuario.Id, usuario.Nome, usuario.Email, usuario.FotoUrl, usuario.DataCriacao, usuario.Role, usuario.Tema, usuario.Plano, usuario.PlanoExpiraEm)
+                Usuario:   new UsuarioDto(usuario.Id, usuario.Nome, usuario.Email, usuario.FotoUrl, usuario.DataCriacao, usuario.Role ?? "user", usuario.Tema ?? "dark", usuario.Plano ?? "gratuito", usuario.PlanoExpiraEm)
             ));
         }
         catch (Exception ex)
@@ -1921,7 +1968,9 @@ public class AdminController(AppDbContext db) : ControllerBase
                 u.Role,
                 u.DataCriacao,
                 u.UltimaLogin,
-                u.Residencias.Count
+                u.Residencias.Count,
+                u.Plano,
+                u.PlanoExpiraEm
             ))
             .ToListAsync();
 
@@ -1982,6 +2031,26 @@ public class AdminController(AppDbContext db) : ControllerBase
         usuario.DataAtualizacao = DateTime.UtcNow;
         await db.SaveChangesAsync();
         return Ok(new { sucesso = true });
+    }
+
+    /// PATCH /api/admin/usuarios/{id}/plano
+    [HttpPatch("usuarios/{id}/plano")]
+    public async Task<IActionResult> AtualizarPlano(string id, [FromBody] AdminAtualizarPlanoRequest req)
+    {
+        if (req.Plano is not ("gratuito" or "mensal"))
+            return BadRequest(new { sucesso = false, erro = "Plano inválido." });
+
+        var usuario = await db.Usuarios.FindAsync(id);
+        if (usuario is null)
+            return NotFound(new { sucesso = false, erro = "Usuário não encontrado." });
+
+        usuario.Plano           = req.Plano;
+        usuario.PlanoExpiraEm   = req.Plano == "mensal"
+            ? DateTime.UtcNow.AddDays(req.DiasExpiracao ?? 30)
+            : null;
+        usuario.DataAtualizacao = DateTime.UtcNow;
+        await db.SaveChangesAsync();
+        return Ok(new { sucesso = true, plano = usuario.Plano, expiraEm = usuario.PlanoExpiraEm });
     }
 }
 

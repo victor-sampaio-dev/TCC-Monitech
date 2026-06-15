@@ -69,7 +69,12 @@
           </a>
           <a class="nav-link" href="../website/compra.html">
             <span class="mmenu-icon"><i data-lucide="shopping-cart"></i></span>
-            <span class="mmenu-text">Comprar</span>
+            <span class="mmenu-text">Comprar Dispositivo</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a href="../website/planos.html">
+            <span class="mmenu-icon"><i data-lucide="zap"></i></span>
+            <span class="mmenu-text">Planos</span>
             <i data-lucide="chevron-right" class="mmenu-arrow"></i>
           </a>
         </div>
@@ -87,7 +92,8 @@
         <a class="nav-link active" href="./docs.html">Documentação</a>
         <a class="nav-link" href="./changelog.html">Changelog</a>
         <a class="nav-link" href="./contato.html">Contato</a>
-        <a class="nav-link" href="../website/compra.html">Comprar</a>
+        <a class="nav-link" href="../website/compra.html">Comprar Dispositivo</a>
+        <a class="nav-link" href="../website/planos.html">Planos</a>
       </div>
 
       <div class="nav-actions">
@@ -318,42 +324,226 @@
         </div>
 
         <h2 id="instalacao-fisica">Instalação Física <a class="doc-anchor" href="#instalacao-fisica">#</a></h2>
-        <p>Antes de usar o painel online, instale o Dispositivo MONITECH em sua casa:</p>
+        <p>Antes de usar o painel online, instale o Dispositivo Monitech em sua casa. O processo não requer eletricista — o Sensor Monitech <strong>abraça o fio por fora</strong>, sem cortar nada e sem contato com alta tensão.</p>
+
+        <div class="info-box info-box--info">
+          <span class="info-box-icon"><i data-lucide="clock"></i></span>
+          <div><strong>Tempo estimado:</strong> 15 a 20 minutos para concluir toda a instalação.</div>
+        </div>
+
+        <h3>O que você vai precisar</h3>
+        <ul>
+          <li>Dispositivo Monitech (já vem com Sensor Monitech e cabo de alimentação)</li>
+          <li>Acesso ao seu quadro elétrico</li>
+          <li>Celular ou computador com Wi-Fi</li>
+          <li>Chave de fenda ou philips — apenas se a tampa do quadro usar parafusos</li>
+        </ul>
+
+        <h3>Passo 1 — Localize o quadro elétrico</h3>
+        <p>O quadro elétrico é uma <strong>caixa metálica ou plástica na parede</strong> que contém os disjuntores — as chaves que "caem" quando dá sobrecarga. Ele fica geralmente em:</p>
 
         <div class="step-cards">
           <div class="step-card">
-            <div class="step-num-badge">1</div>
+            <div class="step-num-badge"><i data-lucide="building-2" style="width:14px;height:14px"></i></div>
             <div>
-              <div class="step-card-title">Escolha um Local</div>
-              <p class="step-card-text">Procure um local seguro e protegido (preferentemente em um armário ou embaixo da escada) perto do quadro de energia. O dispositivo precisa estar próximo ao cabo principal da casa.</p>
+              <div class="step-card-title">Em apartamentos</div>
+              <p class="step-card-text">Geralmente no corredor interno próximo à porta de entrada ou na área de serviço. Costuma ser uma caixa embutida na parede com tampa.</p>
             </div>
           </div>
           <div class="step-card">
-            <div class="step-num-badge">2</div>
+            <div class="step-num-badge"><i data-lucide="home" style="width:14px;height:14px"></i></div>
             <div>
-              <div class="step-card-title">Prenda o Sensor CT</div>
-              <p class="step-card-text">Sem desligar a energia, abra a pinça do sensor CT e prenda-a firmemente no cabo principal de energia da sua casa. A pinça é magnética e segura. Não faz contato com alta tensão.</p>
-            </div>
-          </div>
-          <div class="step-card">
-            <div class="step-num-badge">3</div>
-            <div>
-              <div class="step-card-title">Conecte a Energia</div>
-              <p class="step-card-text">Conecte o cabo de energia do Dispositivo na tomada. Ele tem uma fonte automática que funciona em 110V ou 220V. Aguarde alguns segundos até o dispositivo ligar (LED verde acenderá).</p>
-            </div>
-          </div>
-          <div class="step-card">
-            <div class="step-num-badge">4</div>
-            <div>
-              <div class="step-card-title">Conecte ao Wi-Fi</div>
-              <p class="step-card-text">O Dispositivo MONITECH procura automaticamente redes Wi-Fi disponíveis. Ele se conectará à sua rede Wi-Fi de casa automaticamente (configure isto no painel do MONITECH, confira próximas seções).</p>
+              <div class="step-card-title">Em casas</div>
+              <p class="step-card-text">Na área de serviço, garagem, corredor ou hall de entrada. Pode estar em caixa externa na parede ou em nicho embutido.</p>
             </div>
           </div>
         </div>
 
+        <h3>Passo 2 — Identifique o cabo principal</h3>
+        <p>Abra a tampa do quadro elétrico. Você verá vários fios e disjuntores. O <strong>cabo principal</strong> é o fio mais grosso que entra pelo topo ou lateral e vai direto ao <strong>disjuntor maior</strong> — chamado de disjuntor geral. Dentro desse cabo há dois ou três fios menores:</p>
+
+        <table class="docs-table">
+          <thead>
+            <tr>
+              <th>Cor do fio</th>
+              <th>Nome</th>
+              <th>O que fazer</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:12px;height:12px;border-radius:50%;background:#ef4444;display:inline-block"></span> Preto ou Vermelho</span></td>
+              <td><strong>Fase</strong></td>
+              <td>✅ O Sensor Monitech vai neste fio</td>
+            </tr>
+            <tr>
+              <td><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:12px;height:12px;border-radius:50%;background:#3b82f6;display:inline-block"></span> Azul</span></td>
+              <td>Neutro</td>
+              <td>Ignorar — não encaixar o sensor neste fio</td>
+            </tr>
+            <tr>
+              <td><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:12px;height:12px;border-radius:50%;background:#22c55e;display:inline-block"></span> Verde ou Verde/Amarelo</span></td>
+              <td>Terra</td>
+              <td>Ignorar — proteção elétrica, não usar</td>
+            </tr>
+          </tbody>
+        </table>
+
         <div class="info-box info-box--warn">
           <span class="info-box-icon"><i data-lucide="alert-triangle"></i></span>
-          <div><strong>Segurança:</strong> Se não tiver confiança em fazer esta instalação, peça para um eletricista habilitado. A pinça do sensor CT não toca em alta tensão, mas se você não tiver certeza, não faça.</div>
+          <div><strong>Importante:</strong> Passe <strong>somente o fio fase</strong> (preto ou vermelho) pelo Sensor Monitech. Se passar dois fios juntos, as leituras ficarão zeradas.</div>
+        </div>
+
+        <h3>Passo 3 — Instale o Sensor Monitech</h3>
+        <p>Esta é a etapa principal. O Sensor Monitech é uma argola que abre ao meio, envolve o fio e fecha — sem cortar, sem tocar em alta tensão.</p>
+
+        <div class="step-cards">
+          <div class="step-card">
+            <div class="step-num-badge">3.1</div>
+            <div>
+              <div class="step-card-title">Abra o Sensor Monitech</div>
+              <p class="step-card-text">Segure o sensor pelas duas metades e pressione levemente a trava lateral. As duas metades se separam, abrindo o centro da argola.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num-badge">3.2</div>
+            <div>
+              <div class="step-card-title">Posicione no fio fase</div>
+              <p class="step-card-text">Com o sensor aberto, encaixe o fio fase (preto ou vermelho) no centro da argola. Certifique-se de que apenas este fio está dentro — não inclua o neutro nem o terra.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num-badge">3.3</div>
+            <div>
+              <div class="step-card-title">Feche o sensor</div>
+              <p class="step-card-text">Pressione as duas metades até ouvir o clique de travamento. O sensor deve ficar firme ao redor do fio, sem folgas.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num-badge">3.4</div>
+            <div>
+              <div class="step-card-title">Passe o cabo para fora do quadro</div>
+              <p class="step-card-text">O cabo fino que sai do Sensor Monitech precisa alcançar o Dispositivo Monitech. Passe-o com cuidado pela lateral ou abertura inferior do quadro elétrico, sem apertar nem dobrar em ângulo agudo.</p>
+            </div>
+          </div>
+        </div>
+
+        <h3>Passo 4 — Conecte e ligue o Dispositivo Monitech</h3>
+
+        <div class="step-cards">
+          <div class="step-card">
+            <div class="step-num-badge">4.1</div>
+            <div>
+              <div class="step-card-title">Conecte o Sensor Monitech ao Dispositivo</div>
+              <p class="step-card-text">Encaixe o conector do cabo do Sensor Monitech na entrada lateral do Dispositivo Monitech. O conector entra em apenas uma posição — não force se não encaixar, verifique a orientação.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num-badge">4.2</div>
+            <div>
+              <div class="step-card-title">Feche o quadro elétrico</div>
+              <p class="step-card-text">Recoloque a tampa do quadro elétrico normalmente. O cabo do sensor pode passar pela borda ou por um orifício existente na tampa.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num-badge">4.3</div>
+            <div>
+              <div class="step-card-title">Posicione o Dispositivo Monitech</div>
+              <p class="step-card-text">Leve o Dispositivo Monitech até a tomada mais próxima do quadro elétrico. O cabo de alimentação tem comprimento suficiente para alcançar uma tomada próxima sem precisar de extensão.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num-badge">4.4</div>
+            <div>
+              <div class="step-card-title">Plugue na tomada</div>
+              <p class="step-card-text">Conecte o cabo de alimentação do Dispositivo Monitech em qualquer tomada próxima. O dispositivo funciona em 110V e 220V automaticamente. O LED vai acender imediatamente.</p>
+            </div>
+          </div>
+        </div>
+
+        <h3>Passo 5 — Configure o Wi-Fi pelo celular</h3>
+
+        <div class="step-cards">
+          <div class="step-card">
+            <div class="step-num-badge">5.1</div>
+            <div>
+              <div class="step-card-title">Aguarde o LED piscar rapidamente</div>
+              <p class="step-card-text">Assim que ligado, o Dispositivo Monitech entra em modo de configuração automaticamente. O LED pisca rapidamente em azul — isso significa que ele está pronto para receber as informações do seu Wi-Fi.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num-badge">5.2</div>
+            <div>
+              <div class="step-card-title">Conecte seu celular à rede "MONITECH-Setup"</div>
+              <p class="step-card-text">No seu celular, abra as configurações de Wi-Fi e procure a rede <strong>MONITECH-Setup</strong>. Conecte-se a ela — não precisa de senha.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num-badge">5.3</div>
+            <div>
+              <div class="step-card-title">Abra a página de configuração</div>
+              <p class="step-card-text">Após conectar, uma página de configuração abrirá automaticamente no seu navegador. Se não abrir, acesse <strong>192.168.4.1</strong> manualmente no navegador do celular.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num-badge">5.4</div>
+            <div>
+              <div class="step-card-title">Preencha os dados e salve</div>
+              <p class="step-card-text">Informe o <strong>nome da sua rede Wi-Fi doméstica</strong>, a <strong>senha do Wi-Fi</strong> e o <strong>Token</strong> gerado no painel MONITECH (você vai gerar na próxima seção). Toque em <strong>Salvar</strong>.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num-badge">5.5</div>
+            <div>
+              <div class="step-card-title">Aguarde a reconexão</div>
+              <p class="step-card-text">O Dispositivo Monitech reinicia automaticamente e se conecta à sua rede doméstica. Seu celular também voltará para sua rede Wi-Fi normal. Todo o processo leva cerca de 30 segundos.</p>
+            </div>
+          </div>
+        </div>
+
+        <h3>Passo 6 — Verifique o status pelo LED</h3>
+        <p>Após a configuração, o LED do Dispositivo Monitech indica o status de conexão em tempo real:</p>
+
+        <table class="docs-table">
+          <thead>
+            <tr>
+              <th>LED</th>
+              <th>Significado</th>
+              <th>O que fazer</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:50%;background:#3b82f6;display:inline-block;animation:pulse 1s infinite"></span> Piscando rápido (azul)</span></td>
+              <td>Aguardando configuração Wi-Fi</td>
+              <td>Conecte ao MONITECH-Setup e configure</td>
+            </tr>
+            <tr>
+              <td><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:50%;background:#a855f7;display:inline-block"></span> Piscando devagar (roxo)</span></td>
+              <td>Conectando ao Wi-Fi</td>
+              <td>Aguarde — leva até 30 segundos</td>
+            </tr>
+            <tr>
+              <td><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:50%;background:#22c55e;display:inline-block"></span> Fixo (verde)</span></td>
+              <td>✅ Online — enviando leituras</td>
+              <td>Tudo funcionando</td>
+            </tr>
+            <tr>
+              <td><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:50%;background:#ef4444;display:inline-block"></span> Fixo (vermelho)</span></td>
+              <td>Erro de conexão ou configuração</td>
+              <td>Repita o passo 5 para reconfigurar</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="info-box info-box--tip">
+          <span class="info-box-icon"><i data-lucide="check-circle"></i></span>
+          <div><strong>Instalação concluída!</strong> Com o LED verde fixo, acesse o painel MONITECH no computador ou celular — o sensor já aparecerá como <strong>Online</strong> e as leituras começam automaticamente.</div>
+        </div>
+
+        <div class="info-box info-box--warn">
+          <span class="info-box-icon"><i data-lucide="alert-triangle"></i></span>
+          <div><strong>Segurança:</strong> O Sensor Monitech não toca em alta tensão. Porém, se você não se sentir seguro abrindo o quadro elétrico, solicite a instalação a um eletricista habilitado.</div>
         </div>
       </div>
 
@@ -591,17 +781,17 @@
         <p>Esta seção é para usuários mais técnicos que querem entender a arquitetura do sistema.</p>
 
         <h3>Os Componentes Internos</h3>
-        <p>Dentro da caixa MONITECH há dois componentes principais:</p>
+        <p>Dentro da caixa do Dispositivo Monitech há dois componentes principais:</p>
         <ul>
-          <li><strong>ESP32:</strong> Um microcontrolador pequeno com Wi-Fi integrado. Ele lê os dados do sensor e envia pela internet</li>
-          <li><strong>PZEM-004T:</strong> Um sensor de energia de alta precisão que mede todos os dados elétricos</li>
+          <li><strong>Dispositivo de Conexão Monitech:</strong> Módulo com Wi-Fi integrado que lê os dados do sensor e os envia para o painel pela internet</li>
+          <li><strong>Leitor Monitech:</strong> Sensor de energia de alta precisão que mede todos os dados elétricos em tempo real</li>
         </ul>
 
         <h3>Como Funciona o Fluxo de Dados</h3>
         <ol>
-          <li>O sensor PZEM-004T mede a energia continuamente via o cabo CT prensado no fio principal</li>
-          <li>O ESP32 lê esses dados a cada 2 segundos</li>
-          <li>O ESP32 envia os dados para o painel via Wi-Fi em formato JSON</li>
+          <li>O Leitor Monitech mede a energia continuamente via o Sensor Monitech prensado no fio principal</li>
+          <li>O Dispositivo de Conexão lê esses dados a cada 2 segundos</li>
+          <li>O Dispositivo de Conexão envia os dados para o painel via Wi-Fi</li>
           <li>O painel recebe e armazena os dados em banco de dados</li>
           <li>O navegador atualiza os gráficos e medidores em tempo real</li>
         </ol>

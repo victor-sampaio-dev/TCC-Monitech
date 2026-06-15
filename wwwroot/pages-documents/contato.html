@@ -71,7 +71,12 @@
           </a>
           <a class="nav-link" href="../website/compra.html">
             <span class="mmenu-icon"><i data-lucide="shopping-cart"></i></span>
-            <span class="mmenu-text">Comprar</span>
+            <span class="mmenu-text">Comprar Dispositivo</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a class="nav-link" href="../website/planos.html">
+            <span class="mmenu-icon"><i data-lucide="zap"></i></span>
+            <span class="mmenu-text">Planos</span>
             <i data-lucide="chevron-right" class="mmenu-arrow"></i>
           </a>
         </div>
@@ -89,7 +94,8 @@
         <a class="nav-link" href="./docs.html">Documentação</a>
         <a class="nav-link" href="./changelog.html">Changelog</a>
         <a class="nav-link active" href="./contato.html">Contato</a>
-        <a class="nav-link" href="../website/compra.html">Comprar</a>
+        <a class="nav-link" href="../website/compra.html">Comprar Dispositivo</a>
+        <a class="nav-link" href="../website/planos.html">Planos</a>
       </div>
 
       <div class="nav-actions">
@@ -356,8 +362,7 @@
       <div class="sidebar-card">
         <div class="sidebar-card-icon"><i data-lucide="layout-dashboard"></i></div>
         <div class="sidebar-card-title">Acesso ao Painel</div>
-        <p class="sidebar-card-text">Conecte seu ESP32 e acesse todas as funcionalidades de monitoramento em tempo real
-          diretamente pelo painel web.</p>
+        <p class="sidebar-card-text">Conecte seu Dispositivo Monitech e acesse todas as funcionalidades de monitoramento em tempo real diretamente pelo painel web.</p>
         <a class="sidebar-card-link" href="../system/system.html">Abrir o Painel →</a>
       </div>
 
@@ -371,7 +376,7 @@
 
       <div class="faq-item">
         <div class="faq-q" onclick="toggleFaq(this)">
-          O MONITECH funciona sem um ESP32 conectado?
+          O MONITECH funciona sem um Dispositivo Monitech conectado?
           <span class="faq-chevron">▼</span>
         </div>
         <div class="faq-a">Sim. Você pode navegar pelo painel, cadastrar cômodos, dispositivos e configurar alertas sem
@@ -390,42 +395,18 @@
 
       <div class="faq-item">
         <div class="faq-q" onclick="toggleFaq(this)">
-          Qual a diferença entre WebSocket e HTTP Polling?
+          O Dispositivo Monitech funciona com qualquer carga elétrica?
           <span class="faq-chevron">▼</span>
         </div>
-        <div class="faq-a">WebSocket mantém uma conexão persistente e bidirecional — o ESP32 envia dados automaticamente
-          a cada 2 segundos, com latência mínima. HTTP Polling faz requisições GET periódicas; é mais simples de
-          configurar e funciona em redes com restrições de portas, mas tem latência levemente maior.</div>
+        <div class="faq-a">Sim. O Dispositivo Monitech foi projetado para medir qualquer carga elétrica residencial — lâmpadas, eletrodomésticos, ar-condicionado, chuveiro e mais. Basta instalá-lo no ponto de entrada da residência ou no circuito desejado.</div>
       </div>
 
       <div class="faq-item">
         <div class="faq-q" onclick="toggleFaq(this)">
-          Posso usar outro sensor além do PZEM-004T?
+          Como saber se o Dispositivo Monitech está conectado?
           <span class="faq-chevron">▼</span>
         </div>
-        <div class="faq-a">Sim. O painel aceita qualquer fonte de dados que envie o JSON no formato esperado
-          (<code>volts</code>, <code>amps</code>, <code>watts</code> são os campos obrigatórios). O sensor ACS712 é uma
-          alternativa comum, assim como sensores DIY com qualquer microcontrolador que suporte Wi-Fi.</div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">
-          O Serial/USB funciona em qualquer navegador?
-          <span class="faq-chevron">▼</span>
-        </div>
-        <div class="faq-a">Não. A Web Serial API é suportada apenas no <strong>Google Chrome 89+</strong> e
-          <strong>Microsoft Edge 89+</strong>. Firefox e Safari não implementam esta API. Para os outros protocolos
-          (WebSocket, HTTP, MQTT), qualquer navegador moderno funciona.</div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">
-          Como descobrir o IP do ESP32 na minha rede?
-          <span class="faq-chevron">▼</span>
-        </div>
-        <div class="faq-a">Após gravar o firmware e conectar o ESP32 à rede Wi-Fi, abra o <strong>Serial
-            Monitor</strong> do Arduino IDE (115200 baud) e aguarde o boot. O IP local será impresso na saída serial
-          assim que a conexão for estabelecida.</div>
+        <div class="faq-a">Após configurar o dispositivo pelo portal de instalação, acesse o painel MONITECH. A aba <strong>Dispositivo Monitech</strong> mostrará o status <strong style="color:var(--cyan)">Online</strong> assim que a comunicação for estabelecida — sem necessidade de nenhuma ferramenta técnica.</div>
       </div>
 
     </div>

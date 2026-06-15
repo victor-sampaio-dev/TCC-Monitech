@@ -70,7 +70,12 @@
           </a>
           <a class="nav-link" href="../website/compra.html">
             <span class="mmenu-icon"><i data-lucide="shopping-cart"></i></span>
-            <span class="mmenu-text">Comprar</span>
+            <span class="mmenu-text">Comprar Dispositivo</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a href="../website/planos.html">
+            <span class="mmenu-icon"><i data-lucide="zap"></i></span>
+            <span class="mmenu-text">Planos</span>
             <i data-lucide="chevron-right" class="mmenu-arrow"></i>
           </a>
         </div>
@@ -88,9 +93,9 @@
         <a class="nav-link" href="./docs.html">Documentação</a>
         <a class="nav-link active" href="changelog.html">Changelog</a>
         <a class="nav-link" href="./contato.html">Contato</a>
-        <a class="nav-link" href="../website/compra.html">Comprar</a>
+        <a class="nav-link" href="../website/compra.html">Comprar Dispositivo</a>
+        <a class="nav-link" href="../website/planos.html">Planos</a>
       </div>
-
       <div class="nav-actions">
         <div class="nav-end">
           <a class="btn-nav-solid" target="_blank" href="../system/system.html">Acessar Painel →</a>
@@ -394,8 +399,7 @@
                 dispositivos touch.</div>
             </div>
             <div class="change-item"><span class="change-tag tag-fix">fix</span>
-              <div class="change-text">Overlay do gráfico ESP32 não reaparecia corretamente após desconexão em modo HTTP
-                Polling.</div>
+              <div class="change-text">Overlay do gráfico do Dispositivo Monitech não reaparecia corretamente após desconexão em modo HTTP Polling.</div>
             </div>
           </div>
         </div>
@@ -411,8 +415,7 @@
       </div>
       <div class="release-body">
         <div class="release-summary">
-          Reescrita completa da interface — novo design system, suporte a MQTT e Serial/USB, terminal de log integrado,
-          osciloscópio em canvas e reestruturação do motor de conexão ESP32.
+          Reescrita completa da interface — novo design system, terminal de log integrado, osciloscópio em canvas e motor de conexão HTTP do Dispositivo Monitech.
         </div>
 
         <div class="change-group">
@@ -420,20 +423,10 @@
               class="change-title--new">Novidades</span></div>
           <div class="change-list">
             <div class="change-item"><span class="change-tag tag-new">novo</span>
-              <div class="change-text"><strong>Protocolo MQTT</strong> — Suporte completo a brokers públicos e privados
-                com autenticação por usuário/senha.</div>
+              <div class="change-text"><strong>Terminal de Log</strong> — Janela de log em tempo real na aba do Dispositivo Monitech, com filtro por nível e rolagem automática.</div>
             </div>
             <div class="change-item"><span class="change-tag tag-new">novo</span>
-              <div class="change-text"><strong>Protocolo Serial/USB</strong> — Comunicação direta via Web Serial API sem
-                necessidade de rede Wi-Fi.</div>
-            </div>
-            <div class="change-item"><span class="change-tag tag-new">novo</span>
-              <div class="change-text"><strong>Terminal de Log</strong> — Janela de log em tempo real na aba ESP32, com
-                filtro por nível e rolagem automática.</div>
-            </div>
-            <div class="change-item"><span class="change-tag tag-new">novo</span>
-              <div class="change-text"><strong>Gráfico ESP32 ao vivo</strong> — Canvas com onda em tempo real,
-                selecionável entre Volts, Amperes e Watts.</div>
+              <div class="change-text"><strong>Gráfico ao vivo</strong> — Canvas com onda em tempo real do Dispositivo Monitech, selecionável entre Volts, Amperes e Watts.</div>
             </div>
             <div class="change-item"><span class="change-tag tag-new">novo</span>
               <div class="change-text"><strong>Painel de informações do hardware</strong> — Exibe firmware, Chip ID, IP,
@@ -455,10 +448,7 @@
               class="change-title--brk">Breaking Changes</span></div>
           <div class="change-list">
             <div class="change-item"><span class="change-tag tag-brk">breaking</span>
-              <div class="change-text">O JSON enviado pelo ESP32 agora <strong>requer os campos <code>volts</code>, <code>amps</code> e <code>watts</code></strong>. Pacotes sem estes campos são ignorados silenciosamente.</div>
-            </div>
-            <div class="change-item"><span class="change-tag tag-brk">breaking</span>
-              <div class="change-text">A porta WebSocket padrão mudou de <code>:80</code> para <code>:81</code>. Atualize o firmware existente antes de conectar.</div>
+              <div class="change-text">O JSON enviado pelo Dispositivo Monitech agora <strong>requer os campos <code>volts</code>, <code>amps</code> e <code>watts</code></strong>. Pacotes sem estes campos são ignorados silenciosamente.</div>
             </div>
           </div>
         </div>
@@ -521,7 +511,7 @@
       </div>
       <div class="release-body">
         <div class="release-summary">
-          Lançamento inicial do MONITECH. Dashboard básico com leituras em tempo real via WebSocket e HTTP Polling,
+          Lançamento inicial do MONITECH. Dashboard básico com leituras em tempo real via HTTP,
           cadastro de conta, onboarding de residência e gráficos de histórico.
         </div>
         <div class="change-group">
@@ -533,7 +523,7 @@
                 Frequência, kWh.</div>
             </div>
             <div class="change-item"><span class="change-tag tag-new">novo</span>
-              <div class="change-text">Conexão ESP32 via WebSocket e HTTP Polling com terminal de status básico.</div>
+              <div class="change-text">Conexão do Dispositivo Monitech via HTTP com terminal de status básico.</div>
             </div>
             <div class="change-item"><span class="change-tag tag-new">novo</span>
               <div class="change-text">Fluxo de cadastro e onboarding de residência com configuração de cômodos e
@@ -544,8 +534,7 @@
               </div>
             </div>
             <div class="change-item"><span class="change-tag tag-new">novo</span>
-              <div class="change-text">Código de referência de firmware para ESP32 + PZEM-004T disponível no painel.
-              </div>
+              <div class="change-text">Firmware de referência do Dispositivo Monitech disponível para download no painel.</div>
             </div>
           </div>
         </div>

@@ -172,6 +172,7 @@
     </div>
 
   </div>
+  <div class="carousel-dots" id="carousel-dots"></div>
 
   <!-- TABELA COMPARATIVA -->
   <div class="comparativo-wrap">
@@ -257,6 +258,41 @@
       resposta.style.display = aberto ? 'none' : 'block';
       if (icone) icone.style.transform = aberto ? '' : 'rotate(180deg)';
     }
+
+    // ── Carrossel de planos (mobile) ──
+    (function () {
+      const grid   = document.getElementById('planos-grid') || document.querySelector('.planos-grid');
+      const dotsEl = document.getElementById('carousel-dots');
+      if (!grid || !dotsEl) return;
+
+      const cards = Array.from(grid.querySelectorAll('.plano-card'));
+      if (cards.length < 2) return;
+
+      // Cria os dots
+      cards.forEach((_, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'carousel-dot' + (i === 0 ? ' carousel-dot--active' : '');
+        btn.setAttribute('aria-label', 'Plano ' + (i + 1));
+        btn.addEventListener('click', () => {
+          grid.scrollTo({ left: cards[i].offsetLeft - 24, behavior: 'smooth' });
+        });
+        dotsEl.appendChild(btn);
+      });
+
+      // Atualiza dot ativo conforme scroll
+      function atualizarDots() {
+        let closest = 0, minDiff = Infinity;
+        cards.forEach((card, i) => {
+          const diff = Math.abs(card.offsetLeft - 24 - grid.scrollLeft);
+          if (diff < minDiff) { minDiff = diff; closest = i; }
+        });
+        dotsEl.querySelectorAll('.carousel-dot').forEach((dot, i) => {
+          dot.classList.toggle('carousel-dot--active', i === closest);
+        });
+      }
+
+      grid.addEventListener('scroll', atualizarDots, { passive: true });
+    })();
   </script>
 
 </body>

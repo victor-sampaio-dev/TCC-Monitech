@@ -81,12 +81,25 @@ async function _apiFetch(url, opcoes = {}) {
 }
 
 function logout() {
+  // Captura o tema do usuário antes de limpar a sessão, para manter a landing page consistente
+  let temaAntes = 'dark';
+  try {
+    const userStr = localStorage.getItem('monitech_usuario_landing');
+    const userId  = userStr ? JSON.parse(userStr)?.id : null;
+    if (userId) temaAntes = window._getTemaUsuario?.(userId) || 'dark';
+  } catch (_) {}
+
   // Remove APENAS tokens da LANDING PAGE
   // Não toca em tokens do system (cada página é independente)
   localStorage.removeItem('monitech_token_landing');
   localStorage.removeItem('monitech_usuario_landing');
   localStorage.removeItem('monitech_expira_landing');
   sessionStorage.clear();
+
+  // Mantém o tema que o usuário usava antes de deslogar (mt_t_{uid} é preservado automaticamente
+  // pois o userId já foi removido do localStorage — _persistirCookie não tocará nele)
+  if (window.definirTema) window.definirTema(temaAntes);
+
   if (typeof fecharUserMenu === 'function') fecharUserMenu();
   if (typeof atualizarMenuAutenticacao === 'function') atualizarMenuAutenticacao();
   if (typeof atualizarHeaderDropdownGlobal === 'function') atualizarHeaderDropdownGlobal();
@@ -206,6 +219,9 @@ async function _handleGoogleCredential(response) {
       localStorage.setItem('monitech_token_landing',   resp.token);
       localStorage.setItem('monitech_usuario_landing', JSON.stringify(resp.usuario));
       localStorage.setItem('monitech_expira_landing',  resp.expiraEm);
+      const _temaGgl = window._getTemaUsuario?.(resp.usuario?.id) || resp.usuario?.tema || 'dark';
+      window._salvarTemaUsuario?.(resp.usuario?.id, _temaGgl);
+      if (window.definirTema) window.definirTema(_temaGgl, true);
       closeAuthModal();
       if (typeof atualizarMenuAutenticacao === 'function') atualizarMenuAutenticacao();
       if (typeof carregarFotoPerfilGlobal  === 'function') carregarFotoPerfilGlobal();
@@ -249,12 +265,14 @@ async function loginWithEmail(event) {
 
   if (resp.sucesso && resp.token) {
     // ⚠️ IMPORTANTE: Landing page APENAS salva tokens com prefixo "_landing"
-    // Não sincroniza com o system (que tem autenticação independente)
     localStorage.setItem('monitech_token_landing',   resp.token);
     localStorage.setItem('monitech_usuario_landing', JSON.stringify(resp.usuario));
     localStorage.setItem('monitech_expira_landing',  resp.expiraEm);
-    console.log('[loginWithEmail] Token da LANDING salvo:', resp.token.substring(0, 20) + '...');
-    console.log('[loginWithEmail] Expira:', resp.expiraEm);
+    // Cookie do usuário tem prioridade; fallback para o valor do servidor
+    const _temaLand = window._getTemaUsuario?.(resp.usuario?.id) || resp.usuario?.tema || 'dark';
+    console.log('[TEMA v61] loginWithEmail → id:', resp.usuario?.id, '| cookie:', window._getTemaUsuario?.(resp.usuario?.id), '| server:', resp.usuario?.tema, '| final:', _temaLand, '| definirTema?', typeof window.definirTema);
+    window._salvarTemaUsuario?.(resp.usuario?.id, _temaLand);
+    if (window.definirTema) window.definirTema(_temaLand, true);
     closeAuthModal();
     _atualizarAvatarMenu(resp.usuario);
     if (typeof atualizarMenuAutenticacao === 'function') {
@@ -330,7 +348,6 @@ function verificarSessaoAtiva() {
     if (typeof atualizarMenuAutenticacao === 'function') atualizarMenuAutenticacao();
     return true;
   }
-  // Remove tokens da landing se não estão válidos
   localStorage.removeItem('monitech_token_landing');
   localStorage.removeItem('monitech_usuario_landing');
   localStorage.removeItem('monitech_expira_landing');

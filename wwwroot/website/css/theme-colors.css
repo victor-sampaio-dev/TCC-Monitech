@@ -108,15 +108,16 @@
 html[data-theme="light"] {
   color-scheme: light;
 
-  --bg-void:    #D6E8F5;
-  --bg-deep:    #C0D8EE;
-  --bg-card:    #E8F3FA;
-  --bg-card2:   #C8DEEC;
-  --bg-surface: #C8DEEC;
+  /* Fundo principal mais neutro — menos saturado que antes */
+  --bg-void:    #EEF3F8;
+  --bg-deep:    #E2EBF3;
+  --bg-card:    #F6F9FC;
+  --bg-card2:   #EAF0F6;
+  --bg-surface: #EAF0F6;
 
-  --white:  #ffffff;
-  --off:    #f4f8fc;
-  --off2:   #EAF3FB;
+  --white:  #FAFCFE;
+  --off:    #F0F5FA;
+  --off2:   #E6EFF7;
 
   --text-primary:   #0A1A2C;
   --text-secondary: #1E3D58;
@@ -124,7 +125,7 @@ html[data-theme="light"] {
   --ink:    #0A1A2C;
   --ink-2:  #1E3D58;
   --ink-3:  #4A6C88;
-  --muted:  #7a94a8;
+  --muted:  #3B5A73;
 
   --blue:        #1A7A9C;
   --blue-core:   #1A7A9C;

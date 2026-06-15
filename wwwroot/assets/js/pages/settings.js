@@ -145,37 +145,60 @@ function updateRangeLabelLanding(input) {
   if (label) label.textContent = input.value;
 }
 
-/* ── Config Dispositivo (landing) ── */
-function salvarConfigDispositivo() {
-  const intervalo = document.getElementById('landing-interval')?.value || '5';
-  localStorage.setItem('monitech_intervalo_landing', intervalo);
-  showToast(`Intervalo salvo: ${intervalo}s`, 'success');
-}
+/* ── Status do Dispositivo (settings) ── */
+async function carregarStatusDispositivoSettings() {
+  const token = getAuthToken();
+  const dot   = document.getElementById('settings-status-dot');
+  const txt   = document.getElementById('settings-status-text');
+  const meta  = document.getElementById('settings-device-meta');
+  const nodev = document.getElementById('settings-no-device');
+  if (!dot) return;
 
-function salvarTarifaLanding() {
-  const distribuidora = document.getElementById('landing-distribuidora')?.value.trim() || '';
-  const tarifa = document.getElementById('landing-tarifa')?.value || '';
-  if (!tarifa) { showToast('Informe a tarifa em R$/kWh.', 'error'); return; }
-  const cfg = { distribuidora, tarifa: parseFloat(tarifa) };
-  localStorage.setItem('monitech_tarifa_landing', JSON.stringify(cfg));
-  showToast('Tarifa de energia salva!', 'success');
+  if (!token) {
+    if (txt) txt.textContent = 'Faça login para ver o status.';
+    return;
+  }
+
+  try {
+    const res  = await fetch('/api/residencia', { headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' } });
+    const data = await res.json();
+    const residencia = data?.residencias?.[0];
+    if (!residencia) {
+      if (txt) txt.textContent = 'Nenhuma residência cadastrada.';
+      if (nodev) nodev.style.display = '';
+      return;
+    }
+
+    const res2    = await fetch(`/api/sensores/${residencia.id}`, { headers: { 'Authorization': `Bearer ${token}` } });
+    const data2   = await res2.json();
+    const sensor  = data2?.sensores?.[0];
+
+    if (!sensor) {
+      if (txt) txt.textContent = 'Nenhum dispositivo vinculado.';
+      if (dot) dot.className = 'device-status-dot offline';
+      if (nodev) nodev.style.display = '';
+      return;
+    }
+
+    const online  = sensor.status === 'online';
+    const warning = document.getElementById('settings-offline-warning');
+    if (dot)     dot.className       = `device-status-dot ${online ? 'online' : 'offline'}`;
+    if (txt)     txt.textContent     = online ? 'Online' : 'Offline';
+    if (warning) warning.style.display = online ? 'none' : '';
+
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '—'; };
+    set('settings-device-id',   sensor.idIot);
+    set('settings-device-fw',   sensor.versaoFirmware ? `v${sensor.versaoFirmware}` : null);
+    set('settings-device-ssid', sensor.ssidWifi);
+    set('settings-device-rssi', sensor.rssiDbm ? `${sensor.rssiDbm} dBm` : null);
+    if (meta) meta.style.display = '';
+  } catch {
+    if (txt) txt.textContent = 'Não foi possível carregar o status.';
+  }
 }
 
 function carregarConfigDispositivo() {
-  const intervalo = localStorage.getItem('monitech_intervalo_landing') || '5';
-  const sliderEl = document.getElementById('landing-interval');
-  const labelEl  = document.getElementById('landing-range-val');
-  if (sliderEl) sliderEl.value = intervalo;
-  if (labelEl)  labelEl.textContent = intervalo;
-
-  const tarifaRaw = localStorage.getItem('monitech_tarifa_landing');
-  if (tarifaRaw) {
-    const cfg = JSON.parse(tarifaRaw);
-    const distEl   = document.getElementById('landing-distribuidora');
-    const tarifaEl = document.getElementById('landing-tarifa');
-    if (distEl && cfg.distribuidora) distEl.value = cfg.distribuidora;
-    if (tarifaEl && cfg.tarifa)      tarifaEl.value = cfg.tarifa;
-  }
+  carregarStatusDispositivoSettings();
 }
 
 /* ── Notificações (landing) — persiste no backend ── */
@@ -679,10 +702,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Listeners dos radio de tema
   document.querySelectorAll('input[name="theme"]').forEach(radio => {
-    radio.addEventListener('change', function () {
-      applyTheme(this.value, true);
+    radio.addEventListener('change', async function () {
+      const t = this.value;
+      applyTheme(t, true);
+
+      // Salva no cookie por usuário (compartilhado com o system)
+      try {
+        const userStr = localStorage.getItem('monitech_usuario_landing');
+        const userId = userStr ? JSON.parse(userStr)?.id : null;
+        if (userId) window._salvarTemaUsuario?.(userId, t);
+      } catch (_) {}
+
+      // Salva no banco para que o system restaure corretamente
+      const token = getAuthToken();
+      if (token) {
+        await fetch('/api/usuario/perfil', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ tema: t })
+        }).catch(() => {});
+      }
+
       showToast(
-        this.value === 'dark' ? 'Tema Escuro ativado!' : 'Tema Claro ativado!',
+        t === 'dark' ? 'Tema Escuro ativado!' : 'Tema Claro ativado!',
         'success'
       );
     });

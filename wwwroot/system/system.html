@@ -829,15 +829,34 @@
             <div class="floor-plan-header">
               <div>
                 <div class="house-name-label" id="house-label">Minha Casa</div>
-                <div class="floor-hint">Clique em um cômodo para visualizar consumo detalhado e dispositivos</div>
+                <div class="floor-hint" id="floor-hint">Clique em um cômodo para visualizar consumo detalhado</div>
               </div>
-              <div class="floor-legend">
-                <span>● Normal</span>
-                <span class="floor-legend__warn">● Médio</span>
-                <span class="floor-legend__danger">● Alto</span>
+              <div class="floor-header-actions">
+                <div class="floor-legend">
+                  <span>● Normal</span>
+                  <span class="floor-legend__warn">● Médio</span>
+                  <span class="floor-legend__danger">● Alto</span>
+                </div>
+                <button id="btn-limpar-planta" class="btn btn-secondary btn-sm" onclick="limparPlanta()" style="display:none;color:var(--danger);border-color:var(--danger);" title="Remove todos os cômodos da planta">
+                  <i data-lucide="trash-2" style="width:13px;height:13px;"></i> Limpar planta
+                </button>
+                <button id="btn-editar-planta" class="btn btn-secondary btn-sm" onclick="toggleModoEdicaoPlanta()">
+                  <i data-lucide="layout-grid" style="width:13px;height:13px;"></i> Editar layout
+                </button>
               </div>
             </div>
-            <div class="floor-grid" id="floor-grid"></div>
+
+            <!-- Canvas livre da planta -->
+            <div class="floor-canvas" id="floor-canvas"></div>
+
+            <!-- Bandeja de cômodos sem posição (visível no modo edição) -->
+            <div class="floor-tray-wrap" id="floor-tray-wrap" style="display:none">
+              <div class="floor-tray-label">
+                <i data-lucide="move" style="width:12px;height:12px;vertical-align:-2px;margin-right:4px;"></i>
+                Cômodos fora da planta — arraste para o canvas acima
+              </div>
+              <div class="floor-tray" id="floor-tray"></div>
+            </div>
           </div>
 
           <div id="room-detail-panel" class="room-detail-panel">
@@ -1086,8 +1105,8 @@
             </div>
           </div>
 
-          <!-- Vista para usuário comum: status via API (sem conexão direta) -->
-          <div class="esp32-user-view" data-user-only>
+          <!-- Vista de dispositivo: status via API -->
+          <div class="esp32-user-view">
 
             <!-- ── Estado A: Nenhum sensor vinculado ── -->
             <div id="device-sem-sensor" style="display:none">
@@ -1326,8 +1345,8 @@
 
           </div>
 
-          <!-- Grid principal: configuração + status -->
-          <div class="esp32-main-grid" data-admin-only>
+          <!-- Grid principal: configuração + status (legado admin, oculto) -->
+          <div class="esp32-main-grid" style="display:none">
 
             <!-- Configuração de conexão -->
             <div class="chart-card">
@@ -1477,8 +1496,8 @@
           </div>
           <!-- /Grid principal -->
 
-          <!-- Leituras ao vivo -->
-          <div class="esp32-live-grid" data-admin-only>
+          <!-- Leituras ao vivo (legado admin, oculto) -->
+          <div class="esp32-live-grid" style="display:none">
 
             <div class="chart-card">
               <div class="chart-title chart-title--flex">
@@ -1510,8 +1529,8 @@
 
           </div>
 
-          <!-- Terminal de log (apenas admin) -->
-          <div class="chart-card chart-card--mb" data-admin-only>
+          <!-- Terminal de log (legado admin, oculto) -->
+          <div class="chart-card chart-card--mb" style="display:none">
             <div class="terminal-header">
               <span>TERMINAL DE LOG</span>
               <div class="terminal-controls">
@@ -1525,8 +1544,8 @@
             <div id="esp-terminal" class="esp-terminal"></div>
           </div>
 
-          <!-- Guia de firmware -->
-          <div class="chart-card" data-admin-only>
+          <!-- Guia de firmware (legado admin, oculto) -->
+          <div class="chart-card" style="display:none">
             <div class="chart-title chart-title--mb-16">FIRMWARE PARA Dispositivo Monitech — CÓDIGO DE REFERÊNCIA</div>
 
             <!-- Credenciais Wi-Fi para preencher o código -->
@@ -2365,6 +2384,7 @@
                     <th>E-mail</th>
                     <th>Cargo</th>
                     <th>Status</th>
+                    <th>Plano</th>
                     <th>Cadastro</th>
                     <th>Último acesso</th>
                     <th class="admin-th-center">Res.</th>

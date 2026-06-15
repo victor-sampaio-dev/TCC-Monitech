@@ -386,8 +386,8 @@ a { text-decoration: none; color: inherit; }
   height: 30px;
   border-radius: 8px;
   background: rgba(0,87,255,0.1);
-  border: 1px solid rgba(0,87,255,0.18);
-  color: var(--blue);
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
   flex-shrink: 0;
 }
 
@@ -770,6 +770,39 @@ a { text-decoration: none; color: inherit; }
 .proto-info { flex: 1; }
 .proto-name { font-family: var(--display); font-size: 14px; font-weight: 700; color: var(--ink); }
 .proto-sub  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+/* ── Status do dispositivo (settings) ── */
+.device-status-row {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+}
+.device-status-dot {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  background: var(--muted);
+}
+.device-status-dot.online  { background: var(--success); box-shadow: 0 0 6px rgba(16,185,129,.4); }
+.device-status-dot.offline { background: var(--muted); }
+.device-status-text { font-size: 14px; font-weight: 600; color: var(--ink); }
+
+.device-meta-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; margin-bottom: 4px;
+}
+.device-meta-item { display: flex; flex-direction: column; gap: 2px; }
+.device-meta-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+.device-meta-val   { font-size: 13px; color: var(--cyan); font-family: var(--mono); }
+
+/* ── Steps de reset ── */
+.reset-steps { display: flex; flex-direction: column; gap: 14px; margin-top: 16px; }
+.reset-step {
+  display: flex; align-items: flex-start; gap: 14px;
+  font-size: 13px; color: var(--ink-3); line-height: 1.6;
+}
+.reset-step-num {
+  min-width: 26px; height: 26px; border-radius: 50%;
+  background: var(--blue-bg); border: 1px solid var(--border-bright);
+  color: var(--cyan); font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  margin-top: 1px;
+}
 
 .proto-check {
   width: 22px; height: 22px;

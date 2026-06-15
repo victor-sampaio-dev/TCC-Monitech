@@ -523,58 +523,81 @@
         <section class="settings-panel" id="panel-dispositivo">
           <div class="panel-header">
             <div class="panel-eyebrow">Hardware</div>
-            <h1 class="panel-title">Dispositivo</h1>
-            <p class="panel-desc">Preferências de comunicação e cálculo de energia do seu ESP32 MONITECH.</p>
+            <h1 class="panel-title">Dispositivo Monitech</h1>
+            <p class="panel-desc">Status e opções do seu Dispositivo Monitech.</p>
           </div>
 
+          <!-- Status do dispositivo -->
           <div class="settings-card">
-            <div class="card-label"><span class="card-label-icon"><i data-lucide="globe"></i></span>Protocolo de Comunicação</div>
-            <div class="card-sublabel">O MONITECH usa HTTP para envio de dados — sem configuração extra, funciona em qualquer rede Wi-Fi doméstica.</div>
-            <div class="proto-opt proto-selected" style="cursor:default;">
-              <span class="proto-icon"><i data-lucide="globe"></i></span>
-              <div class="proto-info">
-                <div class="proto-name">HTTP · Ativo</div>
-                <div class="proto-sub">O ESP32 envia leituras via POST a cada ciclo configurado</div>
+            <div class="card-label"><span class="card-label-icon"><i data-lucide="cpu"></i></span>Status do Dispositivo</div>
+            <div id="device-status-settings">
+              <div class="device-status-row">
+                <span class="device-status-dot" id="settings-status-dot"></span>
+                <span class="device-status-text" id="settings-status-text">Carregando...</span>
               </div>
-              <span class="proto-check" style="background:var(--blue);border-color:var(--blue);color:#fff;">✓</span>
-            </div>
-            <div class="info-note">
-              <i data-lucide="info"></i>
-              <span>As credenciais Wi-Fi, URL e token de autenticação do sensor são configuradas diretamente no dispositivo através do portal de instalação do MONITECH.</span>
-            </div>
-          </div>
-
-          <div class="settings-card">
-            <div class="card-label"><span class="card-label-icon"><i data-lucide="clock"></i></span>Intervalo de Atualização</div>
-            <div class="card-sublabel">De quantos em quantos segundos o painel busca novos dados do servidor. Valores menores = maior precisão, maior uso de dados.</div>
-            <div class="range-row">
-              <input type="range" class="form-range" id="landing-interval" min="1" max="60" value="5"
-                oninput="updateRangeLabelLanding(this)">
-              <div class="range-label"><span id="landing-range-val">5</span>s</div>
-            </div>
-            <div class="range-hints">
-              <span>1s · Máxima precisão</span>
-              <span>60s · Economia de dados</span>
+              <div id="settings-offline-warning" style="display:none;margin-bottom:14px;">
+                <div class="info-note" style="border-color:rgba(255,61,107,.3);background:rgba(255,61,107,.06);">
+                  <i data-lucide="wifi-off" style="color:var(--danger);flex-shrink:0;"></i>
+                  <span style="color:var(--danger);">Dispositivo sem comunicação com o servidor. Verifique se está ligado e conectado à mesma rede Wi-Fi.</span>
+                </div>
+              </div>
+              <div class="device-meta-grid" id="settings-device-meta" style="display:none">
+                <div class="device-meta-item">
+                  <span class="device-meta-label">ID</span>
+                  <span class="device-meta-val" id="settings-device-id">—</span>
+                </div>
+                <div class="device-meta-item">
+                  <span class="device-meta-label">Firmware</span>
+                  <span class="device-meta-val" id="settings-device-fw">—</span>
+                </div>
+                <div class="device-meta-item">
+                  <span class="device-meta-label">Rede Wi-Fi</span>
+                  <span class="device-meta-val" id="settings-device-ssid">—</span>
+                </div>
+                <div class="device-meta-item">
+                  <span class="device-meta-label">Sinal</span>
+                  <span class="device-meta-val" id="settings-device-rssi">—</span>
+                </div>
+              </div>
+              <div id="settings-no-device" style="display:none">
+                <p style="font-size:13px;color:var(--text-secondary);margin:12px 0;">Nenhum Dispositivo Monitech vinculado a esta conta.</p>
+              </div>
             </div>
             <div class="form-actions" style="margin-top:16px;">
-              <button class="btn-save" onclick="salvarConfigDispositivo()">Salvar Intervalo</button>
+              <a href="/system/system.html" class="btn-save" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;">
+                <i data-lucide="layout-dashboard" style="width:15px;height:15px;"></i> Gerenciar no Painel
+              </a>
             </div>
           </div>
 
+          <!-- Redefinir dispositivo -->
           <div class="settings-card">
-            <div class="card-label"><span class="card-label-icon"><i data-lucide="zap"></i></span>Tarifa de Energia</div>
-            <div class="card-sublabel">Informe os dados da sua concessionária para que o MONITECH calcule o custo real em R$ no painel de consumo.</div>
-            <div class="form-grid">
-              <div class="form-group">
-                <label class="form-label">Distribuidora</label>
-                <input type="text" id="landing-distribuidora" class="form-input" placeholder="Ex: CEMIG, COPEL, ENEL…">
+            <div class="card-label"><span class="card-label-icon"><i data-lucide="rotate-ccw"></i></span>Redefinir Dispositivo</div>
+            <div class="card-sublabel">Use esta opção para reconfigurar a rede Wi-Fi ou o token do seu Dispositivo Monitech.</div>
+            <div class="reset-steps">
+              <div class="reset-step">
+                <span class="reset-step-num">1</span>
+                <span>Com o Dispositivo Monitech ligado, localize o pequeno orifício de reset na lateral da caixa.</span>
+              </div>
+              <div class="reset-step">
+                <span class="reset-step-num">2</span>
+                <span>Insira um objeto fino — palito, clipe de papel ou agulha — e pressione o botão interno por <strong>3 segundos</strong>.</span>
+              </div>
+              <div class="reset-step">
+                <span class="reset-step-num">3</span>
+                <span>O LED irá piscar rapidamente. Solte — o dispositivo está redefinido e pronto para nova configuração.</span>
+              </div>
+              <div class="reset-step">
+                <span class="reset-step-num">4</span>
+                <span>Conecte-se à rede <strong>MONITECH-Setup</strong> e acesse <strong>http://192.168.4.1</strong> para configurar novamente.</span>
               </div>
             </div>
-            <div class="tariff-info">
-              <i data-lucide="zap"></i>
-              <span>A tarifa é calculada automaticamente com base na sua distribuidora e na bandeira tarifária vigente da ANEEL.</span>
+            <div class="info-note" style="margin-top:16px;">
+              <i data-lucide="info"></i>
+              <span>Após redefinir, gere um novo token no painel antes de configurar o dispositivo novamente.</span>
             </div>
           </div>
+
         </section>
 
         <!-- NOTIFICAÇÕES -->
@@ -632,7 +655,7 @@
               <div class="toggle-row">
                 <div class="toggle-info">
                   <div class="toggle-title">Sensor Desconectado</div>
-                  <div class="toggle-sub">Alerta imediato quando o ESP32 parar de enviar leituras por mais de 2 minutos.</div>
+                  <div class="toggle-sub">Alerta imediato quando o Dispositivo Monitech parar de enviar leituras por mais de 2 minutos.</div>
                 </div>
                 <label class="toggle-switch">
                   <input type="checkbox" id="notif-sensor" checked>

@@ -121,7 +121,7 @@ public class AuthService(AppDbContext db, IConfiguration config, EmailService em
             var response = new LoginResponse(
                 Sucesso:  true,
                 Token:    token,
-                Usuario:  new UsuarioDto(usuario.Id, $"{usuario.Nome} {usuario.Sobrenome}".Trim(), usuario.Email, usuario.FotoUrl, usuario.DataCriacao, usuario.Role, usuario.Tema, usuario.Plano, usuario.PlanoExpiraEm),
+                Usuario:  new UsuarioDto(usuario.Id, $"{usuario.Nome} {usuario.Sobrenome}".Trim(), usuario.Email, usuario.FotoUrl, usuario.DataCriacao, usuario.Role ?? "user", usuario.Tema ?? "dark", usuario.Plano ?? "gratuito", usuario.PlanoExpiraEm),
                 ExpiraEm: expira
             );
 

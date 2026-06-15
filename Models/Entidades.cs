@@ -27,6 +27,9 @@ public class Usuario
     [Column("ultima_login")]     public DateTime? UltimaLogin    { get; set; }
     [Column("fuso_horario")]     public string  FusoHorario      { get; set; } = "America/Sao_Paulo";
     [Column("role")]             public string  Role             { get; set; } = "user";
+    [Column("tema")]             public string  Tema             { get; set; } = "dark"; // dark | light
+    [Column("plano")]            public string  Plano            { get; set; } = "gratuito"; // gratuito | mensal
+    [Column("plano_expira_em")]  public DateTime? PlanoExpiraEm  { get; set; }
     [Column("totp_secret")]      public string? TotpSecret       { get; set; }
     [Column("totp_ativo")]       public bool    TotpAtivo        { get; set; } = false;
 
@@ -67,6 +70,8 @@ public class Comodo
     [Column("andar")]           public short   Andar         { get; set; } = 0;
     [Column("area_m2")]         public decimal? AreaM2       { get; set; }
     [Column("ordem_exibicao")]  public short   OrdemExibicao { get; set; } = 0;
+    [Column("posicao_x")]       public int?    PosicaoX      { get; set; }
+    [Column("posicao_y")]       public int?    PosicaoY      { get; set; }
     [Column("data_criacao")]    public DateTime DataCriacao  { get; set; } = DateTime.UtcNow;
     [Column("data_atualizacao")] public DateTime DataAtualizacao { get; set; } = DateTime.UtcNow;
 

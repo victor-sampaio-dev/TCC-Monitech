@@ -362,6 +362,15 @@ const API = {
     });
   },
 
+  /** PATCH /api/comodos/:id/posicao */
+  atualizarPosicaoComodo: async (id, posicaoX, posicaoY) => {
+    return await apiFetch(`/api/comodos/${id}/posicao`, {
+      method:  'PATCH',
+      headers: { ...headersAuth(), 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ posicaoX, posicaoY })
+    });
+  },
+
   // ── DISPOSITIVOS ──────────────────────────────────────────
 
   /** GET /api/dispositivos/:idResidencia */
@@ -526,6 +535,15 @@ const API = {
       method:  'PATCH',
       headers: headersAuth(),
       body:    JSON.stringify({ role })
+    });
+  },
+
+  /** PATCH /api/admin/usuarios/{id}/plano */
+  adminAtualizarPlano: async (id, plano, diasExpiracao) => {
+    return await apiFetch(`/api/admin/usuarios/${id}/plano`, {
+      method:  'PATCH',
+      headers: headersAuth(),
+      body:    JSON.stringify({ plano, diasExpiracao })
     });
   }
 };
@@ -847,73 +865,123 @@ function _nilmRenderTabela(container, estimados, reais, horas, modo, resp) {
   const CORES = ['#818cf8','#34d399','#fb923c','#f472b6','#60a5fa','#a78bfa','#facc15','#f87171','#2dd4bf','#e879f9'];
   const temReal = modo === 'ok';
 
-  // Aviso de estado
   const avisoMap = {
     offline:       `<div class="nilm-aviso nilm-aviso--warn">Serviço de análise offline — exibindo somente estimativas cadastradas.</div>`,
     semDados:      `<div class="nilm-aviso nilm-aviso--info">Dados insuficientes no período — exibindo somente estimativas. Aumente o intervalo ou aguarde mais leituras.</div>`,
     planoGratuito: `<div class="nilm-aviso nilm-aviso--info">🔒 A comparação com medição real (NILM avançado) está disponível no <strong>Plano Mensal</strong>. <a href="#" onclick="atualizarPlano();return false;" style="color:var(--blue-core)">Fazer upgrade →</a></div>`,
-    ok:            '',
+    ok: '',
   };
-  const avisoHtml = avisoMap[modo] || '';
 
-  // Montar linhas mesclando estimado + real por nome
+  // Ícone por nome/tipo do aparelho
+  const _icone = (est) => {
+    const n = (est.nome || '').toLowerCase();
+    const t = (est.tipo || est.categoria || '').toLowerCase();
+    if (n.includes('ar') || n.includes('cond') || t.includes('clima')) return 'wind';
+    if (n.includes('chuv') || t.includes('chuv'))                       return 'droplets';
+    if (n.includes('gelad') || n.includes('frigor'))                    return 'thermometer';
+    if (n.includes('tv') || n.includes('telev'))                        return 'tv-2';
+    if (n.includes('lamp') || t.includes('ilumina'))                    return 'lightbulb';
+    if (n.includes('micro') || n.includes('forno'))                     return 'zap';
+    if (n.includes('lava') || n.includes('máqui'))                      return 'rotate-cw';
+    if (n.includes('comp') || n.includes('note') || n.includes('pc'))  return 'monitor';
+    if (n.includes('chuveiro'))                                         return 'droplets';
+    return 'plug';
+  };
+
+  // Máximos para escalar as barras
+  const maxEst  = Math.max(...estimados.map(e => Number(e.kwh  || 0)), 0.001);
+  const maxReal = Math.max(...reais.map(r => Number(r.kwhEstimado || 0)), 0.001);
+
+  // Linhas dos aparelhos cadastrados
   const linhas = estimados.map((est, i) => {
-    const real   = reais.find(r => r.nome?.toLowerCase() === est.nome?.toLowerCase());
-    const ativo  = est.status === 'on' || est.status === 'ativo';
-    const estKwh = Number(est.kwh || 0);
+    const real    = reais.find(r => r.nome?.toLowerCase() === est.nome?.toLowerCase());
+    const ativo   = est.status === 'on' || est.status === 'ativo';
+    const estKwh  = Number(est.kwh || 0);
     const realKwh = real ? Number(real.kwhEstimado || 0) : null;
+    const cor     = CORES[i % CORES.length];
+    const icone   = _icone(est);
+    const estPct  = ((estKwh / maxEst) * 100).toFixed(1);
+    const realPct = realKwh !== null ? ((realKwh / maxReal) * 100).toFixed(1) : 0;
 
-    let deltaHtml = `<span class="nc-delta nc-delta--nd">—</span>`;
+    // Pill de delta
+    let deltaPill = `<span class="nc-delta-pill nc-delta-pill--nd">—</span>`;
     if (realKwh !== null && estKwh > 0) {
-      const pct = ((realKwh - estKwh) / estKwh) * 100;
+      const pct   = ((realKwh - estKwh) / estKwh) * 100;
       const sinal = pct > 0 ? '+' : '';
-      if (pct > 20)       deltaHtml = `<span class="nc-delta nc-delta--alto">⬆ ${sinal}${pct.toFixed(0)}%</span>`;
-      else if (pct < -20) deltaHtml = `<span class="nc-delta nc-delta--baixo">⬇ ${pct.toFixed(0)}%</span>`;
-      else                deltaHtml = `<span class="nc-delta nc-delta--ok">${sinal}${pct.toFixed(0)}%</span>`;
+      const label = `${sinal}${pct.toFixed(0)}%`;
+      if      (pct >  20) deltaPill = `<span class="nc-delta-pill nc-delta-pill--alto">↑ ${label}</span>`;
+      else if (pct < -20) deltaPill = `<span class="nc-delta-pill nc-delta-pill--baixo">↓ ${label}</span>`;
+      else                deltaPill = `<span class="nc-delta-pill nc-delta-pill--ok">${label}</span>`;
     }
 
-    const realHtml = realKwh !== null
-      ? `<span class="nc-val nc-val--real">${realKwh.toFixed(3)} kWh</span>`
-      : `<span class="nc-val nc-val--nd">${temReal ? 'não detect.' : '—'}</span>`;
+    const realCell = realKwh !== null
+      ? `<div class="nc-cell">
+           <span class="nc-num nc-num--real">${realKwh.toFixed(3)}<small> kWh</small></span>
+           <div class="nc-bar"><div class="nc-bar-fill nc-bar-fill--real" style="width:${realPct}%"></div></div>
+         </div>`
+      : `<div class="nc-cell nc-cell--nd">
+           <span class="nc-num-nd">${temReal ? 'não detectado' : '—'}</span>
+           <div class="nc-bar"></div>
+         </div>`;
 
-    const mins = real?.minutosLigadoEstimado ?? null;
+    const minsCell = temReal
+      ? `<span class="nc-mins">${real?.minutosLigadoEstimado != null ? real.minutosLigadoEstimado + '<small> min</small>' : '—'}</span>`
+      : '';
 
     return `
       <div class="nc-row ${!ativo ? 'nc-row--inativo' : ''}">
-        <span class="nc-nome">
-          <span class="nc-dot" style="background:${CORES[i % CORES.length]};"></span>
-          ${est.nome}
-        </span>
-        <span class="nc-val nc-val--est">${estKwh.toFixed(3)} kWh</span>
-        ${realHtml}
-        ${deltaHtml}
-        ${temReal ? `<span class="nc-mins">${mins !== null ? mins + ' min' : '—'}</span>` : ''}
+        <div class="nc-device">
+          <span class="nc-dot" style="background:${cor}"></span>
+          <span class="nc-icon" style="color:${cor}"><i data-lucide="${icone}" style="width:14px;height:14px"></i></span>
+          <div class="nc-device-info">
+            <span class="nc-name">${est.nome}</span>
+            <span class="nc-status ${ativo ? 'nc-status--on' : 'nc-status--off'}">${ativo ? 'Ativo' : 'Inativo'}</span>
+          </div>
+        </div>
+        <div class="nc-cell">
+          <span class="nc-num nc-num--est">${estKwh.toFixed(3)}<small> kWh</small></span>
+          <div class="nc-bar"><div class="nc-bar-fill nc-bar-fill--est" style="width:${estPct}%"></div></div>
+        </div>
+        ${realCell}
+        ${deltaPill}
+        ${minsCell}
       </div>`;
   }).join('');
 
-  // Dispositivos detectados pelo sensor mas não cadastrados
+  // Aparelhos detectados pelo sensor mas não cadastrados
   const extras = reais.filter(r => !estimados.some(e => e.nome?.toLowerCase() === r.nome?.toLowerCase()));
-  const extrasHtml = extras.map((r) => `
-    <div class="nc-row nc-row--novo">
-      <span class="nc-nome">
-        <span class="nc-dot" style="background:#facc15;"></span>
-        ${r.nome} <span class="nc-badge-novo">novo</span>
-      </span>
-      <span class="nc-val nc-val--nd">—</span>
-      <span class="nc-val nc-val--real">${Number(r.kwhEstimado||0).toFixed(3)} kWh</span>
-      <span class="nc-delta nc-delta--novo">detectado</span>
-      <span class="nc-mins">${r.minutosLigadoEstimado ?? '—'} min</span>
-    </div>`).join('');
+  const extrasHtml = extras.map(r => {
+    const realKwh = Number(r.kwhEstimado || 0);
+    const realPct = ((realKwh / maxReal) * 100).toFixed(1);
+    return `
+      <div class="nc-row nc-row--novo">
+        <div class="nc-device">
+          <span class="nc-dot" style="background:#facc15"></span>
+          <span class="nc-icon" style="color:#facc15"><i data-lucide="search" style="width:14px;height:14px"></i></span>
+          <div class="nc-device-info">
+            <span class="nc-name">${r.nome} <span class="nc-badge-novo">novo</span></span>
+            <span class="nc-status nc-status--on">Detectado</span>
+          </div>
+        </div>
+        <div class="nc-cell nc-cell--nd"><span class="nc-num-nd">—</span><div class="nc-bar"></div></div>
+        <div class="nc-cell">
+          <span class="nc-num nc-num--real">${realKwh.toFixed(3)}<small> kWh</small></span>
+          <div class="nc-bar"><div class="nc-bar-fill nc-bar-fill--real" style="width:${realPct}%"></div></div>
+        </div>
+        <span class="nc-delta-pill nc-delta-pill--novo">detectado</span>
+        ${temReal ? `<span class="nc-mins">${r.minutosLigadoEstimado ?? '—'}<small> min</small></span>` : ''}
+      </div>`;
+  }).join('');
 
   const tsHtml = resp?.analisadoEm
     ? `<div class="nilm-ts">Análise: ${new Date(resp.analisadoEm).toLocaleString('pt-BR')} · últimas ${horas}h · ${resp.analise || ''}</div>`
     : '';
 
-  const colReal  = temReal ? `<span>Medido (${horas}h)</span>` : `<span>Medido</span>`;
-  const colMins  = temReal ? `<span>Tempo ligado</span>` : '';
+  const colReal = temReal ? `<span>Medido (${horas}h)</span>` : `<span>Medido</span>`;
+  const colMins = temReal ? `<span>Tempo ligado</span>` : '';
 
   container.innerHTML = `
-    ${avisoHtml}
+    ${avisoMap[modo] || ''}
     <div class="nilm-compare-wrap">
       ${temReal && reais.length ? `
       <div class="nilm-compare-donut">
@@ -924,7 +992,7 @@ function _nilmRenderTabela(container, estimados, reais, horas, modo, resp) {
           <span>Aparelho</span>
           <span>Estimado</span>
           ${colReal}
-          <span>Δ</span>
+          <span>Δ Variação</span>
           ${colMins}
         </div>
         ${linhas}
@@ -1000,8 +1068,8 @@ async function fazerLogin() {
     // Salva também no localStorage para persistência
     localStorage.setItem('monitech_usuario_system', JSON.stringify(resposta.usuario));
 
-    // Cookie do usuário tem prioridade; fallback para o valor do servidor
-    const _temaLogin = window._getTemaUsuario?.(resposta.usuario.id) || resposta.usuario.tema || 'dark';
+    // DB é fonte de verdade no login — salva no cookie e aplica
+    const _temaLogin = resposta.usuario.tema || 'dark';
     window._salvarTemaUsuario?.(resposta.usuario.id, _temaLogin);
     aplicarTema(_temaLogin, true, true);
     console.log('[Login] Usuário logado:', appState.usuario);
@@ -1020,7 +1088,7 @@ async function fazerLogin() {
       // Se tem residências, carrega a primeira e entra no app
       console.log('[Login] Carregando primeira residência...');
       appState.residencias = respResidencias.residencias;
-      appState.residencia  = respResidencias.residencias[0];
+      appState.residencia  = _residenciaPreferida(respResidencias.residencias);
 
       // Atualiza tarifaKwh com valor vivo da ANEEL (se distribuidora cadastrada)
       if (appState.residencia.distribuidora) {
@@ -1073,14 +1141,14 @@ async function verificar2FaLogin() {
   if (resposta.sucesso) {
     appState.usuario = resposta.usuario;
     localStorage.setItem('monitech_usuario_system', JSON.stringify(resposta.usuario));
-    const _tema2fa = window._getTemaUsuario?.(resposta.usuario.id) || resposta.usuario?.tema || 'dark';
+    const _tema2fa = resposta.usuario?.tema || 'dark';
     window._salvarTemaUsuario?.(resposta.usuario.id, _tema2fa);
     aplicarTema(_tema2fa, true, true);
     cancelar2FaLogin();
     const respResidencias = await API.listarResidencias();
     if (respResidencias?.residencias?.length > 0) {
       appState.residencias = respResidencias.residencias;
-      appState.residencia  = respResidencias.residencias[0];
+      appState.residencia  = _residenciaPreferida(respResidencias.residencias);
       entrarNoApp();
     } else {
       mostrarPagina('page-onboard');
@@ -1197,7 +1265,7 @@ async function _handleGoogleSystemCredential(response) {
       localStorage.setItem('monitech_expira_system',  data.expiraEm);
 
       appState.usuario = data.usuario;
-      const _temaGgl = window._getTemaUsuario?.(data.usuario?.id) || data.usuario?.tema || 'dark';
+      const _temaGgl = data.usuario?.tema || 'dark';
       window._salvarTemaUsuario?.(data.usuario?.id, _temaGgl);
       aplicarTema(_temaGgl, true, true);
       atualizarIndicadorUsuarioDOM(); // exibe foto do Google imediatamente, sem esperar sync da API
@@ -1207,7 +1275,7 @@ async function _handleGoogleSystemCredential(response) {
 
       if (temResidencias) {
         appState.residencias = respResidencias.residencias;
-        appState.residencia  = respResidencias.residencias[0];
+        appState.residencia  = _residenciaPreferida(respResidencias.residencias);
         const respComodos2 = await API.obterComodos(appState.residencia.id);
         if (respComodos2.sucesso) appState.comodos = respComodos2.comodos || [];
         await _sincronizarDispositivos();
@@ -1772,7 +1840,9 @@ async function sincronizarUsuarioDoLocalStorage() {
           dataCriacao:    data.dataCriacao,
           role:           data.role || 'user',
           totpAtivo:      data.totpAtivo ?? false,
-          tema:           data.tema || 'dark'
+          tema:           data.tema || 'dark',
+          plano:          data.plano || 'gratuito',
+          planoExpiraEm:  data.planoExpiraEm || null
         };
 
         // Tema gerenciado por cookie (mt_t_{uid}) — não sobrescreve com valor do DB
@@ -2045,6 +2115,7 @@ function aplicarTema(tema, persistir = true, skipSalvar = false) {
   const temaNormalizado = tema === 'light' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', temaNormalizado);
   document.documentElement.setAttribute('data-theme-mode', temaNormalizado);
+  document.documentElement.classList.toggle('dark-theme', temaNormalizado === 'dark');
   document.body?.setAttribute('data-theme', temaNormalizado);
   document.body?.classList.toggle('dark-theme', temaNormalizado === 'dark');
 
@@ -2061,10 +2132,23 @@ function aplicarTema(tema, persistir = true, skipSalvar = false) {
   atualizarControlesTema(temaNormalizado);
 }
 
-/** Salva a personalização do tema — o próprio aplicarTema já persiste no servidor */
-function salvarPersonalizacao() {
+/** Salva a personalização do tema localmente e no banco */
+async function salvarPersonalizacao() {
   const temaSelecionado = document.querySelector('input[name="theme-preference"]:checked')?.value || 'dark';
   aplicarTema(temaSelecionado, true);
+
+  const token = localStorage.getItem('monitech_token_system');
+  if (!token) return;
+  const resp = await apiFetch('/api/usuario/perfil', {
+    method:  'PATCH',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+    body:    JSON.stringify({ tema: temaSelecionado })
+  });
+  if (resp?.sucesso) {
+    if (appState.usuario) appState.usuario.tema = temaSelecionado;
+  } else {
+    mostrarToast('Erro ao salvar tema. Tente novamente.', 'erro');
+  }
 }
 
 /** Preenche os campos de configurações com os dados do estado atual */
@@ -3270,6 +3354,16 @@ function carregarDadosDemo() {
 // SELETOR DE RESIDÊNCIA
 // ===================================================
 
+/** Retorna a residência salva como preferida; fallback para a primeira da lista */
+function _residenciaPreferida(lista) {
+  const idSalvo = localStorage.getItem('monitech_residencia_system');
+  if (idSalvo) {
+    const encontrada = lista.find(r => r.id === idSalvo);
+    if (encontrada) return encontrada;
+  }
+  return lista[0];
+}
+
 /** Atualiza o selector da topbar com a lista de residências */
 function renderizarResidenciaSelector() {
   const nomeEl = document.getElementById('residencia-nome-topbar');
@@ -3314,6 +3408,7 @@ async function trocarResidencia(id) {
   if (!res) return;
 
   appState.residencia = res;
+  localStorage.setItem('monitech_residencia_system', id);
   document.getElementById('residencia-dropdown')?.classList.remove('open');
   renderizarResidenciaSelector();
 
@@ -4015,35 +4110,368 @@ function exibirDetalheComodo(idComodo) {
 
 
 // ===================================================
-// ABA: PLANTA INTERATIVA
+// ABA: PLANTA INTERATIVA — canvas livre
 // ===================================================
 
-/** Renderiza a grade da planta baixa com os cômodos cadastrados */
-function renderizarPlanta() {
-  const grade = document.getElementById('floor-grid');
-  const icones = obterIconesComodos();
-  const maxW = Math.max(...appState.comodos.map(c => c.watts), 1);
+let _plantaModoEdicao = false;
+let _dragState = null; // { comodoId, offsetX, offsetY, fromTray }
 
-  grade.innerHTML = appState.comodos.map(comodo => {
-    const proporcao = comodo.watts / maxW;
-    const isCritico = proporcao > 0.7;
-    const isMedio = proporcao > 0.4 && !isCritico;
-    const cor = isCritico ? 'var(--danger)' : isMedio ? 'var(--warn)' : 'var(--success)';
-    const qtdDisp = appState.dispositivos.filter(d => d.idComodo === comodo.id).length;
+// Coordenadas salvas como inteiros 0-1000 (‰ da largura/altura do canvas)
+const _pctToStore = (px, dim) => Math.max(0, Math.min(1000, Math.round((px / dim) * 1000)));
+const _storeToLeft = v => (v / 10) + '%';
+const _storeToTop  = v => (v / 10) + '%';
 
-    return `
-      <div class="floor-room ${isCritico ? 'critical' : ''}" id="floor-${comodo.id}" onclick="selecionarComodoPlanta('${comodo.id}')">
-        <div class="heat-overlay" style="background:${cor};"></div>
-        <div class="room-icon">${icones[comodo.tipo] || '📦'}</div>
-        <div class="room-name" style="color:var(--text-primary);">${comodo.nome}</div>
-        <div class="room-kw" style="color:${cor};">${(comodo.watts / 1000).toFixed(2)} kW</div>
-        <div style="font-size:10px; color:var(--text-dim);">${qtdDisp} disp.</div>
-      </div>
-    `;
-  }).join('');
+/** Cria e retorna um elemento card de cômodo para a planta */
+function _criarCardPlanta(comodo, icones, totalW, maxW, idTop, noCanvas) {
+  const w         = comodo.watts || 0;
+  const proporcao = w / maxW;
+  const isCritico = proporcao > 0.7;
+  const isMedio   = proporcao > 0.4 && !isCritico;
+  const cor       = isCritico ? 'var(--danger)' : isMedio ? 'var(--warn)' : 'var(--success)';
+  const qtdDisp   = appState.dispositivos.filter(d => d.idComodo === comodo.id).length;
+  const pct       = totalW > 0 ? Math.round((w / totalW) * 100) : 0;
+  const isTop     = comodo.id === idTop && w > 0;
 
-  corrigirTextosCorrompidosNaPagina(grade);
+  const div = document.createElement('div');
+  div.className = `floor-room${isCritico ? ' critical' : ''}`;
+  div.id = `floor-${comodo.id}`;
+  div.dataset.idComodo = comodo.id;
+
+  if (_plantaModoEdicao) {
+    div.classList.add('floor-room--draggable');
+    div.addEventListener('mousedown',  e => _iniciarDrag(comodo.id, e, !noCanvas));
+    div.addEventListener('touchstart', e => _iniciarDrag(comodo.id, e, !noCanvas), { passive: false });
+  } else {
+    div.addEventListener('click', () => selecionarComodoPlanta(comodo.id));
+  }
+
+  div.innerHTML = `
+    <div class="heat-overlay" style="background:${cor};"></div>
+    ${isTop ? `<div class="room-top-badge"><i data-lucide="crown" style="width:15px;height:15px;"></i></div>` : ''}
+    ${_plantaModoEdicao && noCanvas ? `
+      <button class="floor-room-remove" title="Remover da planta"
+        onmousedown="event.stopPropagation()" ontouchstart="event.stopPropagation()"
+        onclick="event.stopPropagation();removerDaGrade('${comodo.id}')">
+        <i data-lucide="x" style="width:11px;height:11px;"></i>
+      </button>` : ''}
+    <div class="room-icon">${icones[comodo.tipo] || '📦'}</div>
+    <div class="room-name" style="color:var(--text-primary);">${comodo.nome}</div>
+    <div class="room-kw" style="color:${cor};">${(w / 1000).toFixed(2)} kW</div>
+    <div class="room-share-pct">${pct}% da casa</div>
+    <div style="font-size:10px;color:var(--text-dim);">${qtdDisp} disp.</div>
+    <div class="room-share-bar">
+      <div class="room-share-bar__fill" style="width:${pct}%;background:${cor};"></div>
+    </div>
+  `;
+  return div;
 }
+
+/** Renderiza o canvas livre da planta */
+function renderizarPlanta() {
+  const canvas = document.getElementById('floor-canvas');
+  if (!canvas) return;
+
+  const icones = obterIconesComodos();
+
+  // Calcula watts de cada cômodo somando potência nominal dos dispositivos (mesma lógica da aba Cômodos)
+  const wattsDeComodo = id => appState.dispositivos
+    .filter(d => d.idComodo === id)
+    .reduce((s, d) => s + (Number(d.potenciaNominal) || Number(d.watts) || 0), 0);
+  appState.comodos.forEach(c => { c.watts = wattsDeComodo(c.id); });
+
+  const totalW = appState.comodos.reduce((s, c) => s + (c.watts || 0), 0);
+  const maxW   = Math.max(...appState.comodos.map(c => c.watts || 0), 1);
+  const idTop  = totalW > 0
+    ? appState.comodos.reduce((m, c) => (c.watts || 0) > (m?.watts ?? 0) ? c : m, null)?.id
+    : null;
+
+  canvas.innerHTML = '';
+  canvas.className = `floor-canvas${_plantaModoEdicao ? ' floor-canvas--editavel' : ''}`;
+
+  const semPosicao = [];
+  appState.comodos.forEach(c => {
+    if (c.posicaoX != null && c.posicaoY != null) {
+      const card = _criarCardPlanta(c, icones, totalW, maxW, idTop, true);
+      card.style.left = _storeToLeft(c.posicaoX);
+      card.style.top  = _storeToTop(c.posicaoY);
+      canvas.appendChild(card);
+    } else {
+      semPosicao.push(c);
+    }
+  });
+
+  // Bandeja
+  const trayWrap = document.getElementById('floor-tray-wrap');
+  const tray     = document.getElementById('floor-tray');
+  if (tray) {
+    tray.innerHTML = '';
+    semPosicao.forEach(c => tray.appendChild(_criarCardPlanta(c, icones, totalW, maxW, idTop, false)));
+  }
+  if (trayWrap) trayWrap.style.display = (_plantaModoEdicao || semPosicao.length > 0) ? '' : 'none';
+
+  // Botão e dica
+  const btn  = document.getElementById('btn-editar-planta');
+  const hint = document.getElementById('floor-hint');
+  if (btn) btn.innerHTML = _plantaModoEdicao
+    ? '<i data-lucide="check" style="width:13px;height:13px;"></i> Concluir'
+    : '<i data-lucide="layout-grid" style="width:13px;height:13px;"></i> Editar layout';
+  if (hint) hint.textContent = _plantaModoEdicao
+    ? 'Arraste os cômodos para qualquer lugar da planta'
+    : 'Clique em um cômodo para visualizar consumo detalhado';
+
+  // Botão "Limpar planta" — visível só em modo edição
+  const btnLimpar = document.getElementById('btn-limpar-planta');
+  if (btnLimpar) btnLimpar.style.display = _plantaModoEdicao ? '' : 'none';
+
+  if (!_plantaModoEdicao) requestAnimationFrame(_desenharConectoresSVG);
+
+  // Ajusta altura e clamp em um único rAF (ordem importa: altura primeiro, depois clamp)
+  requestAnimationFrame(() => {
+    _ajustarAlturaCanvas();
+    const cW = canvas.offsetWidth;
+    const cH = canvas.offsetHeight;
+    canvas.querySelectorAll('.floor-room').forEach(card => {
+      const cardW = card.offsetWidth;
+      const cardH = card.offsetHeight;
+      const left = parseFloat(card.style.left) / 100 * cW;
+      const top  = parseFloat(card.style.top)  / 100 * cH;
+      const cl   = Math.max(0, Math.min(cW - cardW, left));
+      const ct   = Math.max(0, Math.min(cH - cardH, top));
+      if (Math.abs(left - cl) > 1 || Math.abs(top - ct) > 1) {
+        card.style.left = (cl / cW * 100) + '%';
+        card.style.top  = (ct / cH * 100) + '%';
+      }
+    });
+  });
+
+  corrigirTextosCorrompidosNaPagina(canvas);
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+/** Desenha linhas SVG entre cômodos posicionados (minimum spanning tree) */
+function _desenharConectoresSVG() {
+  const canvas = document.getElementById('floor-canvas');
+  if (!canvas) return;
+
+  document.getElementById('floor-svg-overlay')?.remove();
+  if (_plantaModoEdicao) return;
+
+  const posicionados = appState.comodos.filter(c => c.posicaoX != null && c.posicaoY != null);
+  if (posicionados.length < 2) return;
+
+  const rect = canvas.getBoundingClientRect();
+  const nos = posicionados.map(c => {
+    const card = document.getElementById(`floor-${c.id}`);
+    if (!card) return null;
+    const r = card.getBoundingClientRect();
+    return { x: r.left + r.width / 2 - rect.left, y: r.top + r.height / 2 - rect.top };
+  }).filter(Boolean);
+
+  if (nos.length < 2) return;
+
+  const arestas = [];
+  for (let i = 0; i < nos.length; i++)
+    for (let j = i + 1; j < nos.length; j++) {
+      const dx = nos[i].x - nos[j].x, dy = nos[i].y - nos[j].y;
+      arestas.push({ i, j, d: Math.sqrt(dx * dx + dy * dy) });
+    }
+  arestas.sort((a, b) => a.d - b.d);
+
+  const pai = nos.map((_, i) => i);
+  const find = i => pai[i] === i ? i : (pai[i] = find(pai[i]));
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg');
+  svg.id = 'floor-svg-overlay';
+  svg.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:visible;';
+
+  nos.forEach(n => {
+    const c = document.createElementNS(NS, 'circle');
+    c.setAttribute('cx', n.x); c.setAttribute('cy', n.y); c.setAttribute('r', '4');
+    c.setAttribute('fill', 'rgba(0,212,255,.6)');
+    svg.appendChild(c);
+  });
+
+  for (const { i, j } of arestas) {
+    if (find(i) === find(j)) continue;
+    pai[find(i)] = find(j);
+    const line = document.createElementNS(NS, 'line');
+    line.setAttribute('x1', nos[i].x); line.setAttribute('y1', nos[i].y);
+    line.setAttribute('x2', nos[j].x); line.setAttribute('y2', nos[j].y);
+    line.setAttribute('stroke', 'rgba(0,212,255,.35)');
+    line.setAttribute('stroke-width', '1.5');
+    line.setAttribute('stroke-dasharray', '5,4');
+    line.setAttribute('stroke-linecap', 'round');
+    svg.appendChild(line);
+  }
+
+  canvas.appendChild(svg);
+}
+
+/** Liga/desliga o modo de edição */
+function toggleModoEdicaoPlanta() {
+  _plantaModoEdicao = !_plantaModoEdicao;
+  if (_plantaModoEdicao) {
+    document.querySelectorAll('.floor-room').forEach(el => el.classList.remove('active'));
+    const panel = document.getElementById('room-detail-panel');
+    if (panel) panel.style.display = 'none';
+  }
+  renderizarPlanta();
+}
+
+/** Remove cômodo do canvas (volta para a bandeja) */
+async function removerDaGrade(idComodo) {
+  const comodo = appState.comodos.find(c => c.id === idComodo);
+  if (!comodo) return;
+  comodo.posicaoX = null;
+  comodo.posicaoY = null;
+  await API.atualizarPosicaoComodo(idComodo, null, null);
+  renderizarPlanta();
+}
+
+/** Remove todos os cômodos do canvas — escape hatch para cards presos */
+async function limparPlanta() {
+  const posicionados = appState.comodos.filter(c => c.posicaoX != null || c.posicaoY != null);
+  if (posicionados.length === 0) return;
+  posicionados.forEach(c => { c.posicaoX = null; c.posicaoY = null; });
+  await Promise.all(posicionados.map(c => API.atualizarPosicaoComodo(c.id, null, null)));
+  renderizarPlanta();
+}
+
+// ── Altura dinâmica do canvas ─────────────────────────────
+
+function _ajustarAlturaCanvas() {
+  const canvas = document.getElementById('floor-canvas');
+  if (!canvas) return;
+  const rooms = canvas.querySelectorAll('.floor-room');
+  if (rooms.length === 0) {
+    canvas.style.height = '';
+    return;
+  }
+  let maxBottom = 0;
+  rooms.forEach(r => { maxBottom = Math.max(maxBottom, r.offsetTop + r.offsetHeight); });
+  const minH = parseInt(getComputedStyle(canvas).minHeight) || 280;
+  canvas.style.height = Math.max(minH, maxBottom + 32) + 'px';
+}
+
+// ── Drag livre — mouse e touch ─────────────────────────────
+
+function _clienteXY(e) {
+  if (e.touches && e.touches.length > 0)
+    return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  if (e.changedTouches && e.changedTouches.length > 0)
+    return { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY };
+  return { x: e.clientX, y: e.clientY };
+}
+
+function _iniciarDrag(comodoId, e, fromTray) {
+  const isTouch = e.type === 'touchstart';
+  if (!isTouch && e.button !== 0) return;
+  e.preventDefault();
+
+  const { x: clientX, y: clientY } = _clienteXY(e);
+  const canvas = document.getElementById('floor-canvas');
+  if (!canvas) return;
+  const canvasRect = canvas.getBoundingClientRect();
+
+  const comodo = appState.comodos.find(c => c.id === comodoId);
+  if (!comodo) return;
+
+  if (fromTray) {
+    // Coloca o cômodo no canvas centrado no dedo/cursor e inicia drag
+    const initX = _pctToStore(clientX - canvasRect.left - 64, canvasRect.width);
+    const initY = _pctToStore(clientY - canvasRect.top  - 55, canvasRect.height);
+    comodo.posicaoX = initX;
+    comodo.posicaoY = initY;
+    renderizarPlanta();
+    requestAnimationFrame(() => {
+      const card = document.getElementById(`floor-${comodoId}`);
+      if (!card) return;
+      const r = card.getBoundingClientRect();
+      _dragState = { comodoId, offsetX: clientX - r.left, offsetY: clientY - r.top };
+      card.classList.add('floor-room--dragging');
+      card.style.zIndex = '50';
+    });
+    return;
+  }
+
+  const card = document.getElementById(`floor-${comodoId}`);
+  if (!card) return;
+  const cardRect = card.getBoundingClientRect();
+  _dragState = { comodoId, offsetX: clientX - cardRect.left, offsetY: clientY - cardRect.top };
+  card.classList.add('floor-room--dragging');
+  card.style.zIndex = '50';
+}
+
+function _onDragMover(e) {
+  if (!_dragState) return;
+  if (e.cancelable) e.preventDefault(); // impede scroll da página durante o drag
+  const { comodoId, offsetX, offsetY } = _dragState;
+  const canvas = document.getElementById('floor-canvas');
+  const card   = document.getElementById(`floor-${comodoId}`);
+  if (!canvas || !card) return;
+
+  const { x: clientX, y: clientY } = _clienteXY(e);
+  const rect  = canvas.getBoundingClientRect();
+  const cardW = card.offsetWidth;
+  const cardH = card.offsetHeight;
+
+  // Expande canvas verticalmente se o card estiver chegando à borda inferior
+  const yRaw = clientY - rect.top - offsetY;
+  if (yRaw + cardH + 20 > canvas.offsetHeight) {
+    canvas.style.height = (yRaw + cardH + 40) + 'px';
+  }
+
+  const x = Math.max(0, Math.min(canvas.offsetWidth  - cardW, clientX - rect.left - offsetX));
+  const y = Math.max(0, Math.min(canvas.offsetHeight - cardH, yRaw));
+
+  card.style.left = (x / canvas.offsetWidth  * 100) + '%';
+  card.style.top  = (y / canvas.offsetHeight * 100) + '%';
+  _desenharConectoresSVG();
+}
+
+async function _onDragSoltar(e) {
+  if (!_dragState) return;
+  const { comodoId, offsetX, offsetY } = _dragState;
+  _dragState = null;
+
+  const canvas = document.getElementById('floor-canvas');
+  const card   = document.getElementById(`floor-${comodoId}`);
+  if (!canvas || !card) return;
+
+  const { x: clientX, y: clientY } = _clienteXY(e);
+  const rect  = canvas.getBoundingClientRect();
+  const cardW = card.offsetWidth;
+  const cardH = card.offsetHeight;
+  const x = Math.max(0, Math.min(rect.width  - cardW, clientX - rect.left - offsetX));
+  const y = Math.max(0, Math.min(rect.height - cardH, clientY - rect.top  - offsetY));
+
+  card.classList.remove('floor-room--dragging');
+  card.style.zIndex = '';
+
+  const comodo = appState.comodos.find(c => c.id === comodoId);
+  if (comodo) {
+    comodo.posicaoX = _pctToStore(x, rect.width);
+    comodo.posicaoY = _pctToStore(y, rect.height);
+    try {
+      const resp = await API.atualizarPosicaoComodo(comodoId, comodo.posicaoX, comodo.posicaoY);
+      if (!resp?.sucesso) {
+        console.error('[Planta] Falha ao salvar posição:', resp);
+        mostrarAlerta('error', 'Erro ao salvar posição', resp?.erro || resp?.title || JSON.stringify(resp));
+      }
+    } catch (err) {
+      console.error('[Planta] Erro ao salvar posição:', err);
+      mostrarAlerta('error', 'Erro JS', err.message || String(err));
+    }
+  }
+  _ajustarAlturaCanvas(); // recolhe canvas se cômodo subiu
+  _desenharConectoresSVG();
+}
+
+window.addEventListener('mousemove', _onDragMover);
+window.addEventListener('touchmove', _onDragMover, { passive: false });
+window.addEventListener('mouseup',   _onDragSoltar);
+window.addEventListener('touchend',  _onDragSoltar, { passive: false });
 
 /**
  * Destaca um cômodo na planta baixa com rolagem automática.
@@ -4095,32 +4523,88 @@ function selecionarComodoPlanta(idComodo) {
       `).join('')
     : '<div style="color:var(--text-dim); font-size:13px;">Nenhum dispositivo cadastrado neste cômodo</div>';
 
-  // Gráfico de consumo histórico do cômodo (simulado)
+  // Gráfico de consumo do cômodo via NILM + histórico real
   if (graficos.detalheComodo) graficos.detalheComodo.destroy();
-  const historico = Array.from({ length: 12 }, (_, i) => ({
-    label: `${i * 2}h`,
-    kwh: +(Math.random() * 0.4 + 0.05).toFixed(2)
-  }));
 
-  graficos.detalheComodo = new Chart(document.getElementById('chart-room-detail'), {
-    type: 'line',
-    data: {
-      labels: historico.map(d => d.label),
-      datasets: [{
-        label: 'kWh',
-        data: historico.map(d => d.kwh),
-        borderColor: '#00d4ff',
-        backgroundColor: 'rgba(0,212,255,0.08)',
-        borderWidth: 2,
-        tension: 0.4,
-        fill: true,
-        pointRadius: 2
-      }]
-    },
-    options: { ...configPadraoGraficos }
+  _carregarGraficoComodo(idComodo).then(({ labels, dados, fonte }) => {
+    const chartEl = document.getElementById('chart-room-detail');
+    if (!chartEl) return;
+    const cor = fonte === 'nilm' ? '#00d4ff' : fonte === 'nominal' ? '#a78bfa' : '#64748b';
+    graficos.detalheComodo = new Chart(chartEl, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: fonte === 'nilm' ? 'kWh (NILM)' : fonte === 'nominal' ? 'kWh (estimado)' : 'kWh',
+          data: dados,
+          borderColor: cor,
+          backgroundColor: cor.replace(')', ',.08)').replace('rgb', 'rgba'),
+          borderWidth: 2,
+          tension: 0.4,
+          fill: true,
+          pointRadius: 2
+        }]
+      },
+      options: { ...configPadraoGraficos }
+    });
   });
 
   corrigirTextosCorrompidosNaPagina(painel);
+}
+
+/**
+ * Calcula os dados do gráfico de consumo de um cômodo.
+ * Prioridade: NILM × histórico real → potência nominal × histórico real → zeros
+ */
+async function _carregarGraficoComodo(idComodo) {
+  const comodo      = appState.comodos.find(c => c.id === idComodo);
+  const dispositivosDoComodo = appState.dispositivos.filter(d => d.idComodo === idComodo);
+
+  // 1. Busca histórico real do dia e NILM em paralelo
+  const [respHist, respNilm] = await Promise.all([
+    API.obterHistorico('day'),
+    API.analisarNilm?.(24).catch(() => null)
+  ]);
+
+  const dadosHist = respHist?.sucesso && respHist.dados?.length ? respHist.dados : null;
+
+  // 2. Tenta calcular % do cômodo pelo NILM
+  let pctNilm = 0;
+  if (respNilm?.disponivel && dispositivosDoComodo.length > 0) {
+    const nomesDisp = dispositivosDoComodo.map(d => (d.nome || '').toLowerCase());
+    (respNilm.dispositivos || []).forEach(item => {
+      const nomeItem = (item.nome || '').toLowerCase();
+      if (nomesDisp.some(n => n.includes(nomeItem) || nomeItem.includes(n))) {
+        pctNilm += (item.porcentagem || 0);
+      }
+    });
+  }
+
+  if (pctNilm > 0 && dadosHist) {
+    // NILM disponível: aplica % ao histórico medido
+    return {
+      labels: dadosHist.map(d => d.label),
+      dados:  dadosHist.map(d => +((d.kwh * pctNilm / 100)).toFixed(3)),
+      fonte:  'nilm'
+    };
+  }
+
+  // 3. Fallback: proporção de potência nominal × histórico medido
+  const totalWCasa = appState.comodos.reduce((s, c) => s + (c.watts || 0), 0);
+  const wComodo    = comodo?.watts || 0;
+  const pctNominal = totalWCasa > 0 ? wComodo / totalWCasa : 0;
+
+  if (pctNominal > 0 && dadosHist) {
+    return {
+      labels: dadosHist.map(d => d.label),
+      dados:  dadosHist.map(d => +((d.kwh * pctNominal)).toFixed(3)),
+      fonte:  'nominal'
+    };
+  }
+
+  // 4. Sem dados: zeros
+  const labels = Array.from({ length: 12 }, (_, i) => `${i * 2}h`);
+  return { labels, dados: labels.map(() => 0), fonte: 'sem-dados' };
 }
 
 
@@ -4649,10 +5133,12 @@ function _aplicarBloqueioHistorico() {
     const optYear = sel.querySelector('option[value="year"]');
     if (!optYear) return;
     if (gratuito) {
-      optYear.textContent = 'Último Ano 🔒';
+      optYear.textContent = id === 'period-select' ? 'Este Ano — Plano Mensal' : 'Último Ano — Plano Mensal';
+      optYear.disabled = true;
       optYear.dataset.locked = '1';
     } else {
       optYear.textContent = id === 'period-select' ? 'Este Ano' : 'Último Ano';
+      optYear.disabled = false;
       delete optYear.dataset.locked;
     }
   });
@@ -4821,6 +5307,43 @@ function atualizarGraficos() {
 // ABA: ALERTAS
 // ===================================================
 
+/** Corrige textos de alerta com ?? no lugar de caracteres especiais */
+function _corrigirAlerta(s) {
+  if (!s || typeof s !== 'string' || !s.includes('??')) return s;
+  return s
+    .replace(/subtens\?\?o/gi, 'subtensão')
+    .replace(/tens\?\?o/gi, 'tensão')
+    .replace(/m\?\?nimo/gi, 'mínimo')
+    .replace(/m\?\?ximo/gi, 'máximo')
+    .replace(/di\?\?rio/gi, 'diário')
+    .replace(/di\?\?ria/gi, 'diária')
+    .replace(/pot\?\?ncia/gi, 'potência')
+    .replace(/est\?\?o/gi, 'estão')
+    .replace(/est\?\?/gi, 'está')
+    .replace(/n\?\?o/gi, 'não')
+    .replace(/s\?\?o/gi, 'são')
+    .replace(/h\?\? /gi, 'há ')
+    .replace(/fun\?\?\?\?o/gi, 'função')
+    .replace(/fun\?\?\?\?es/gi, 'funções')
+    .replace(/conex\?\?o/gi, 'conexão')
+    .replace(/informa\?\?\?\?o/gi, 'informação')
+    .replace(/configura\?\?\?\?o/gi, 'configuração')
+    .replace(/notifica\?\?\?\?o/gi, 'notificação')
+    .replace(/vers\?\?o/gi, 'versão')
+    .replace(/condi\?\?\?\?o/gi, 'condição')
+    .replace(/cr\?\?tico/gi, 'crítico')
+    .replace(/cr\?\?tica/gi, 'crítica')
+    .replace(/per\?\?odo/gi, 'período')
+    .replace(/c\?\?digo/gi, 'código')
+    .replace(/c\?\?lculo/gi, 'cálculo')
+    .replace(/p\?\?gina/gi, 'página')
+    .replace(/m\?\?dia/gi, 'média')
+    .replace(/m\?\?s\b/gi, 'mês')
+    .replace(/an\?\?lise/gi, 'análise')
+    .replace(/al\?\?m/gi, 'além')
+    .replace(/tamb\?\?m/gi, 'também');
+}
+
 /** Renderiza a lista de alertas gerados */
 function renderizarAlertas() {
   const lista = document.getElementById('alerts-list');
@@ -4830,8 +5353,8 @@ function renderizarAlertas() {
   const alertas = (appState.alertas || []).map(a => ({
     tipo:     a.tipo     || a.type   || 'info',
     icone:    a.icone    || _iconePorTipo(a.tipo || a.type),
-    titulo:   a.titulo   || a.title  || a.Titulo  || 'Alerta',
-    mensagem: a.mensagem || a.message || a.Mensagem || '',
+    titulo:   _corrigirAlerta(a.titulo   || a.title  || a.Titulo  || 'Alerta'),
+    mensagem: _corrigirAlerta(a.mensagem || a.message || a.Mensagem || ''),
     horario:  a.horario  || (a.dataCriacao || a.DataCriacao
                 ? new Date(a.dataCriacao || a.DataCriacao).toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})
                 : ''),
@@ -6927,12 +7450,15 @@ async function restaurarSessao() {
   if (token && expira && new Date(expira) > new Date()) {
     console.log('[RESTAURAR-SESSÃO] ✓ Token do SYSTEM válido encontrado. Sincronizando usuário...');
     
-    // Sincroniza dados do localStorage
-    if (sincronizarUsuarioDoLocalStorage()) {
+    // Sincroniza dados do localStorage (await obrigatório — função async)
+    const sincronizado = await sincronizarUsuarioDoLocalStorage();
+    if (sincronizado) {
       console.log('[RESTAURAR-SESSÃO] ✓ Usuário sincronizado:', appState.usuario);
 
-      // Aplica o tema da conta (lido do servidor — não precisa re-salvar)
-      if (appState.usuario?.tema) aplicarTema(appState.usuario.tema, true, true);
+      // DB é fonte de verdade — salva no cookie para que landing page leia corretamente
+      const _tema = appState.usuario?.tema || 'dark';
+      window._salvarTemaUsuario?.(appState.usuario?.id, _tema);
+      aplicarTema(_tema, true, true);
       
       // Se não tem residências, carrega da API
       if (!appState.residencia) {
@@ -6940,7 +7466,8 @@ async function restaurarSessao() {
         try {
           const respResidencias = await API.listarResidencias();
           if (respResidencias?.sucesso && respResidencias?.residencias?.length > 0) {
-            appState.residencia = respResidencias.residencias[0];
+            appState.residencias = respResidencias.residencias;
+            appState.residencia  = _residenciaPreferida(respResidencias.residencias);
             appState.comodos = (await API.obterComodos(appState.residencia.id))?.comodos || [];
             await _sincronizarDispositivos();
             console.log('[RESTAURAR-SESSÃO] ✓ Residência carregada');
@@ -7037,6 +7564,11 @@ async function carregarAdminUsuarios(pagina = 1, search = '') {
       ? new Date(u.ultimaLogin).toLocaleDateString('pt-BR')
       : '—';
 
+    const isMensal   = u.plano === 'mensal' && (!u.planoExpiraEm || new Date(u.planoExpiraEm) > new Date());
+    const planoBadge = isMensal
+      ? `<span class="admin-badge admin-badge--active">Mensal</span>`
+      : `<span class="admin-badge">Gratuito</span>`;
+
     const isSelf     = u.id === appState.usuario?.id;
     const btnStatus  = isSelf ? '' : u.status === 'active'
       ? `<button class="admin-btn admin-btn--danger" onclick="adminAlterarStatus('${u.id}','suspended')">Suspender</button>`
@@ -7044,6 +7576,9 @@ async function carregarAdminUsuarios(pagina = 1, search = '') {
     const btnRole    = isSelf ? '' : u.role === 'admin'
       ? `<button class="admin-btn" onclick="adminAlterarRole('${u.id}','user')">Rebaixar</button>`
       : `<button class="admin-btn admin-btn--promote" onclick="adminAlterarRole('${u.id}','admin')">Promover</button>`;
+    const btnPlano   = isSelf ? '' : isMensal
+      ? `<button class="admin-btn admin-btn--danger" onclick="adminAlterarPlano('${u.id}','gratuito')">→ Gratuito</button>`
+      : `<button class="admin-btn admin-btn--success" onclick="adminAlterarPlano('${u.id}','mensal')">→ Mensal</button>`;
 
     return `
       <tr>
@@ -7051,10 +7586,11 @@ async function carregarAdminUsuarios(pagina = 1, search = '') {
         <td style="color:var(--text-secondary);font-size:13px">${u.email}</td>
         <td>${roleBadge}</td>
         <td>${statusBadge}</td>
+        <td>${planoBadge}</td>
         <td style="color:var(--text-secondary);font-size:13px;white-space:nowrap">${dataCadastro}</td>
         <td style="color:var(--text-secondary);font-size:13px;white-space:nowrap">${ultimoAcesso}</td>
         <td class="admin-td-center" style="color:var(--text-secondary)">${u.qtdResidencias}</td>
-        <td><div class="admin-actions">${btnStatus}${btnRole}</div></td>
+        <td><div class="admin-actions">${btnStatus}${btnRole}${btnPlano}</div></td>
       </tr>`;
   }).join('');
 
@@ -7202,6 +7738,24 @@ async function adminAlterarRole(id, novoRole) {
   if (!confirmado) return;
   const resp = await API.adminAtualizarRole(id, novoRole);
   if (!resp?.sucesso) { mostrarAlerta(resp?.erro || 'Erro ao alterar cargo.', 'erro'); return; }
+  const search = document.getElementById('admin-search')?.value || '';
+  await carregarAdminUsuarios(_adminPagina, search);
+}
+
+async function adminAlterarPlano(id, novoPlano) {
+  const paraMensal = novoPlano === 'mensal';
+  const confirmado = await mostrarConfirm({
+    icone:    paraMensal ? '⭐' : '🔽',
+    titulo:   paraMensal ? 'Ativar Plano Mensal (teste)' : 'Reverter para Gratuito',
+    mensagem: paraMensal
+      ? 'O usuário terá acesso ao plano mensal por 30 dias (apenas para testes).'
+      : 'O usuário voltará às limitações do plano gratuito imediatamente.',
+    okLabel:  paraMensal ? 'Ativar Mensal' : 'Reverter',
+    okDanger: !paraMensal
+  });
+  if (!confirmado) return;
+  const resp = await API.adminAtualizarPlano(id, novoPlano, paraMensal ? 30 : null);
+  if (!resp?.sucesso) { mostrarAlerta(resp?.erro || 'Erro ao alterar plano.', 'erro'); return; }
   const search = document.getElementById('admin-search')?.value || '';
   await carregarAdminUsuarios(_adminPagina, search);
 }

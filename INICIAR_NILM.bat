@@ -1,11 +1,11 @@
 @echo off
-title MONITECH — NILM Python Service
+title MONITECH - NILM Python Service
 color 0B
 cd /d %~dp0\nilm_service
 
 echo.
 echo  =============================================
-echo   MONITECH — Servico NILM (Python/FastAPI)
+echo   MONITECH - Servico NILM (Python/FastAPI)
 echo   Porta: 8001
 echo  =============================================
 echo.

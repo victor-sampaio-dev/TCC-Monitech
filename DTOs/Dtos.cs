@@ -90,6 +90,9 @@ public record CriarComodoRequest(
     short   OrdemExibicao = 0
 );
 
+/// PATCH /api/comodos/{id}/posicao
+public record AtualizarPosicaoComodoRequest(int? PosicaoX, int? PosicaoY);
+
 // ── DISPOSITIVOS ─────────────────────────────────────────────
 
 /// POST /api/dispositivos
@@ -196,7 +199,9 @@ public record UsuarioCompletoResponse(
     DateTime  DataCriacao,
     string    Role     = "user",
     bool      TotpAtivo = false,
-    string    Tema     = "dark"
+    string    Tema     = "dark",
+    string    Plano    = "gratuito",
+    DateTime? PlanoExpiraEm = null
 );
 
 /// PATCH /api/usuario/perfil — atualizar perfil do usuário
@@ -261,11 +266,14 @@ public record AdminUsuarioDto(
     string    Role,
     DateTime  DataCriacao,
     DateTime? UltimaLogin,
-    int       QtdResidencias
+    int       QtdResidencias,
+    string    Plano = "gratuito",
+    DateTime? PlanoExpiraEm = null
 );
 
 public record AdminAtualizarStatusRequest(string Status);
 public record AdminAtualizarRoleRequest(string Role);
+public record AdminAtualizarPlanoRequest(string Plano, int? DiasExpiracao = null);
 
 /// GET /api/leituras/historico?idResidencia=...&periodo=day
 public record LeituraHistoricoItem(

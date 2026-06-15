@@ -57,12 +57,12 @@ html[data-theme="light"] {
    --off2:  #BDD4E8;
    --ink:   #0A1A2C;
    --ink-2: #1E3D58;
-   --ink-3: #4A6C88;
+   --ink-3: #3B5A73;
    --blue:   #005EA8;
    --blue-2: #004B8C;
    --blue-bg:  #C8DCEE;
    --blue-mid: #9ABDD8;
-   --muted:  #5A82A0;
+   --muted:  #3B5A73;
    --subtle: #A8C4DC;
    --line:   #AECADE;
    --shadow-sm: 0 1px 4px rgba(10, 26, 44, 0.08);
@@ -1884,7 +1884,9 @@ footer::before {
    .how-section,
    .proto-section,
    .hw-section,
-   .cta-section {
+   .cta-section,
+   .compat-strip,
+   .pwa-section {
       padding-left: 20px;
       padding-right: 20px;
    }
@@ -1923,7 +1925,35 @@ footer::before {
       }
    }
 
+   /* Hero */
+   .hero {
+      padding-top: 80px;
+   }
 
+   .hero-inner {
+      gap: 36px;
+      padding-bottom: 56px;
+   }
+
+   .hero-trust {
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 11px;
+   }
+
+   /* Compat strip */
+   .compat-strip {
+      padding-top: 16px;
+      padding-bottom: 16px;
+   }
+
+   .compat-inner {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+   }
+
+   /* Features */
    .feat-grid,
    .steps-track {
       grid-template-columns: 1fr;
@@ -1937,6 +1967,22 @@ footer::before {
       grid-template-columns: 1fr;
    }
 
+   /* CTA */
+   .cta-section {
+      padding-top: 80px;
+      padding-bottom: 80px;
+   }
+
+   /* PWA */
+   .pwa-section {
+      padding-top: 60px;
+      padding-bottom: 60px;
+   }
+
+   .pwa-grid {
+      grid-template-columns: 1fr;
+   }
+
    .footer-top {
       grid-template-columns: 1fr;
       padding: 44px 20px;
@@ -1945,6 +1991,7 @@ footer::before {
    .footer-bot {
       padding: 16px 20px;
    }
+
    .stat-num{
       font-size: 38px;
    }
@@ -2004,13 +2051,35 @@ footer::before {
    }
 
    /* Hero adjustments for very small screens */
+   .hero,
+   .stats-section,
+   .features-section,
+   .how-section,
+   .proto-section,
+   .hw-section,
+   .cta-section,
+   .compat-strip,
+   .pwa-section {
+      padding-left: 14px;
+      padding-right: 14px;
+   }
+
    .hero {
-      padding: 80px 14px 0;
+      padding-top: 70px;
    }
 
    .hero-inner {
-      gap: 32px;
-      padding-bottom: 60px;
+      gap: 28px;
+      padding-bottom: 48px;
+   }
+
+   .compat-list {
+      gap: 6px;
+   }
+
+   .compat-item {
+      font-size: 11px;
+      padding: 5px 10px;
    }
 
    .hero-h1 {

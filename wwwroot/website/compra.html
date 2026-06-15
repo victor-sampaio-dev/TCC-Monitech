@@ -68,7 +68,12 @@
           </a>
           <a class="nav-link active" href="./compra.html">
             <span class="mmenu-icon"><i data-lucide="shopping-cart"></i></span>
-            <span class="mmenu-text">Comprar</span>
+            <span class="mmenu-text">Comprar Dispositivo</span>
+            <i data-lucide="chevron-right" class="mmenu-arrow"></i>
+          </a>
+          <a class="nav-link" href="./planos.html">
+            <span class="mmenu-icon"><i data-lucide="zap"></i></span>
+            <span class="mmenu-text">Planos</span>
             <i data-lucide="chevron-right" class="mmenu-arrow"></i>
           </a>
         </div>
@@ -85,7 +90,8 @@
         <a class="nav-link" href="../pages-documents/docs.html">Documentacao</a>
         <a class="nav-link" href="../pages-documents/changelog.html">Changelog</a>
         <a class="nav-link" href="../pages-documents/contato.html">Contato</a>
-        <a class="nav-link active" href="./compra.html">Comprar</a>
+        <a class="nav-link active" href="./compra.html">Comprar Dispositivo</a>
+        <a class="nav-link" href="./planos.html">Planos</a>
       </div>
 
       <div class="nav-actions">
@@ -358,12 +364,29 @@
           <p class="product-sub">Hardware de medicao e plataforma web para acompanhamento de consumo eletrico em tempo real.</p>
 
           <div class="product-visual" aria-hidden="true">
-            <div class="visual-core">
-              <span class="visual-chip">ESP32</span>
-              <span class="visual-chip">PZEM</span>
-            </div>
             <span class="visual-orbit visual-orbit--a"></span>
             <span class="visual-orbit visual-orbit--b"></span>
+            <div class="visual-components">
+              <div class="visual-component">
+                <div class="visual-component-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="2" x2="9" y2="4"/><line x1="15" y1="2" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="22"/><line x1="15" y1="20" x2="15" y2="22"/><line x1="20" y1="9" x2="22" y2="9"/><line x1="20" y1="14" x2="22" y2="14"/><line x1="2" y1="9" x2="4" y2="9"/><line x1="2" y1="14" x2="4" y2="14"/></svg>
+                </div>
+                <span class="visual-component-name">Dispositivo de<br>Conexão</span>
+              </div>
+
+              <div class="visual-connector">
+                <span class="visual-connector-dot"></span>
+                <span class="visual-connector-line"></span>
+                <span class="visual-connector-dot"></span>
+              </div>
+
+              <div class="visual-component">
+                <div class="visual-component-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                </div>
+                <span class="visual-component-name">Leitor<br>Monitech</span>
+              </div>
+            </div>
           </div>
 
           <div class="price-card">
@@ -374,7 +397,7 @@
 
           <div class="feature-list">
             <div class="feature-item">Dashboard web com leituras ao vivo</div>
-            <div class="feature-item">Compatibilidade com WebSocket, HTTP, MQTT e Serial</div>
+            <div class="feature-item">Comunicação via HTTP — funciona em qualquer rede Wi-Fi doméstica</div>
             <div class="feature-item">Historico local e configuracao de alertas</div>
             <div class="feature-item">Documentacao tecnica e onboarding inicial</div>
           </div>

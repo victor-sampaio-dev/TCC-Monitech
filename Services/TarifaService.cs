@@ -197,9 +197,9 @@ public class TarifaService
                 }
                 if (codigo is null) continue;
 
-                // Tarifa total = TUSD + TE (em R$/kWh)
-                var tusd = ParseDecimal(r, "VlrTUSD");
-                var te   = ParseDecimal(r, "VlrTE");
+                // ANEEL retorna em R$/MWh — divide por 1000 para R$/kWh
+                var tusd   = ParseDecimal(r, "VlrTUSD") / 1000m;
+                var te     = ParseDecimal(r, "VlrTE")   / 1000m;
                 var tarifa = tusd + te;
                 if (tarifa <= 0) continue;
 
@@ -301,6 +301,11 @@ public class TarifaService
     {
         if (!el.TryGetProperty(prop, out var v)) return 0m;
         if (v.ValueKind == JsonValueKind.Number) return v.GetDecimal();
-        return decimal.TryParse(v.GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var d) ? d : 0m;
+        var s = v.GetString();
+        if (string.IsNullOrWhiteSpace(s)) return 0m;
+        // ANEEL usa formato pt-BR: vírgula = decimal, ponto = milhar (ex: "1.234,56")
+        // Normaliza para invariant: remove ponto de milhar, troca vírgula por ponto
+        var normalizado = s.Replace(".", "").Replace(",", ".");
+        return decimal.TryParse(normalizado, NumberStyles.Any, CultureInfo.InvariantCulture, out var d) ? d : 0m;
     }
 }

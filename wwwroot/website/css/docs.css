@@ -434,29 +434,79 @@ ol {
    gap: 18px;
    padding: 20px 24px;
    background: var(--white);
-   border: 1px solid var(--line);
+   border: 1px solid var(--border);
    border-radius: var(--r-sm);
    transition: all .2s
 }
 
 .step-card:hover {
-   border-color: var(--blue-mid);
+   border-color: var(--cyan);
    box-shadow: var(--shadow-sm)
+}
+
+/* HW CARDS — componentes do kit */
+.hw-cards {
+   display: flex;
+   flex-direction: column;
+   gap: 12px;
+   margin: 20px 0
+}
+
+.hw-card {
+   display: flex;
+   align-items: flex-start;
+   gap: 16px;
+   padding: 18px 20px;
+   background: var(--white);
+   border: 1px solid var(--border);
+   border-radius: var(--r-sm);
+   transition: border-color .2s
+}
+
+.hw-card:hover {
+   border-color: var(--cyan)
+}
+
+.hw-card-icon {
+   width: 40px;
+   height: 40px;
+   border-radius: 10px;
+   background: rgba(72, 197, 217, 0.14);
+   border: 1.5px solid var(--cyan);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   color: var(--cyan);
+   flex-shrink: 0
+}
+
+.hw-card-name {
+   font-family: var(--display);
+   font-size: 14px;
+   font-weight: 700;
+   color: var(--ink);
+   margin-bottom: 6px
+}
+
+.hw-card-desc {
+   font-size: 13.5px;
+   line-height: 1.7;
+   color: var(--ink-3)
 }
 
 .step-num-badge {
    width: 32px;
    height: 32px;
    border-radius: 50%;
-   background: var(--blue-bg);
-   border: 1px solid var(--blue-mid);
+   background: rgba(72, 197, 217, 0.14);
+   border: 1.5px solid var(--cyan);
    display: flex;
    align-items: center;
    justify-content: center;
    font-family: var(--display);
    font-size: 13px;
    font-weight: 800;
-   color: var(--blue);
+   color: var(--cyan);
    flex-shrink: 0
 }
 
@@ -687,7 +737,8 @@ h3:hover .doc-anchor {
       width: 26px;
       height: 26px;
       font-size: 11px;
-      min-width: 26px
+      min-width: 26px;
+      border-width: 1.5px
    }
 
    .step-card-title {
