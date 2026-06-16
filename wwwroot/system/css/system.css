@@ -3119,8 +3119,12 @@ select.form-input {
   }
 
   .charts-grid,
-  .rooms-grid,
   .report-grid {
+    gap: 8px;
+  }
+
+  .rooms-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 8px;
   }
 
@@ -3948,6 +3952,18 @@ select.form-input {
 
 /* 460px - Phones medianos */
 @media (max-width: 480px) {
+
+  .rooms-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  /* Cômodo card compacto em mobile */
+  .room-card { padding: 10px; }
+  .room-header { margin-bottom: 6px; }
+  .room-name { font-size: 12px; margin-bottom: 4px; }
+  .room-devices { font-size: 10px; }
+  .room-watts span:first-child { font-size: 15px !important; }
 
   /* Dropdown em telas muito pequenas */
   .user-dropdown {
@@ -4866,6 +4882,63 @@ html[data-theme="light"] .onboard-logo-svg {
   flex-wrap: wrap;
 }
 
+/* ── Drawer: responsividade ── */
+@keyframes drawer-slide-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+@media (max-width: 600px) {
+  /* Bottom sheet em mobile */
+  .drawer-overlay {
+    align-items: flex-end;
+    justify-content: stretch;
+  }
+  .drawer-panel {
+    width: 100%;
+    height: 92dvh;
+    border-left: none;
+    border-top: 1px solid var(--border-bright);
+    border-radius: 18px 18px 0 0;
+    animation: drawer-slide-up 0.28s cubic-bezier(.25,.46,.45,.94);
+    box-shadow: 0 -8px 40px rgba(0,0,0,.5);
+  }
+  .drawer-header {
+    padding: 14px 16px 12px;
+  }
+  /* Alça visual de drag no topo */
+  .drawer-panel::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 4px;
+    background: var(--border-bright);
+    border-radius: 2px;
+    margin: 10px auto 0;
+    flex-shrink: 0;
+  }
+  .drawer-body {
+    padding: 12px 16px;
+    gap: 16px;
+  }
+  .drawer-stat-value { font-size: 14px; }
+  .drawer-room-name  { font-size: 13px; letter-spacing: 0; }
+  .drawer-room-icon  { font-size: 22px; }
+  .drawer-footer {
+    padding: 10px 16px;
+    gap: 6px;
+  }
+  .drawer-footer .btn {
+    flex: 1;
+    justify-content: center;
+    font-size: 11px;
+    padding: 8px 6px;
+  }
+}
+
+@media (max-width: 360px) {
+  .drawer-stats { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .drawer-stat-card { padding: 8px 6px; }
+  .drawer-stat-value { font-size: 12px; }
+  .drawer-stat-label { font-size: 9px; }
+}
 /* ── /Drawer lateral ── */
 
 .room-detail-panel {
