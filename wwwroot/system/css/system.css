@@ -2578,7 +2578,6 @@ select.form-input {
   .modal-overlay,
   .modal,
   .modal-actions,
-  .room-header,
   .toggle-group,
   .toggle-label,
   .about-section,
@@ -3126,6 +3125,16 @@ select.form-input {
   .rooms-grid {
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 8px;
+  }
+
+  .room-header {
+    flex-direction: row !important;
+    align-items: center;
+  }
+
+  .room-delete-btn {
+    margin-left: auto;
+    flex-shrink: 0;
   }
 
   .form-row {
