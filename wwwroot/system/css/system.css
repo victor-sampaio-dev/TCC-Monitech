@@ -1188,6 +1188,84 @@ body {
   background: rgba(239, 68, 68, .1);
 }
 
+/* ── Tabela dispositivos: responsividade ── */
+
+/* 768px: esconde colunas menos importantes */
+@media (max-width: 768px) {
+  .devices-table th:nth-child(5),
+  .devices-table th:nth-child(6),
+  .devices-table td:nth-child(5),
+  .devices-table td:nth-child(6) { display: none; }
+
+  .devices-table th, .devices-table td { padding: 10px 10px; }
+}
+
+/* 600px: converte em cards por linha */
+@media (max-width: 600px) {
+  .table-scroll { overflow-x: visible; }
+
+  .devices-table { border: none; background: none; }
+  .devices-table thead { display: none; }
+  .devices-table tbody { display: flex; flex-direction: column; gap: 8px; }
+
+  .devices-table tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 0;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    overflow: hidden;
+  }
+  .devices-table tr.device-row--inativo { opacity: .65; }
+
+  /* Linha 1: Dispositivo (span 2) */
+  .devices-table td:nth-child(1) {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    padding: 0 0 8px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  /* Linha 2: Cômodo + Potência */
+  .devices-table td:nth-child(2) {
+    display: flex;
+    align-items: center;
+    padding: 8px 0 4px;
+  }
+  .devices-table td:nth-child(4) {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 8px 0 4px;
+    font-family: 'Orbitron', monospace;
+    color: var(--cyan);
+  }
+
+  /* Status: hidden (toggle já mostra) */
+  .devices-table td:nth-child(3) { display: none; }
+
+  /* Linha 3: Toggle + Delete */
+  .devices-table td.device-actions-cell {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0 0;
+    border-top: 1px solid var(--border);
+  }
+
+  /* Delete sempre visível em touch */
+  .devices-table .btn-icon-delete { opacity: .55; }
+}
+
+/* ── /Tabela dispositivos responsividade ── */
+
 .device-status {
   display: inline-flex;
   align-items: center;

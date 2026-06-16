@@ -4828,17 +4828,17 @@ function renderizarDispositivos() {
     const icone     = icones[disp.tipo ?? disp.categoria] || icones['outro'];
     return `
     <tr class="${ativo ? '' : 'device-row--inativo'}">
-      <td><span style="margin-right:8px;">${icone}</span>${disp.nome || 'Sem nome'}</td>
-      <td><span class="tag tag-cyan">${nomeComodo}</span></td>
-      <td>
+      <td data-label="Dispositivo"><span style="margin-right:8px;">${icone}</span>${disp.nome || 'Sem nome'}</td>
+      <td data-label="Cômodo"><span class="tag tag-cyan">${nomeComodo}</span></td>
+      <td data-label="Status">
         <span class="device-status ${ativo ? 'on' : 'off'}">
           <span class="device-status-dot"></span>${ativo ? 'Ativo' : 'Inativo'}
         </span>
       </td>
-      <td style="font-family:'Orbitron',monospace; color:var(--cyan);">${watts}W</td>
-      <td style="font-family:'Orbitron',monospace;">${kwh.toFixed(2)} kWh</td>
-      <td style="font-family:'Orbitron',monospace;">${kwhMes} kWh</td>
-      <td>
+      <td data-label="Potência" style="font-family:'Orbitron',monospace; color:var(--cyan);">${watts}W</td>
+      <td data-label="Est./Dia" style="font-family:'Orbitron',monospace;">${kwh.toFixed(2)} kWh</td>
+      <td data-label="kWh/Mês" style="font-family:'Orbitron',monospace;">${kwhMes} kWh</td>
+      <td class="device-actions-cell">
         <label class="device-toggle" title="${ativo ? 'Desativar dispositivo' : 'Ativar dispositivo'}">
           <input type="checkbox" ${ativo ? 'checked' : ''} onchange="alternarDispositivo('${disp.id}')">
           <span class="device-toggle-track">
