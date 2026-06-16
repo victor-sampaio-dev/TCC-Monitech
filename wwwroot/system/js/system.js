@@ -4129,18 +4129,22 @@ const _storeToLeft = v => (v / 10) + '%';
 const _storeToTop  = v => (v / 10) + '%';
 
 /** Cria e retorna um elemento card de cômodo para a planta */
-function _criarCardPlanta(comodo, icones, totalW, maxW, idTop, noCanvas) {
-  const w         = comodo.watts || 0;
-  const proporcao = w / maxW;
-  const isCritico = proporcao > 0.7;
-  const isMedio   = proporcao > 0.4 && !isCritico;
-  const cor       = isCritico ? 'var(--danger)' : isMedio ? 'var(--warn)' : 'var(--success)';
-  const qtdDisp   = appState.dispositivos.filter(d => d.idComodo === comodo.id).length;
-  const pct       = totalW > 0 ? Math.round((w / totalW) * 100) : 0;
-  const isTop     = comodo.id === idTop && w > 0;
+function _criarCardPlanta(comodo, icones, totalW, maxW, mediaW, idTop, noCanvas) {
+  const w      = comodo.watts || 0;
+  const nivel  = w === maxW && w > 0 ? 'alto' : w > mediaW ? 'medio' : 'normal';
+  const cor    = nivel === 'alto' ? 'var(--danger)' : nivel === 'medio' ? 'var(--warn)' : 'var(--success)';
+  const qtdDisp = appState.dispositivos.filter(d => d.idComodo === comodo.id).length;
+  const pct    = totalW > 0 ? Math.round((w / totalW) * 100) : 0;
+  const isTop  = comodo.id === idTop && w > 0;
+
+  const badgeHtml = nivel === 'alto'
+    ? `<span class="badge badge-danger" style="font-size:10px;padding:2px 7px;"><i data-lucide="triangle-alert" style="width:10px;height:10px;"></i> ALTO</span>`
+    : nivel === 'medio'
+    ? `<span class="badge badge-warn" style="font-size:10px;padding:2px 7px;"><i data-lucide="triangle-alert" style="width:10px;height:10px;"></i> MÉDIO</span>`
+    : `<span class="badge badge-success" style="font-size:10px;padding:2px 7px;"><i data-lucide="check" style="width:10px;height:10px;"></i> NORMAL</span>`;
 
   const div = document.createElement('div');
-  div.className = `floor-room${isCritico ? ' critical' : ''}`;
+  div.className = `floor-room${nivel === 'alto' ? ' critical' : ''}`;
   div.id = `floor-${comodo.id}`;
   div.dataset.idComodo = comodo.id;
 
@@ -4162,6 +4166,7 @@ function _criarCardPlanta(comodo, icones, totalW, maxW, idTop, noCanvas) {
         <i data-lucide="x" style="width:11px;height:11px;"></i>
       </button>` : ''}
     <div class="room-icon">${icones[comodo.tipo] || '📦'}</div>
+    ${badgeHtml}
     <div class="room-name" style="color:var(--text-primary);">${comodo.nome}</div>
     <div class="room-kw" style="color:${cor};">${(w / 1000).toFixed(2)} kW</div>
     <div class="room-share-pct">${pct}% da casa</div>
@@ -4186,9 +4191,10 @@ function renderizarPlanta() {
     .reduce((s, d) => s + (Number(d.potenciaNominal) || Number(d.watts) || 0), 0);
   appState.comodos.forEach(c => { c.watts = wattsDeComodo(c.id); });
 
-  const totalW = appState.comodos.reduce((s, c) => s + (c.watts || 0), 0);
-  const maxW   = Math.max(...appState.comodos.map(c => c.watts || 0), 1);
-  const idTop  = totalW > 0
+  const totalW  = appState.comodos.reduce((s, c) => s + (c.watts || 0), 0);
+  const maxW    = Math.max(...appState.comodos.map(c => c.watts || 0), 1);
+  const mediaW  = appState.comodos.length > 0 ? totalW / appState.comodos.length : 0;
+  const idTop   = totalW > 0
     ? appState.comodos.reduce((m, c) => (c.watts || 0) > (m?.watts ?? 0) ? c : m, null)?.id
     : null;
 
@@ -4198,7 +4204,7 @@ function renderizarPlanta() {
   const semPosicao = [];
   appState.comodos.forEach(c => {
     if (c.posicaoX != null && c.posicaoY != null) {
-      const card = _criarCardPlanta(c, icones, totalW, maxW, idTop, true);
+      const card = _criarCardPlanta(c, icones, totalW, maxW, mediaW, idTop, true);
       card.style.left = _storeToLeft(c.posicaoX);
       card.style.top  = _storeToTop(c.posicaoY);
       canvas.appendChild(card);
@@ -4212,7 +4218,7 @@ function renderizarPlanta() {
   const tray     = document.getElementById('floor-tray');
   if (tray) {
     tray.innerHTML = '';
-    semPosicao.forEach(c => tray.appendChild(_criarCardPlanta(c, icones, totalW, maxW, idTop, false)));
+    semPosicao.forEach(c => tray.appendChild(_criarCardPlanta(c, icones, totalW, maxW, mediaW, idTop, false)));
   }
   if (trayWrap) trayWrap.style.display = (_plantaModoEdicao || semPosicao.length > 0) ? '' : 'none';
 
