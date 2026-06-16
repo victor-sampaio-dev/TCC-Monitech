@@ -2607,7 +2607,6 @@ select.form-input {
   .page {
     width: 100%;
     max-width: 100%;
-    overflow-x: hidden;
     box-sizing: border-box;
   }
 
@@ -8570,11 +8569,11 @@ tr.device-row--inativo .device-toggle {
 }
 .nc-mins small { font-size: 10px; }
 
-/* Responsivo: esconde delta e mins em telas pequenas */
-@media (max-width: 640px) {
+/* Responsivo: 768px — 3 colunas sem min-width fixo */
+@media (max-width: 768px) {
   .nc-header,
   .nc-row {
-    grid-template-columns: 1.4fr 1fr 1fr;
+    grid-template-columns: 1.6fr 1fr 1fr;
     gap: 10px;
     padding: 12px 10px;
   }
@@ -8584,6 +8583,18 @@ tr.device-row--inativo .device-toggle {
   .nc-row .nc-mins { display: none; }
   .nc-num { font-size: 12px; }
   .nc-name { font-size: 13px; }
+}
+
+/* 480px — 2 colunas */
+@media (max-width: 480px) {
+  .nc-header,
+  .nc-row {
+    grid-template-columns: 1.4fr 1fr;
+    gap: 8px;
+  }
+  .nc-header span:nth-child(3),
+  .nc-row .nc-cell:last-of-type { display: none; }
+  .nc-name { font-size: 12px; }
 }
 
 @media print {
