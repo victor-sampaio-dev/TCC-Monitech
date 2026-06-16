@@ -4846,7 +4846,7 @@ function renderizarDispositivos() {
           </span>
           <span class="device-toggle-label">${ativo ? 'Ativo' : 'Inativo'}</span>
         </label>
-        <button class="btn btn-sm btn-danger" onclick="removerDispositivo('${disp.id}')" style="margin-left:8px;">✕</button>
+        <button class="btn-icon-delete" onclick="removerDispositivo('${disp.id}')" title="Remover dispositivo"></button>
       </td>
     </tr>`;
   }).join('');
