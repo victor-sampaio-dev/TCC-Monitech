@@ -1154,21 +1154,30 @@ body {
   background: rgba(0, 212, 255, 0.03);
 }
 
+/* Célula de ações da tabela de dispositivos */
+.device-actions-cell {
+  white-space: nowrap;
+}
+.device-actions-cell > * {
+  vertical-align: middle;
+}
+
 .btn-icon-delete {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   border-radius: 6px;
-  border: none;
+  border: 1px solid transparent;
   background: none;
   color: var(--text-dim);
   cursor: pointer;
-  opacity: 0;
-  transition: opacity .18s, color .18s, background .18s;
+  opacity: .3;
+  transition: opacity .18s, color .18s, background .18s, border-color .18s;
   vertical-align: middle;
-  margin-left: 8px;
+  margin-left: 10px;
+  flex-shrink: 0;
 }
 .btn-icon-delete::before {
   content: '';
@@ -1180,12 +1189,13 @@ body {
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='3 6 5 6 21 6'/%3E%3Cpath d='M19 6l-1 14H6L5 6'/%3E%3Cpath d='M10 11v6'/%3E%3Cpath d='M14 11v6'/%3E%3Cpath d='M9 6V4h6v2'/%3E%3C/svg%3E") center/contain no-repeat;
 }
 .devices-table tr:hover .btn-icon-delete {
-  opacity: .45;
+  opacity: .55;
 }
 .btn-icon-delete:hover {
   opacity: 1 !important;
   color: var(--danger);
   background: rgba(239, 68, 68, .1);
+  border-color: rgba(239, 68, 68, .25);
 }
 
 /* ── Tabela dispositivos: responsividade ── */
@@ -1197,7 +1207,20 @@ body {
   .devices-table td:nth-child(5),
   .devices-table td:nth-child(6) { display: none; }
 
-  .devices-table th, .devices-table td { padding: 10px 10px; }
+  .devices-table th, .devices-table td { padding: 10px 8px; font-size: 12px; }
+
+  /* Em touch não há hover — mostra o botão com opacidade base maior */
+  .btn-icon-delete { opacity: .45; }
+  .btn-icon-delete:hover,
+  .btn-icon-delete:active { opacity: 1 !important; }
+
+  /* Célula de ações: toggle + lixeira na mesma linha */
+  .device-actions-cell {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 0;
+  }
 }
 
 /* 600px: converte em cards por linha */
