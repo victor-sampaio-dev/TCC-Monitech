@@ -90,6 +90,9 @@ public record CriarComodoRequest(
     short   OrdemExibicao = 0
 );
 
+/// PATCH /api/comodos/{id}/nome
+public record RenomearComodoRequest(string Nome);
+
 /// PATCH /api/comodos/{id}/posicao
 public record AtualizarPosicaoComodoRequest(int? PosicaoX, int? PosicaoY);
 

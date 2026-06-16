@@ -391,6 +391,21 @@ public class ComodosController(AppDbContext db) : ControllerBase
         return Ok(new { sucesso = true, comodo = c });
     }
 
+    /// PATCH /api/comodos/{id}/nome
+    [HttpPatch("{id}/nome")]
+    public async Task<IActionResult> RenomearComodo(string id, [FromBody] RenomearComodoRequest req)
+    {
+        var c = await db.Comodos
+            .Include(c => c.Residencia)
+            .FirstOrDefaultAsync(c => c.Id == id && c.Residencia!.IdUsuario == UsuarioId);
+        if (c is null) return NotFound(new { sucesso = false });
+        if (string.IsNullOrWhiteSpace(req.Nome)) return BadRequest(new { sucesso = false, erro = "Nome inválido" });
+        c.Nome            = req.Nome.Trim();
+        c.DataAtualizacao = DateTime.UtcNow;
+        await db.SaveChangesAsync();
+        return Ok(new { sucesso = true, nome = c.Nome });
+    }
+
     /// PATCH /api/comodos/{id}/posicao
     [HttpPatch("{id}/posicao")]
     public async Task<IActionResult> AtualizarPosicao(string id, [FromBody] AtualizarPosicaoComodoRequest req)

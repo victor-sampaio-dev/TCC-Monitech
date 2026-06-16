@@ -4106,13 +4106,151 @@ async function deletarComodo(idComodo, evento) {
   mostrarAlerta('success', 'Cômodo deletado', `"${comodo.nome}" foi removido com sucesso.`);
 }
 
-/**
- * Navega para a planta interativa e destaca o cômodo selecionado.
- * @param {string} idComodo - ID do cômodo a destacar
- */
-function exibirDetalheComodo(idComodo) {
-  exibirAba('planta');
-  destacarComodoPlanta(idComodo);
+// ID do cômodo aberto no drawer (acessado pelos botões do footer)
+let _drawerComodoId = null;
+
+/** Abre o drawer lateral com informações completas do cômodo */
+async function exibirDetalheComodo(idComodo) {
+  _drawerComodoId = idComodo;
+  const comodo = appState.comodos.find(c => c.id === idComodo);
+  if (!comodo) return;
+
+  const drawer = document.getElementById('drawer-comodo');
+  drawer.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+
+  const icones      = obterIconesComodos();
+  const iconeDisp   = obterIconesDispositivos();
+  const dispositivos = appState.dispositivos.filter(d => d.idComodo === idComodo);
+
+  const wattsLista  = appState.comodos.map(c =>
+    appState.dispositivos.filter(d => d.idComodo === c.id)
+      .reduce((s, d) => s + (Number(d.potenciaNominal) || Number(d.watts) || 0), 0));
+  const totalWatts  = wattsLista.reduce((s, w) => s + w, 0);
+  const maxWatts    = Math.max(...wattsLista, 1);
+  const mediaWatts  = totalWatts / Math.max(appState.comodos.length, 1);
+  const idxComodo   = appState.comodos.findIndex(c => c.id === idComodo);
+  const watts       = wattsLista[idxComodo] || 0;
+  const pct         = totalWatts > 0 ? Math.round(watts / totalWatts * 100) : 0;
+  const nivel       = watts > 0 && watts === maxWatts ? 'alto' : watts > 0 && watts > mediaWatts ? 'medio' : 'normal';
+
+  // Header
+  document.getElementById('drawer-icon').textContent = icones[comodo.tipo] || '📦';
+  document.getElementById('drawer-nome').textContent = comodo.nome;
+
+  const badge = document.getElementById('drawer-badge');
+  badge.className = 'badge ' + (nivel === 'alto' ? 'badge-danger' : nivel === 'medio' ? 'badge-warn' : 'badge-success');
+  badge.innerHTML = nivel === 'alto'
+    ? '<i data-lucide="triangle-alert" style="width:10px;height:10px;vertical-align:-1px;"></i> ALTO'
+    : nivel === 'medio'
+    ? '<i data-lucide="triangle-alert" style="width:10px;height:10px;vertical-align:-1px;"></i> MÉDIO'
+    : '<i data-lucide="check" style="width:10px;height:10px;vertical-align:-1px;"></i> NORMAL';
+
+  // Stats
+  const corWatts = nivel === 'alto' ? 'var(--danger)' : nivel === 'medio' ? 'var(--warn)' : 'var(--success)';
+  document.getElementById('drawer-stats').innerHTML = `
+    <div class="drawer-stat-card">
+      <div class="drawer-stat-value" style="color:${corWatts};">${watts}<span style="font-size:10px;"> W</span></div>
+      <div class="drawer-stat-label">Consumo</div>
+    </div>
+    <div class="drawer-stat-card">
+      <div class="drawer-stat-value">${pct}<span style="font-size:10px;">%</span></div>
+      <div class="drawer-stat-label">do Total</div>
+    </div>
+    <div class="drawer-stat-card">
+      <div class="drawer-stat-value">${dispositivos.length}</div>
+      <div class="drawer-stat-label">Dispositivo${dispositivos.length !== 1 ? 's' : ''}</div>
+    </div>
+  `;
+
+  // Dispositivos
+  const listEl = document.getElementById('drawer-devices-list');
+  if (dispositivos.length === 0) {
+    listEl.innerHTML = '<div class="drawer-empty">Nenhum dispositivo cadastrado neste cômodo.</div>';
+  } else {
+    listEl.innerHTML = dispositivos.map(d => {
+      const w      = Number(d.potenciaNominal) || Number(d.watts) || 0;
+      const ligado = d.status === 'on';
+      return `
+        <div class="drawer-device-row">
+          <span class="drawer-device-icon">${iconeDisp[d.categoria || d.tipo] || iconeDisp['outro']}</span>
+          <span class="drawer-device-name">${d.nome}</span>
+          <span class="device-status ${d.status}" style="margin-right:4px;">
+            <span class="device-status-dot"></span>${ligado ? 'Ligado' : 'Desligado'}
+          </span>
+          <span class="drawer-device-watts">${w} W</span>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Gráfico
+  if (graficos.drawerComodo) { graficos.drawerComodo.destroy(); graficos.drawerComodo = null; }
+  const chartEl = document.getElementById('chart-drawer-comodo');
+  if (chartEl) {
+    _carregarGraficoComodo(idComodo).then(({ labels, dados, fonte }) => {
+      const cor = fonte === 'nilm' ? '#00d4ff' : fonte === 'nominal' ? '#a78bfa' : '#64748b';
+      graficos.drawerComodo = new Chart(chartEl, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: fonte === 'nilm' ? 'kWh (NILM)' : fonte === 'nominal' ? 'kWh (est.)' : 'kWh',
+            data: dados,
+            borderColor: cor,
+            backgroundColor: cor.replace(')', ',.08)').replace('rgb', 'rgba'),
+            borderWidth: 2,
+            tension: 0.4,
+            fill: true,
+            pointRadius: 2
+          }]
+        },
+        options: { ...configPadraoGraficos }
+      });
+    });
+  }
+
+  if (typeof lucide !== 'undefined') lucide.createIcons({ nodes: [drawer] });
+  corrigirTextosCorrompidosNaPagina(drawer);
+}
+
+function fecharDrawerComodo() {
+  const drawer = document.getElementById('drawer-comodo');
+  drawer.style.display = 'none';
+  document.body.style.overflow = '';
+  _drawerComodoId = null;
+}
+
+async function drawerRenomearComodo() {
+  const comodo = appState.comodos.find(c => c.id === _drawerComodoId);
+  if (!comodo) return;
+  const novoNome = prompt(`Novo nome para "${comodo.nome}":`, comodo.nome);
+  if (!novoNome || novoNome.trim() === comodo.nome) return;
+  try {
+    const resp = await apiFetch(`/api/comodos/${_drawerComodoId}/nome`, {
+      method: 'PATCH',
+      headers: { ...headersAuth(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome: novoNome.trim() })
+    });
+    if (resp?.sucesso === false) { mostrarAlerta('error', 'Erro', resp.erro || 'Não foi possível renomear.'); return; }
+    comodo.nome = novoNome.trim();
+    document.getElementById('drawer-nome').textContent = comodo.nome;
+    renderizarComodos();
+    renderizarPlanta();
+    mostrarAlerta('success', 'Renomeado', `Cômodo agora se chama "${comodo.nome}".`);
+  } catch { mostrarAlerta('error', 'Erro de conexão', 'Não foi possível renomear.'); }
+}
+
+function drawerAdicionarDispositivo() {
+  fecharDrawerComodo();
+  abrirModalAdicionarDispositivo(_drawerComodoId);
+}
+
+async function drawerDeletarComodo() {
+  if (!_drawerComodoId) return;
+  const id = _drawerComodoId;
+  fecharDrawerComodo();
+  await deletarComodo(id, { stopPropagation: () => {} });
 }
 
 
@@ -4743,8 +4881,12 @@ function abrirModalAdicionarComodo() {
 }
 
 /** Abre o modal de adição de novo dispositivo */
-function abrirModalAdicionarDispositivo() {
+function abrirModalAdicionarDispositivo(idComodoPreSelecionado) {
   preencherSelecoesComodos();
+  if (idComodoPreSelecionado) {
+    const sel = document.getElementById('modal-dev-room');
+    if (sel) sel.value = idComodoPreSelecionado;
+  }
   abrirModal('modal-device');
 }
 

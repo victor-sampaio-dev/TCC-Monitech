@@ -2412,6 +2412,58 @@
   <!-- ===== /APLICAÇÃO PRINCIPAL ===== -->
 
 
+  <!-- DRAWER: Detalhe do Cômodo (aba Cômodos) -->
+  <div class="drawer-overlay" id="drawer-comodo" style="display:none;" onclick="if(event.target===this)fecharDrawerComodo()">
+    <div class="drawer-panel">
+      <div class="drawer-header">
+        <div class="drawer-header-left">
+          <span class="drawer-room-icon" id="drawer-icon"></span>
+          <div>
+            <div class="drawer-room-name" id="drawer-nome"></div>
+            <span class="badge" id="drawer-badge" style="font-size:11px;"></span>
+          </div>
+        </div>
+        <button class="drawer-close-btn" onclick="fecharDrawerComodo()" title="Fechar">
+          <i data-lucide="x" style="width:18px;height:18px;"></i>
+        </button>
+      </div>
+
+      <div class="drawer-body">
+        <!-- Stats -->
+        <div class="drawer-stats" id="drawer-stats"></div>
+
+        <!-- Gráfico de consumo -->
+        <div class="drawer-section">
+          <div class="drawer-section-title">Consumo estimado (24h)</div>
+          <div style="position:relative;height:140px;">
+            <canvas id="chart-drawer-comodo"></canvas>
+          </div>
+        </div>
+
+        <!-- Dispositivos -->
+        <div class="drawer-section">
+          <div class="drawer-section-title" style="display:flex;justify-content:space-between;align-items:center;">
+            <span>Dispositivos</span>
+            <button class="btn btn-secondary btn-sm" id="drawer-btn-add-device" onclick="drawerAdicionarDispositivo()">+ Adicionar</button>
+          </div>
+          <div id="drawer-devices-list"></div>
+        </div>
+      </div>
+
+      <div class="drawer-footer">
+        <button class="btn btn-secondary btn-sm" onclick="drawerRenomearComodo()">
+          <i data-lucide="pencil" style="width:13px;height:13px;vertical-align:-2px;"></i> Renomear
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="exibirAba('planta');destacarComodoPlanta(_drawerComodoId)">
+          <i data-lucide="map" style="width:13px;height:13px;vertical-align:-2px;"></i> Ver na Planta
+        </button>
+        <button class="btn btn-sm" style="background:rgba(239,68,68,.12);color:var(--danger);border:1px solid rgba(239,68,68,.25);" onclick="drawerDeletarComodo()">
+          <i data-lucide="trash-2" style="width:13px;height:13px;vertical-align:-2px;"></i> Excluir
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: Novo Cômodo -->
   <div class="modal-overlay" id="modal-room">
     <div class="modal">
