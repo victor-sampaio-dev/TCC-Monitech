@@ -4024,30 +4024,37 @@ function renderizarComodos() {
   const wattsLista  = appState.comodos.map(c => wattsComodo(c.id));
   const totalWatts  = wattsLista.reduce((s, w) => s + w, 0);
   const maxWatts    = Math.max(...wattsLista, 1);
+  const mediaWatts  = totalWatts / Math.max(appState.comodos.length, 1);
 
   grade.innerHTML = appState.comodos.map((comodo, idx) => {
     const watts       = wattsLista[idx];
     const porcentagem = totalWatts > 0 ? Math.round(watts / totalWatts * 100) : 0;
-    const ehMaior     = watts > 0 && watts === maxWatts;
     const qtdDispositivos = appState.dispositivos.filter(d => d.idComodo === comodo.id).length;
 
+    // 3 níveis: Alto = maior consumo, Médio = acima da média, Normal = abaixo ou na média
+    const nivel = watts > 0 && watts === maxWatts ? 'alto'
+                : watts > 0 && watts > mediaWatts  ? 'medio'
+                : 'normal';
+    const badgeClass = nivel === 'alto' ? 'badge-high' : nivel === 'medio' ? 'badge-warn' : 'badge-normal';
+    const badgeLabel = nivel === 'alto' ? '⚠ Alto' : nivel === 'medio' ? '▲ Médio' : '✓ Normal';
+
     return `
-      <div class="room-card ${ehMaior ? 'high-consumption' : ''}" onclick="exibirDetalheComodo('${comodo.id}')">
+      <div class="room-card ${nivel === 'alto' ? 'high-consumption' : ''}" onclick="exibirDetalheComodo('${comodo.id}')">
         <div class="room-header">
           <span class="room-icon">${icones[comodo.tipo] || '📦'}</span>
-          <span class="room-badge ${ehMaior ? 'badge-high' : 'badge-normal'}">
-            ${ehMaior ? '⚠ MAIOR CONSUMO' : 'Normal'}
+          <span class="room-badge ${badgeClass}">
+            ${badgeLabel}
           </span>
           <button class="room-delete-btn" onclick="deletarComodo('${comodo.id}', event)" title="Deletar cômodo"><i data-lucide="trash-2" style="width:15px;height:15px;pointer-events:none;"></i></button>
         </div>
         <div class="room-name">${comodo.nome}</div>
         <div class="room-devices">${qtdDispositivos} dispositivo${qtdDispositivos !== 1 ? 's' : ''}</div>
         <div class="consumption-bar">
-          <div class="consumption-fill ${ehMaior ? 'high' : ''}" style="width:${porcentagem}%"></div>
+          <div class="consumption-fill ${nivel === 'alto' ? 'high' : ''}" style="width:${porcentagem}%"></div>
         </div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
           <div class="room-watts">
-            <span style="font-family:'Orbitron',monospace; font-size:18px; color:${ehMaior ? 'var(--danger)' : 'var(--cyan)'};">${watts}</span>
+            <span style="font-family:'Orbitron',monospace; font-size:18px; color:${nivel === 'alto' ? 'var(--danger)' : 'var(--cyan)'};">${watts}</span>
             <span style="font-size:12px; color:var(--text-secondary);"> W</span>
           </div>
           <div style="font-size:11px; color:var(--text-secondary);">${porcentagem}% do total</div>
@@ -4283,27 +4290,50 @@ function _desenharConectoresSVG() {
   const NS = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(NS, 'svg');
   svg.id = 'floor-svg-overlay';
-  svg.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:visible;';
+  svg.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:hidden;';
 
-  nos.forEach(n => {
-    const c = document.createElementNS(NS, 'circle');
-    c.setAttribute('cx', n.x); c.setAttribute('cy', n.y); c.setAttribute('r', '4');
-    c.setAttribute('fill', 'rgba(0,212,255,.6)');
-    svg.appendChild(c);
-  });
-
+  // Coleta arestas do MST
+  const mstEdges = [];
   for (const { i, j } of arestas) {
     if (find(i) === find(j)) continue;
     pai[find(i)] = find(j);
+    mstEdges.push({ i, j });
+  }
+
+  // Camada 1: linhas base sólidas (fundo)
+  mstEdges.forEach(({ i, j }) => {
+    const base = document.createElementNS(NS, 'line');
+    base.setAttribute('x1', nos[i].x); base.setAttribute('y1', nos[i].y);
+    base.setAttribute('x2', nos[j].x); base.setAttribute('y2', nos[j].y);
+    base.setAttribute('class', 'floor-connector-base');
+    svg.appendChild(base);
+  });
+
+  // Camada 2: dashes animados sobre a base
+  mstEdges.forEach(({ i, j }) => {
     const line = document.createElementNS(NS, 'line');
     line.setAttribute('x1', nos[i].x); line.setAttribute('y1', nos[i].y);
     line.setAttribute('x2', nos[j].x); line.setAttribute('y2', nos[j].y);
-    line.setAttribute('stroke', 'rgba(0,212,255,.35)');
-    line.setAttribute('stroke-width', '1.5');
-    line.setAttribute('stroke-dasharray', '5,4');
-    line.setAttribute('stroke-linecap', 'round');
+    line.setAttribute('class', 'floor-connector-line');
     svg.appendChild(line);
-  }
+  });
+
+  // Camada 3: nós (ripple + ponto central)
+  nos.forEach((n, idx) => {
+    const delay = `${(idx * 0.45) % 2}s`;
+
+    const ring = document.createElementNS(NS, 'circle');
+    ring.setAttribute('cx', n.x); ring.setAttribute('cy', n.y); ring.setAttribute('r', '5');
+    ring.setAttribute('class', 'floor-connector-ring');
+    ring.style.animationDelay = delay;
+    svg.appendChild(ring);
+
+    const dot = document.createElementNS(NS, 'circle');
+    dot.setAttribute('cx', n.x); dot.setAttribute('cy', n.y); dot.setAttribute('r', '3.5');
+    dot.setAttribute('class', 'floor-connector-dot');
+    dot.style.animationDelay = delay;
+    svg.appendChild(dot);
+  });
 
   canvas.appendChild(svg);
 }
