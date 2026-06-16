@@ -1202,25 +1202,34 @@ body {
 
 /* 768px: esconde colunas menos importantes */
 @media (max-width: 768px) {
+  /* 4 colunas: Dispositivo | Cômodo | Potência | Ativo — Status é redundante com o toggle */
+  .devices-table th:nth-child(3),
   .devices-table th:nth-child(5),
   .devices-table th:nth-child(6),
+  .devices-table td:nth-child(3),
   .devices-table td:nth-child(5),
   .devices-table td:nth-child(6) { display: none; }
 
-  .devices-table th, .devices-table td { padding: 10px 8px; font-size: 12px; }
+  .devices-table th, .devices-table td { padding: 10px 10px; font-size: 13px; }
 
-  /* Em touch não há hover — mostra o botão com opacidade base maior */
-  .btn-icon-delete { opacity: .45; }
-  .btn-icon-delete:hover,
-  .btn-icon-delete:active { opacity: 1 !important; }
+  /* Esconde o texto do label do toggle para poupar espaço */
+  .device-toggle-label { display: none; }
 
-  /* Célula de ações: toggle + lixeira na mesma linha */
+  /* Célula de ações: toggle + lixeira lado a lado */
   .device-actions-cell {
     display: flex;
     align-items: center;
-    flex-wrap: nowrap;
-    gap: 0;
+    gap: 6px;
+    white-space: nowrap;
   }
+
+  /* Em touch não há hover — botão sempre minimamente visível */
+  .btn-icon-delete { opacity: .5; }
+  .btn-icon-delete:hover,
+  .btn-icon-delete:active { opacity: 1 !important; }
+
+  /* Permite scroll horizontal só nessa faixa se ainda apertar */
+  .table-scroll { overflow-x: auto; }
 }
 
 /* 600px: converte em cards por linha */
