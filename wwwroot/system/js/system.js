@@ -4272,16 +4272,39 @@ function _desenharConectoresSVG() {
   const posicionados = appState.comodos.filter(c => c.posicaoX != null && c.posicaoY != null);
   if (posicionados.length < 2) return;
 
-  const rect = canvas.getBoundingClientRect();
+  const canvasRect = canvas.getBoundingClientRect();
+  const GAP = 5; // recuo em px para a linha não tocar a borda do card
+
+  // Cada nó armazena centro + limites da caixa (com recuo interno)
   const nos = posicionados.map(c => {
     const card = document.getElementById(`floor-${c.id}`);
     if (!card) return null;
     const r = card.getBoundingClientRect();
-    return { x: r.left + r.width / 2 - rect.left, y: r.top + r.height / 2 - rect.top };
+    return {
+      x:      r.left + r.width  / 2 - canvasRect.left,
+      y:      r.top  + r.height / 2 - canvasRect.top,
+      left:   r.left   - canvasRect.left + GAP,
+      top:    r.top    - canvasRect.top  + GAP,
+      right:  r.right  - canvasRect.left - GAP,
+      bottom: r.bottom - canvasRect.top  - GAP,
+    };
   }).filter(Boolean);
 
   if (nos.length < 2) return;
 
+  // Retorna o ponto onde a linha do centro de `n` em direção a (tx,ty) toca a borda do card
+  const edgePt = (n, tx, ty) => {
+    const dx = tx - n.x, dy = ty - n.y;
+    if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) return { x: n.x, y: n.y };
+    let t = Infinity;
+    if (dx > 0) t = Math.min(t, (n.right  - n.x) / dx);
+    else if (dx < 0) t = Math.min(t, (n.left   - n.x) / dx);
+    if (dy > 0) t = Math.min(t, (n.bottom - n.y) / dy);
+    else if (dy < 0) t = Math.min(t, (n.top    - n.y) / dy);
+    return { x: n.x + t * dx, y: n.y + t * dy };
+  };
+
+  // Kruskal MST sobre distâncias entre centros
   const arestas = [];
   for (let i = 0; i < nos.length; i++)
     for (let j = i + 1; j < nos.length; j++) {
@@ -4293,52 +4316,63 @@ function _desenharConectoresSVG() {
   const pai = nos.map((_, i) => i);
   const find = i => pai[i] === i ? i : (pai[i] = find(pai[i]));
 
+  // Calcula pontos de borda já no MST
+  const mstEdges = [];
+  for (const { i, j } of arestas) {
+    if (find(i) === find(j)) continue;
+    pai[find(i)] = find(j);
+    mstEdges.push({
+      p1: edgePt(nos[i], nos[j].x, nos[j].y),
+      p2: edgePt(nos[j], nos[i].x, nos[i].y),
+      i, j
+    });
+  }
+
   const NS = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(NS, 'svg');
   svg.id = 'floor-svg-overlay';
   svg.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:hidden;';
 
-  // Coleta arestas do MST
-  const mstEdges = [];
-  for (const { i, j } of arestas) {
-    if (find(i) === find(j)) continue;
-    pai[find(i)] = find(j);
-    mstEdges.push({ i, j });
-  }
-
-  // Camada 1: linhas base sólidas (fundo)
-  mstEdges.forEach(({ i, j }) => {
+  // Camada 1: linha base sólida borda-a-borda
+  mstEdges.forEach(({ p1, p2 }) => {
     const base = document.createElementNS(NS, 'line');
-    base.setAttribute('x1', nos[i].x); base.setAttribute('y1', nos[i].y);
-    base.setAttribute('x2', nos[j].x); base.setAttribute('y2', nos[j].y);
+    base.setAttribute('x1', p1.x); base.setAttribute('y1', p1.y);
+    base.setAttribute('x2', p2.x); base.setAttribute('y2', p2.y);
     base.setAttribute('class', 'floor-connector-base');
     svg.appendChild(base);
   });
 
-  // Camada 2: dashes animados sobre a base
-  mstEdges.forEach(({ i, j }) => {
+  // Camada 2: dashes animados borda-a-borda
+  mstEdges.forEach(({ p1, p2 }) => {
     const line = document.createElementNS(NS, 'line');
-    line.setAttribute('x1', nos[i].x); line.setAttribute('y1', nos[i].y);
-    line.setAttribute('x2', nos[j].x); line.setAttribute('y2', nos[j].y);
+    line.setAttribute('x1', p1.x); line.setAttribute('y1', p1.y);
+    line.setAttribute('x2', p2.x); line.setAttribute('y2', p2.y);
     line.setAttribute('class', 'floor-connector-line');
     svg.appendChild(line);
   });
 
-  // Camada 3: nós (ripple + ponto central)
-  nos.forEach((n, idx) => {
-    const delay = `${(idx * 0.45) % 2}s`;
+  // Camada 3: pontos de conexão nas bordas dos cards (não no centro)
+  const portsByNode = nos.map(() => []);
+  mstEdges.forEach(({ p1, p2, i, j }) => {
+    portsByNode[i].push(p1);
+    portsByNode[j].push(p2);
+  });
 
-    const ring = document.createElementNS(NS, 'circle');
-    ring.setAttribute('cx', n.x); ring.setAttribute('cy', n.y); ring.setAttribute('r', '5');
-    ring.setAttribute('class', 'floor-connector-ring');
-    ring.style.animationDelay = delay;
-    svg.appendChild(ring);
+  portsByNode.forEach((ports, idx) => {
+    const delay = `${(idx * 0.55) % 2}s`;
+    ports.forEach(p => {
+      const ring = document.createElementNS(NS, 'circle');
+      ring.setAttribute('cx', p.x); ring.setAttribute('cy', p.y); ring.setAttribute('r', '4');
+      ring.setAttribute('class', 'floor-connector-ring');
+      ring.style.animationDelay = delay;
+      svg.appendChild(ring);
 
-    const dot = document.createElementNS(NS, 'circle');
-    dot.setAttribute('cx', n.x); dot.setAttribute('cy', n.y); dot.setAttribute('r', '3.5');
-    dot.setAttribute('class', 'floor-connector-dot');
-    dot.style.animationDelay = delay;
-    svg.appendChild(dot);
+      const dot = document.createElementNS(NS, 'circle');
+      dot.setAttribute('cx', p.x); dot.setAttribute('cy', p.y); dot.setAttribute('r', '2.5');
+      dot.setAttribute('class', 'floor-connector-dot');
+      dot.style.animationDelay = delay;
+      svg.appendChild(dot);
+    });
   });
 
   canvas.appendChild(svg);
