@@ -2420,6 +2420,13 @@
           <span class="drawer-room-icon" id="drawer-icon"></span>
           <div>
             <div class="drawer-room-name" id="drawer-nome"></div>
+            <div id="drawer-rename-form" style="display:none;margin-top:4px;">
+              <input class="form-input" id="drawer-rename-input" style="font-size:13px;padding:5px 10px;height:32px;width:180px;" placeholder="Novo nome…">
+              <div style="display:flex;gap:6px;margin-top:6px;">
+                <button class="btn btn-primary btn-sm" onclick="drawerSalvarNome()">Salvar</button>
+                <button class="btn btn-secondary btn-sm" onclick="drawerCancelarRenomear()">Cancelar</button>
+              </div>
+            </div>
             <span class="badge" id="drawer-badge" style="font-size:11px;"></span>
           </div>
         </div>

@@ -4135,7 +4135,7 @@ async function exibirDetalheComodo(idComodo) {
   const nivel       = watts > 0 && watts === maxWatts ? 'alto' : watts > 0 && watts > mediaWatts ? 'medio' : 'normal';
 
   // Header
-  document.getElementById('drawer-icon').textContent = icones[comodo.tipo] || '📦';
+  document.getElementById('drawer-icon').innerHTML = icones[comodo.tipo] || '📦';
   document.getElementById('drawer-nome').textContent = comodo.nome;
 
   const badge = document.getElementById('drawer-badge');
@@ -4221,23 +4221,42 @@ function fecharDrawerComodo() {
   _drawerComodoId = null;
 }
 
-async function drawerRenomearComodo() {
+function drawerRenomearComodo() {
   const comodo = appState.comodos.find(c => c.id === _drawerComodoId);
   if (!comodo) return;
-  const novoNome = prompt(`Novo nome para "${comodo.nome}":`, comodo.nome);
-  if (!novoNome || novoNome.trim() === comodo.nome) return;
+  const nomeEl  = document.getElementById('drawer-nome');
+  const formEl  = document.getElementById('drawer-rename-form');
+  const inputEl = document.getElementById('drawer-rename-input');
+  nomeEl.style.display  = 'none';
+  formEl.style.display  = 'block';
+  inputEl.value         = comodo.nome;
+  inputEl.focus();
+  inputEl.select();
+}
+
+function drawerCancelarRenomear() {
+  document.getElementById('drawer-nome').style.display  = '';
+  document.getElementById('drawer-rename-form').style.display = 'none';
+}
+
+async function drawerSalvarNome() {
+  const comodo  = appState.comodos.find(c => c.id === _drawerComodoId);
+  if (!comodo) return;
+  const novoNome = document.getElementById('drawer-rename-input').value.trim();
+  if (!novoNome || novoNome === comodo.nome) { drawerCancelarRenomear(); return; }
   try {
     const resp = await apiFetch(`/api/comodos/${_drawerComodoId}/nome`, {
       method: 'PATCH',
       headers: { ...headersAuth(), 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nome: novoNome.trim() })
+      body: JSON.stringify({ nome: novoNome })
     });
     if (resp?.sucesso === false) { mostrarAlerta('error', 'Erro', resp.erro || 'Não foi possível renomear.'); return; }
-    comodo.nome = novoNome.trim();
-    document.getElementById('drawer-nome').textContent = comodo.nome;
+    comodo.nome = novoNome;
+    document.getElementById('drawer-nome').textContent = novoNome;
+    drawerCancelarRenomear();
     renderizarComodos();
     renderizarPlanta();
-    mostrarAlerta('success', 'Renomeado', `Cômodo agora se chama "${comodo.nome}".`);
+    mostrarAlerta('success', 'Renomeado', `Cômodo agora se chama "${novoNome}".`);
   } catch { mostrarAlerta('error', 'Erro de conexão', 'Não foi possível renomear.'); }
 }
 
