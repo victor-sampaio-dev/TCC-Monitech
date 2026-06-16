@@ -4236,9 +4236,7 @@ function renderizarPlanta() {
   const btnLimpar = document.getElementById('btn-limpar-planta');
   if (btnLimpar) btnLimpar.style.display = _plantaModoEdicao ? '' : 'none';
 
-  if (!_plantaModoEdicao) requestAnimationFrame(_desenharConectoresSVG);
-
-  // Ajusta altura e clamp em um único rAF (ordem importa: altura primeiro, depois clamp)
+  // Ajusta altura, clamp e desenha SVG em sequência no mesmo rAF
   requestAnimationFrame(() => {
     _ajustarAlturaCanvas();
     const cW = canvas.offsetWidth;
@@ -4255,6 +4253,7 @@ function renderizarPlanta() {
         card.style.top  = (ct / cH * 100) + '%';
       }
     });
+    if (!_plantaModoEdicao) _desenharConectoresSVG();
   });
 
   corrigirTextosCorrompidosNaPagina(canvas);
@@ -4349,30 +4348,6 @@ function _desenharConectoresSVG() {
     line.setAttribute('x2', p2.x); line.setAttribute('y2', p2.y);
     line.setAttribute('class', 'floor-connector-line');
     svg.appendChild(line);
-  });
-
-  // Camada 3: pontos de conexão nas bordas dos cards (não no centro)
-  const portsByNode = nos.map(() => []);
-  mstEdges.forEach(({ p1, p2, i, j }) => {
-    portsByNode[i].push(p1);
-    portsByNode[j].push(p2);
-  });
-
-  portsByNode.forEach((ports, idx) => {
-    const delay = `${(idx * 0.55) % 2}s`;
-    ports.forEach(p => {
-      const ring = document.createElementNS(NS, 'circle');
-      ring.setAttribute('cx', p.x); ring.setAttribute('cy', p.y); ring.setAttribute('r', '4');
-      ring.setAttribute('class', 'floor-connector-ring');
-      ring.style.animationDelay = delay;
-      svg.appendChild(ring);
-
-      const dot = document.createElementNS(NS, 'circle');
-      dot.setAttribute('cx', p.x); dot.setAttribute('cy', p.y); dot.setAttribute('r', '2.5');
-      dot.setAttribute('class', 'floor-connector-dot');
-      dot.style.animationDelay = delay;
-      svg.appendChild(dot);
-    });
   });
 
   canvas.appendChild(svg);

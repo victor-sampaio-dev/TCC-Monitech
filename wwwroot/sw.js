@@ -1,4 +1,4 @@
-const CACHE = 'monitech-v93';
+const CACHE = 'monitech-v94';
 
 const STATIC = [
   '/system/system.html',
